@@ -15,7 +15,9 @@ export const registerValidation = z.object({
 
   password: z.string().min(8, "Password must be at least 8 characters"),
 
-  phone: z.string().min(11, "Invalid phone number"),
+   phone: z
+    .string()
+    .regex(/^01[3-9]\d{8}$/, "Invalid phone number"),
 
   role: z
     .nativeEnum(ROLE)

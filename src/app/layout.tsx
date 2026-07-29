@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Raleway, Montserrat } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import AuthProvider from "@/providers/AuthProviders";
 
 const montserratHeading = Montserrat({subsets:['latin'],variable:'--font-heading'});
 
@@ -35,8 +36,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
          <Toaster />
-        {children}
-        
+         <AuthProvider>
+          {children}
+        </AuthProvider>
         
         </body>
     </html>
