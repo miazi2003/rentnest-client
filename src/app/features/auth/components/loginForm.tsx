@@ -1,27 +1,49 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { loginAction } from "@/app/(auth)/_action/loginActions";
+import { LoginState } from "../types";
+import { toast } from "sonner";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const initialState : LoginState = {
+    success: false,
+    statusCode: null as number | null,
+    message: "",
+    data: null,
   };
+
+  const [state, formAction, pending] = useActionState(
+    loginAction,
+    initialState
+  );
+
+
+  useEffect(()=>{
+if(!state.success){
+    toast.error(state.message)
+}
+if(state.success){
+        toast.success(state.message)
+    }
+
+
+  } , [state])
 
   return (
     <Card className="w-full shadow-none border-none bg-transparent">
-
       <CardContent className="px-0 pb-0">
-        <form onSubmit={handleSubmit} className="w-full space-y-4">
+     
+        <form action={formAction} className="w-full space-y-4">
           <div>
             <label
               htmlFor="email"
@@ -70,9 +92,10 @@ const LoginForm = () => {
 
           <button
             type="submit"
-            className="w-full py-3.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.99] text-sm mt-2"
+            disabled={pending}
+            className="w-full py-3.5 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.99] text-sm mt-2"
           >
-            Sign In
+            {pending ? "Signing in..." : "Login"}
           </button>
         </form>
       </CardContent>
