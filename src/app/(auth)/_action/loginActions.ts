@@ -1,55 +1,63 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { login } from "@/app/features/auth/service/auth.service";
 import { LoginState } from "@/app/features/auth/types";
 import { loginValidation } from "@/app/features/auth/validations";
 
 export async function loginAction(
-    prevState: any,
-    formData: FormData
+  prevState: LoginState,
+  formData: FormData
 ): Promise<LoginState> {
-    const result = loginValidation.safeParse(
-        {
-            email: formData.get("email") as string,
-            password: formData.get("password") as string,
-        }
-    )
+  const validatedFields = loginValidation.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
 
-    if(!result.success){
-          return {
-    success: false,
-    statusCode: 400,
-    message: result.error.issues[0].message,
-    data: null,
-  }; 
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      statusCode: 400,
+      message: validatedFields.error.issues[0].message,
+      data: null,
+    };
+  }
+
+  try {
+    const result = await login(validatedFields.data);
+
+    if (!result.ok) {
+      return {
+        success: false,
+        statusCode: result.status,
+        message: result.data?.message || "Login failed",
+        data: null,
+      };
     }
 
-    const payload = result.data;
+    // Save cookie in Next.js
+    const cookieStore = await cookies();
 
-    try {
-        const result = await login(payload);
+    cookieStore.set("accessToken", result.data.data.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
-        if (!result.ok) {
-            return {
-                success: false,
-                statusCode: result.status,
-                message: result.data?.message || "Login failed",
-                data: null,
-            };
-        }
-
-        return {
-            success: true,
-            statusCode: result.status,
-            message: result.data?.message || "Logged in successfully",
-            data: result.data,
-        };
-    } catch (error) {
-        return {
-            success: false,
-            statusCode: 500,
-            message: "Something went wrong",
-            data: null,
-        };
-    }
+    return {
+      success: true,
+      statusCode: result.status,
+      message: result.data?.message || "Login successful",
+      data: result.data.data.user,
+    };
+  } catch {
+    return {
+      success: false,
+      statusCode: 500,
+      message: "Something went wrong",
+      data: null,
+    };
+  }
 }

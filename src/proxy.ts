@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const publicRoutes = ["/", "/login", "/register"];
@@ -11,13 +11,14 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/properties");
 
   const token = request.cookies.get("accessToken")?.value;
-
+console.log("pathname:", pathname);
+console.log("token:", token);
 
   if (
     token &&
     (pathname === "/login" || pathname === "/register")
   ) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
 

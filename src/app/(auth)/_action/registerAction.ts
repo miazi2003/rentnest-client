@@ -7,6 +7,7 @@ import {
     ROLE,
 } from "@/app/features/auth/types";
 import { registerValidation } from "@/app/features/auth/validations";
+import { cookies } from "next/headers";
 
 export async function registerAction(
     prevState: registerState,
@@ -55,6 +56,17 @@ export async function registerAction(
                 data: null,
             };
         }
+
+           // Save cookie in Next.js
+            const cookieStore = await cookies();
+        
+            cookieStore.set("accessToken", result.data.data.accessToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+              path: "/",
+              maxAge: 60 * 60 * 24 * 7,
+            });
 
         return {
             success: true,
