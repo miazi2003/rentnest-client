@@ -50,13 +50,10 @@ export default function RegisterPage() {
 
           {/* Heading */}
           <h2 className="text-[42px] font-bold text-gray-900 leading-tight mb-4">
-            Login to your account
+            Create New Account
           </h2>
 
-          {/* Small description */}
-          <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
-            Welcome back! Please sign in to continue.
-          </p>
+        
 
           {/* Placeholder for Login Form */}
           <div className="w-full">

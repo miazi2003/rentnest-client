@@ -4,8 +4,6 @@ import React, { useActionState, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { loginAction } from "@/app/(auth)/_action/loginActions";
 import { LoginState } from "../types";
@@ -15,7 +13,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const initialState : LoginState = {
+  const initialState: LoginState = {
     success: false,
     statusCode: null as number | null,
     message: "",
@@ -27,22 +25,19 @@ const LoginForm = () => {
     initialState
   );
 
+  useEffect(() => {
+    if (!state.message) return;
 
-  useEffect(()=>{
-if(!state.success){
-    toast.error(state.message)
-}
-if(state.success){
-        toast.success(state.message)
+    if (state.success) {
+      toast.success(state.message);
+    } else {
+      toast.error(state.message);
     }
-
-
-  } , [state])
+  }, [state]);
 
   return (
     <Card className="w-full shadow-none border-none bg-transparent">
       <CardContent className="px-0 pb-0">
-     
         <form action={formAction} className="w-full space-y-4">
           <div>
             <label
