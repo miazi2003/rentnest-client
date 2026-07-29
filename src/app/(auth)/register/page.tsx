@@ -8,7 +8,7 @@ export default function RegisterPage() {
   const logoSvg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='24' fill='%230F172A'/><path d='M30 68V48L50 32L70 48V68C70 70.2091 68.2091 72 66 72H34C31.7909 72 30 70.2091 30 68Z' stroke='%23F97316' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><path d='M44 72V56H56V72' stroke='%23F97316' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='50' cy='24' r='4' fill='%23F59E0B'/></svg>`;
 
   return (
-    <main className="min-h-screen w-full bg-[#F5F5F5] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans">
+    <main className="min-h-screen w-full bg-[#F5F5F5] flex items-center justify-center p-4 sm:p-6 lg:p-6 font-sans">
       <div className="w-full max-w-[1220px] bg-white rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-3 sm:p-4 flex flex-col lg:flex-row-reverse min-h-[640px]">
         {/* LEFT COLUMN - HERO SECTION (48%) */}
         <div className="relative w-full lg:w-[48%] min-h-[420px] sm:min-h-[500px] lg:min-h-[640px] rounded-[24px] overflow-hidden flex flex-col justify-between p-8 sm:p-10 lg:p-12">

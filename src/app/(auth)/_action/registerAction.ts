@@ -3,34 +3,46 @@
 
 import { register } from "@/app/features/auth/service/auth.service";
 import {
-    LoginState,
-    RegisterPayload,
+    registerState,
     ROLE,
 } from "@/app/features/auth/types";
+import { registerValidation } from "@/app/features/auth/validations";
 
 export async function registerAction(
-    prevState: LoginState,
+    prevState: registerState,
     formData: FormData
-): Promise<LoginState> {
+): Promise<registerState> {
     const role = formData.get("role");
 
-    // শুধু LANDLORD এবং TENANT allow
-    if (role !== ROLE.LANDLORD && role !== ROLE.TENANT) {
+    // if (role !== ROLE.LANDLORD && role !== ROLE.TENANT) {
+    //     return {
+    //         success: false,
+    //         statusCode: 403,
+    //         message: "You are not allowed to register with this role.",
+    //         data: null,
+    //     };
+    // }
+
+    const result = registerValidation.safeParse(
+        {
+            name: formData.get("userName") as string,
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+            phone: formData.get("phone") as string,
+            role,
+        }
+    )
+
+    if (!result.success) {
         return {
             success: false,
-            statusCode: 403,
-            message: "You are not allowed to register with this role.",
+            statusCode: 400,
+            message: result.error.issues[0].message,
             data: null,
         };
     }
 
-    const payload: RegisterPayload = {
-        name: formData.get("userName") as string,
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-        phone: formData.get("phone") as string,
-        role,
-    };
+    const payload = result.data;
 
     try {
         const result = await register(payload);
