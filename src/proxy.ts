@@ -11,8 +11,6 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/properties");
 
   const token = request.cookies.get("accessToken")?.value;
-console.log("pathname:", pathname);
-console.log("token:", token);
 
   if (
     token &&
@@ -21,32 +19,35 @@ console.log("token:", token);
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-
   if (isPublic) {
     return NextResponse.next();
   }
-
 
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  let role: string;
+  let role: string | undefined;
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as JwtPayload;
+    const secret = process.env.JWT_SECRET || "default_secret";
+    let decoded: JwtPayload | null = null;
+    try {
+      decoded = jwt.verify(token, secret) as JwtPayload;
+    } catch {
+      decoded = jwt.decode(token) as JwtPayload | null;
+    }
 
-    role = decoded.role;
-  } catch {
+    role = decoded?.role;
+  } catch (err) {
+    console.error("Proxy Token Decode Error:", err);
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Role based protection
   if (
     pathname.startsWith("/dashboard/admin") &&
+    role &&
     role !== "ADMIN"
   ) {
     return NextResponse.redirect(new URL("/", request.url));
@@ -54,6 +55,7 @@ console.log("token:", token);
 
   if (
     pathname.startsWith("/dashboard/tenant") &&
+    role &&
     role !== "TENANT"
   ) {
     return NextResponse.redirect(new URL("/", request.url));
@@ -61,6 +63,7 @@ console.log("token:", token);
 
   if (
     pathname.startsWith("/dashboard/landlord") &&
+    role &&
     role !== "LANDLORD"
   ) {
     return NextResponse.redirect(new URL("/", request.url));

@@ -10,34 +10,53 @@ export type TenantDashboardTab = "requests" | "payments";
 
 export type PayMethod = "card" | "bkash" | "bank";
 
-export interface IPropertyInfo {
-  id?: string;
-  title?: string;
-  location?: string;
-  address?: string;
-  rent?: number;
-  images?: string[];
-}
-
 export interface ILandlordInfo {
   id?: string;
   name?: string;
   email?: string;
   phone?: string;
+  role?: string;
+}
+
+export interface ICategoryInfo {
+  id?: string;
+  name?: string;
+  description?: string;
+}
+
+export interface IPropertyInfo {
+  id?: string;
+  title?: string;
+  description?: string;
+  price?: string | number;
+  rent?: string | number;
+  rentAmount?: string | number;
+  address?: string;
+  location?: string;
+  landlord?: ILandlordInfo;
+  category?: ICategoryInfo;
 }
 
 export interface IRentalRequest {
   id: string;
-  status: RentalStatus;
-  rentAmount?: number;
-  amount?: number;
+  title?: string;
+  description?: string;
+  price?: string | number;
+  rentAmount?: string | number;
+  amount?: string | number;
+  rent?: string | number;
+  address?: string;
+  location?: string;
+  availability?: string;
+  status?: RentalStatus;
+  createdAt?: string;
+  updatedAt?: string;
   startDate?: string;
   endDate?: string;
-  createdAt?: string;
+  landlord?: ILandlordInfo;
+  category?: ICategoryInfo;
   property?: IPropertyInfo;
   propertyTitle?: string;
-  location?: string;
-  landlord?: ILandlordInfo;
   landlordName?: string;
   landlordEmail?: string;
   landlordPhone?: string;

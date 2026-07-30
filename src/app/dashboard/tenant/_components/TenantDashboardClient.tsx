@@ -258,6 +258,13 @@ export default function TenantDashboardClient({
 
   // Payment Callback
   const handleConfirmPayment = (request: IRentalRequest, method: PayMethod) => {
+    const statusUpper = (request.status || "").toUpperCase();
+    if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
+      toast.error("This property rental is already active and paid.");
+      setPayModalItem(null);
+      return;
+    }
+
     const title = getPropertyTitle(request);
     const amount = getRentAmount(request);
 
@@ -270,7 +277,7 @@ export default function TenantDashboardClient({
     const newPayment: IPaymentItem = {
       id: `pay-${Date.now()}`,
       transactionId: `TXN-${Math.floor(10000000 + Math.random() * 90000000)}`,
-      amount,
+      amount: Number(amount),
       paymentMethod:
         method === "card"
           ? "Credit Card (Visa/MC)"

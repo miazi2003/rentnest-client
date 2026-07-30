@@ -158,3 +158,130 @@ export const getPaymentHistory = async () => {
     };
   }
 };
+
+export const getRentalRequestById = async (id: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      throw new Error("User not logged in");
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/api/rentals/${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to fetch rental request by ID:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+};
+
+
+// Stripe Checkout Session Creation (POST /api/payments/checkout)
+export const createCheckoutSession = async (rentalRequestId: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      throw new Error("User not logged in");
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/api/payments/create`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rentalRequestId }),
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to create checkout session:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+};
+
+// Stripe Payment Verification (GET /api/payments/verify/:sessionId)
+export const verifyPaymentSession = async (sessionId: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      throw new Error("User not logged in");
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/api/payments/verify/${sessionId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to verify payment session:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+};

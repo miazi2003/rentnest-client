@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   GitPullRequest,
   Building2,
@@ -164,25 +165,22 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
               {/* Actions Column */}
               <TableCell className="py-4 px-6 text-right">
                 {status === "APPROVED" && (
-                  <Button
-                    size="sm"
-                    onClick={() => onOpenPayModal(req)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs"
-                  >
-                    <CreditCard className="w-3.5 h-3.5" />
-                    Pay Now
-                  </Button>
+                  <Link href={`/dashboard/tenant/requests/${req.id}/pay`}>
+                    <Button
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs cursor-pointer"
+                    >
+                      <CreditCard className="w-3.5 h-3.5" />
+                      Pay Now
+                    </Button>
+                  </Link>
                 )}
 
                 {status === "ACTIVE" && (
-                  <Button
-                    size="sm"
-                    onClick={() => onOpenReviewModal(req)}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs"
-                  >
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                    Leave Review
-                  </Button>
+                  <span className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800">
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    Active Rental
+                  </span>
                 )}
 
                 {status === "PENDING" && (
@@ -199,10 +197,14 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
                 )}
 
                 {status === "COMPLETED" && (
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1">
-                    <Check className="w-3 h-3" />
-                    Fulfilled
-                  </span>
+                  <Button
+                    size="sm"
+                    onClick={() => onOpenReviewModal(req)}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs cursor-pointer"
+                  >
+                    <Star className="w-3.5 h-3.5 fill-current" />
+                    Leave Review
+                  </Button>
                 )}
               </TableCell>
             </TableRow>

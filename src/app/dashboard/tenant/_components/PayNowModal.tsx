@@ -9,6 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { IRentalRequest, PayMethod } from "../types/tenant.types";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -41,7 +42,15 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
   const rentAmount =
     request.rentAmount ?? request.amount ?? request.property?.rent ?? 0;
 
+  const reqStatus = (request.status || "").toUpperCase();
+  const isAlreadyPaid = reqStatus === "ACTIVE" || reqStatus === "COMPLETED";
+
   const handlePay = () => {
+    if (isProcessing) return;
+    if (isAlreadyPaid) {
+      toast.error("This property rental is already active and paid.");
+      return;
+    }
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
