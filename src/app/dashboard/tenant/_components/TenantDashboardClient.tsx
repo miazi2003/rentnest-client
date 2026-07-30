@@ -22,6 +22,7 @@ import {
 } from "./index";
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { handleCreateReviewAction } from "@/app/(auth)/_action/reviewActions";
 
 interface TenantDashboardClientProps {
   initialRequests?: IRentalRequest[];
@@ -223,8 +224,16 @@ export default function TenantDashboardClient({
   const getLandlordName = (req: IRentalRequest) =>
     req.landlord?.name || req.landlordName || "Property Landlord";
 
-  const getRentAmount = (req: IRentalRequest) =>
-    req.rentAmount ?? req.amount ?? req.property?.rent ?? 0;
+  const getRentAmount = (req: IRentalRequest) => {
+    const val =
+      req.totalPrice ??
+      req.property?.price ??
+      req.price ??
+      req.rentAmount ??
+      req.amount ??
+      0;
+    return Number(val) || 0;
+  };
 
   // Filter requests
   const filteredRequests = useMemo(() => {
@@ -300,18 +309,38 @@ export default function TenantDashboardClient({
   };
 
   // Review Callback
-  const handleSubmitReview = (
+  const handleSubmitReview = async (
     request: IRentalRequest,
     rating: number,
-    _comment: string
+    comment: string
   ) => {
+    const propertyId = request.propertyId || request.property?.id || request.id;
     const title = getPropertyTitle(request);
 
-    toast.success(`Review submitted successfully!`, {
-      description: `Thank you for reviewing "${title}" (${rating} stars).`,
-    });
+    if (!propertyId) {
+      toast.error("Property ID missing from rental request.");
+      return;
+    }
 
-    setReviewModalItem(null);
+    try {
+      const res = await handleCreateReviewAction({
+        propertyId,
+        rating,
+        comment,
+      });
+
+      if (res.ok) {
+        toast.success(`Review submitted successfully!`, {
+          description: `Thank you for reviewing "${title}" (${rating} stars).`,
+        });
+        setReviewModalItem(null);
+      } else {
+        toast.error(res.message || "Failed to submit review");
+      }
+    } catch (err) {
+      console.error("Submit review error:", err);
+      toast.error(err instanceof Error ? err.message : "Error submitting review");
+    }
   };
 
   return (

@@ -39,8 +39,10 @@ export interface IPropertyInfo {
 
 export interface IRentalRequest {
   id: string;
+  propertyId?: string;
   title?: string;
   description?: string;
+  totalPrice?: string | number;
   price?: string | number;
   rentAmount?: string | number;
   amount?: string | number;
@@ -49,6 +51,7 @@ export interface IRentalRequest {
   location?: string;
   availability?: string;
   status?: RentalStatus;
+  paymentStatus?: string;
   createdAt?: string;
   updatedAt?: string;
   startDate?: string;

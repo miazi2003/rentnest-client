@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
+import { handleGetPropertyReviewsAction } from "@/app/(auth)/_action/reviewActions";
+
 interface LeaveReviewModalProps {
   request: IRentalRequest | null;
   onClose: () => void;
@@ -28,6 +30,29 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+
+  const propertyId = request?.propertyId || request?.property?.id || request?.id;
+
+  React.useEffect(() => {
+    if (!propertyId) return;
+    handleGetPropertyReviewsAction(propertyId)
+      .then((res) => {
+        if (res.ok && res.data) {
+          const list = Array.isArray(res.data.data)
+            ? res.data.data
+            : Array.isArray(res.data)
+            ? res.data
+            : [];
+          if (list.length > 0) {
+            setAlreadyReviewed(true);
+          } else {
+            setAlreadyReviewed(false);
+          }
+        }
+      })
+      .catch(() => setAlreadyReviewed(false));
+  }, [propertyId]);
 
   const isOpen = Boolean(request);
   if (!request) return null;
@@ -37,12 +62,14 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
   const landlordName =
     request.landlord?.name || request.landlordName || "Landlord";
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (isSubmitting || alreadyReviewed) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      await onSubmitReview(request, rating, reviewComment);
+    } finally {
       setIsSubmitting(false);
-      onSubmitReview(request, rating, reviewComment);
-    }, 900);
+    }
   };
 
   return (
@@ -102,6 +129,16 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           </div>
         </div>
 
+        {/* Already Reviewed Alert */}
+        {alreadyReviewed && (
+          <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs">
+            <p className="font-bold">Review Already Submitted</p>
+            <p className="text-[11px] text-amber-700 dark:text-amber-300">
+              You have already reviewed this property. Duplicate reviews are disabled.
+            </p>
+          </div>
+        )}
+
         {/* Review Comment Area */}
         <div className="space-y-2">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
@@ -109,10 +146,11 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           </label>
           <textarea
             rows={3}
+            disabled={alreadyReviewed}
             placeholder="How is the property quality, location convenience, and landlord response time?"
             value={reviewComment}
             onChange={(e) => setReviewComment(e.target.value)}
-            className="w-full p-3 text-xs sm:text-sm bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/40 text-slate-900 dark:text-white"
+            className="w-full p-3 text-xs sm:text-sm bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/40 text-slate-900 dark:text-white disabled:opacity-60"
           />
         </div>
 
@@ -128,11 +166,20 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           </Button>
           <Button
             type="button"
-            disabled={isSubmitting}
+            disabled={isSubmitting || alreadyReviewed}
             onClick={handleSubmit}
-            className="w-2/3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-500/20 gap-2 cursor-pointer"
+            className={`w-2/3 rounded-xl font-bold text-xs shadow-md gap-2 ${
+              alreadyReviewed
+                ? "bg-slate-400 text-white cursor-not-allowed opacity-80"
+                : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20 cursor-pointer"
+            }`}
           >
-            {isSubmitting ? (
+            {alreadyReviewed ? (
+              <>
+                <Star className="w-4 h-4 text-amber-300 fill-amber-300" />
+                Already Reviewed
+              </>
+            ) : isSubmitting ? (
               <span className="animate-pulse">Submitting Review...</span>
             ) : (
               <>

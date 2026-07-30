@@ -35,16 +35,6 @@ const mainNavItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "Rental Requests",
-    href: "/dashboard/tenant/requests",
-    icon: ClipboardList,
-  },
-  {
-    title: "Payments",
-    href: "/dashboard/tenant/payments",
-    icon: CreditCard,
-  },
-  {
     title: "Reviews",
     href: "/dashboard/tenant/reviews",
     icon: Star,

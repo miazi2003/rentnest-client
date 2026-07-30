@@ -39,8 +39,14 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
 
   const propertyTitle =
     request.property?.title || request.propertyTitle || "Rental Property";
-  const rentAmount =
-    request.rentAmount ?? request.amount ?? request.property?.rent ?? 0;
+  const rentAmount = Number(
+    request.totalPrice ??
+      request.property?.price ??
+      request.price ??
+      request.rentAmount ??
+      request.amount ??
+      0
+  );
 
   const reqStatus = (request.status || "").toUpperCase();
   const isAlreadyPaid = reqStatus === "ACTIVE" || reqStatus === "COMPLETED";

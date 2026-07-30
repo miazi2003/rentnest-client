@@ -50,8 +50,10 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
     req.landlord?.phone ||
     "Contact via Nest";
 
-  const getRentAmount = (req: IRentalRequest) =>
-    req.rentAmount ?? req.amount ?? req.property?.rent ?? 0;
+  const getRentAmount = (req: IRentalRequest) => {
+    const val = req.totalPrice ?? req.property?.price ?? 0;
+    return Number(val) || 0;
+  };
 
   if (requests.length === 0) {
     return (
@@ -83,7 +85,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
             Rental Period
           </TableHead>
           <TableHead className="py-4 px-6 font-bold uppercase text-[11px]">
-            Monthly Rent
+            Rent
           </TableHead>
           <TableHead className="py-4 px-6 font-bold uppercase text-[11px]">
             Request Status
@@ -151,9 +153,6 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
               <TableCell className="py-4 px-6">
                 <div className="font-bold text-foreground text-sm">
                   ${rent.toLocaleString()}{" "}
-                  <span className="text-xs font-normal text-muted-foreground">
-                    / mo
-                  </span>
                 </div>
               </TableCell>
 
@@ -183,6 +182,17 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
                   </span>
                 )}
 
+                {status === "COMPLETED" && (
+                  <Button
+                    size="sm"
+                    onClick={() => onOpenReviewModal(req)}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs cursor-pointer"
+                  >
+                    <Star className="w-3.5 h-3.5 fill-current" />
+                    Leave Review
+                  </Button>
+                )}
+
                 {status === "PENDING" && (
                   <span className="text-xs text-amber-600 dark:text-amber-400 font-medium inline-flex items-center gap-1">
                     <Clock className="w-3 h-3" />
@@ -194,17 +204,6 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
                   <span className="text-xs text-muted-foreground font-medium">
                     No Actions
                   </span>
-                )}
-
-                {status === "COMPLETED" && (
-                  <Button
-                    size="sm"
-                    onClick={() => onOpenReviewModal(req)}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs cursor-pointer"
-                  >
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                    Leave Review
-                  </Button>
                 )}
               </TableCell>
             </TableRow>

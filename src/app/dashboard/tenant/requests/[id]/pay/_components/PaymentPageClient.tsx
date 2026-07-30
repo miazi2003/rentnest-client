@@ -51,7 +51,12 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
   const landlordPhone = request?.landlord?.phone || request?.property?.landlord?.phone || "N/A";
 
   // Parse price cleanly from DB without hardcoded fallbacks
-  const rawPrice = request?.price ?? request?.rentAmount ?? request?.amount ?? request?.property?.price ?? request?.property?.rent;
+  const rawPrice =
+    request?.totalPrice ??
+    request?.property?.price ??
+    request?.price ??
+    request?.rentAmount ??
+    request?.amount;
   const price = rawPrice ? Number(rawPrice) : 0;
 
   // Check if rental request is already paid/active to prevent double purchase
