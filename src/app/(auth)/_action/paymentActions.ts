@@ -3,10 +3,27 @@
 import {
   createCheckoutSession,
   verifyPaymentSession,
+  getRentalRequestById,
 } from "@/app/features/auth/service/auth.service";
 
 export async function handleCreateCheckoutSessionAction(rentalRequestId: string) {
   try {
+    // Validate request status on server before proceeding
+    if (rentalRequestId) {
+      const reqRes = await getRentalRequestById(rentalRequestId);
+      const reqData = reqRes?.data?.data ?? reqRes?.data;
+      const statusUpper = (reqData?.status || "").toUpperCase();
+
+      if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
+        return {
+          ok: false,
+          status: 400,
+          data: null,
+          message: "Rental request is already paid and active/completed. Double payment blocked.",
+        };
+      }
+    }
+
     const result = await createCheckoutSession(rentalRequestId);
     return result;
   } catch (error) {

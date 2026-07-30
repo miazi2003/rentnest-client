@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getRentalRequest, getRentalRequestById } from "@/app/features/auth/service/auth.service";
 import PaymentPageClient from "./_components/PaymentPageClient";
 
@@ -22,6 +23,14 @@ export default async function RequestPayPage({ params }: PageProps) {
       rentalRequest = rawList.find(
         (r: any) => String(r.id) === String(id) || String(r._id) === String(id)
       );
+    }
+  }
+
+  // Check if rental request is already paid/active/completed. If so, block access & redirect away immediately.
+  if (rentalRequest) {
+    const statusUpper = (rentalRequest.status || "").toUpperCase();
+    if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
+      redirect("/dashboard/tenant?notice=already_paid");
     }
   }
 
