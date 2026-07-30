@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Building2,
   ClipboardList,
   CreditCard,
+  Star,
   User,
   Settings,
   LogOut,
@@ -31,23 +31,23 @@ import {
 const mainNavItems = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/dashboard/tenant",
     icon: LayoutDashboard,
   },
   {
-    title: "Properties",
-    href: "/dashboard/properties",
-    icon: Building2,
-  },
-  {
-    title: "Requests",
-    href: "/dashboard/requests",
+    title: "Rental Requests",
+    href: "/dashboard/tenant/requests",
     icon: ClipboardList,
   },
   {
     title: "Payments",
-    href: "/dashboard/payments",
+    href: "/dashboard/tenant/payments",
     icon: CreditCard,
+  },
+  {
+    title: "Reviews",
+    href: "/dashboard/tenant/reviews",
+    icon: Star,
   },
 ];
 
@@ -77,7 +77,7 @@ export function AppSidebar() {
       {/* Sidebar Header */}
       <SidebarHeader className="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 px-4 group-data-[collapsible=icon]:px-2">
         <Link
-          href="/dashboard"
+          href="/dashboard/tenant"
           className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
         >
           <img
@@ -91,7 +91,7 @@ export function AppSidebar() {
             </span>
             <span className="text-[11px] font-medium text-muted-foreground leading-none flex items-center gap-1">
               <Sparkles className="h-3 w-3 text-amber-500 fill-amber-500" />
-              Property Portal
+              Tenant Portal
             </span>
           </div>
         </Link>
@@ -108,7 +108,10 @@ export function AppSidebar() {
             <SidebarMenu className="space-y-1">
               {mainNavItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href;
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "/dashboard/tenant" && pathname?.startsWith(item.href));
+
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton

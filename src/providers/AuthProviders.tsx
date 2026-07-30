@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import { AuthContextType, IUser } from "@/app/features/auth/types";
-import { getCurrentUser } from "@/app/features/auth/service/auth.service";
+import { getCurrentUserAction } from "@/app/(auth)/_action/getCurrentUserAction";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 
@@ -20,12 +20,12 @@ const AuthProvider = ({
 
     const getUser = async() =>{
       try{
-          const res = await getCurrentUser()
-        if(!res){
-            throw new Error("User Not Found")
+          const res = await getCurrentUserAction()
+        if(!res || !res.ok || !res.data?.data){
+            setUser(null)
+        } else {
+            setUser(res.data.data)
         }
-
-        setUser(res.data.data)
       }catch(error){
         setUser(null)
       }finally {
@@ -52,6 +52,7 @@ useEffect(() => {
 
 
 export default AuthProvider;
+
 
 
 
