@@ -1,6 +1,7 @@
 "use client"
 
 import { AuthContextType, IUser } from "@/app/features/auth/types";
+import { getCurrentUser } from "@/app/features/auth/service/auth.service";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 
