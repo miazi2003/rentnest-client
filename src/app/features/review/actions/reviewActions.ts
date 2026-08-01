@@ -1,6 +1,6 @@
 "use server";
 
-import { createReview, getPropertyReviews } from "@/app/features/auth/service/auth.service";
+import { createReview, getPropertyReviews } from "@/app/features/api/review.api";
 import { createReviewValidation } from "@/app/features/review/validations";
 
 export async function handleCreateReviewAction(payload: {
@@ -9,32 +9,40 @@ export async function handleCreateReviewAction(payload: {
   comment: string;
 }) {
   try {
-    // Zod schema validation
-    const validation = createReviewValidation.safeParse(payload);
-    if (!validation.success) {
+    const validated = createReviewValidation.safeParse(payload);
+    if (!validated.success) {
       return {
         ok: false,
         status: 400,
+        message: validated.error.issues[0]?.message || "Invalid review data",
         data: null,
-        message: validation.error.issues[0]?.message || "Invalid review payload",
       };
     }
 
-    const result = await createReview(payload);
+    const result = await createReview(validated.data);
     return result;
   } catch (error) {
     console.error("Action error createReview:", error);
     return {
       ok: false,
       status: 500,
-      data: null,
       message: error instanceof Error ? error.message : "Something went wrong",
+      data: null,
     };
   }
 }
 
 export async function handleGetPropertyReviewsAction(propertyId: string) {
   try {
+    if (!propertyId) {
+      return {
+        ok: false,
+        status: 400,
+        message: "Property ID is required",
+        data: null,
+      };
+    }
+
     const result = await getPropertyReviews(propertyId);
     return result;
   } catch (error) {
@@ -42,8 +50,8 @@ export async function handleGetPropertyReviewsAction(propertyId: string) {
     return {
       ok: false,
       status: 500,
-      data: null,
       message: error instanceof Error ? error.message : "Something went wrong",
+      data: null,
     };
   }
 }

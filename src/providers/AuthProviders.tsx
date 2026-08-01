@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthContextType, IUser } from "@/app/features/auth/types";
-import { getCurrentUserAction } from "@/app/(auth)/_action/getCurrentUserAction";
+import { getCurrentUserAction } from "@/app/features/auth/actions/getCurrentUserAction";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 

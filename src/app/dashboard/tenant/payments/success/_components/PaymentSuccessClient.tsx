@@ -16,7 +16,7 @@ import {
   FileText,
 } from "lucide-react";
 import { toast } from "sonner";
-import { handleVerifyPaymentSessionAction } from "@/app/(auth)/_action/paymentActions";
+import { handleVerifyPaymentSessionAction } from "@/app/features/payment/actions/paymentActions";
 
 // Shadcn UI components
 import {

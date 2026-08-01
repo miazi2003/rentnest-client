@@ -1,4 +1,4 @@
-import propertyAction from "@/app/(auth)/_action/propertyAction";
+import propertyAction from "@/app/features/property/actions/propertyAction";
 import React from "react";
 import { Building2 } from "lucide-react";
 import PropertiesListClient from "./components/PropertiesListClient";

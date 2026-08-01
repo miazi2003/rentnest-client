@@ -22,7 +22,7 @@ import {
 } from "./index";
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { handleCreateReviewAction } from "@/app/(auth)/_action/reviewActions";
+import { handleCreateReviewAction } from "@/app/features/review/actions/reviewActions";
 
 interface TenantDashboardClientProps {
   initialRequests?: IRentalRequest[];

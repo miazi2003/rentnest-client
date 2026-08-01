@@ -1,6 +1,6 @@
 "use server";
 
-import { getCurrentUser } from "@/app/features/auth/service/auth.service";
+import { getCurrentUser } from "@/app/features/api/auth.api";
 
 export async function getCurrentUserAction() {
   try {

@@ -1,6 +1,6 @@
 "use server";
 
-import { createRentalRequest } from "@/app/features/auth/service/auth.service";
+import { createRentalRequest } from "@/app/features/api/rental.api";
 
 export async function createRentalAction(payload: {
   propertyId: string;

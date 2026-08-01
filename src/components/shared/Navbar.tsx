@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
-import { logoutAction } from "@/app/(auth)/_action/logoutAction";
+import { logoutAction } from "@/app/features/auth/actions/logoutAction";
 import { toast } from "sonner";
 import {
   Home,

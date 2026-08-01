@@ -5,7 +5,7 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import { loginAction } from "@/app/(auth)/_action/loginActions";
+import { loginAction } from "@/app/features/auth/actions/loginActions";
 import { LoginState } from "../types";
 import { toast } from "sonner";
 

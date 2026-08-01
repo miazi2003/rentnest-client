@@ -1,5 +1,5 @@
 import React from "react";
-import { getPropertyByIdAction } from "@/app/(auth)/_action/getPropertyByIdAction";
+import { getPropertyByIdAction } from "@/app/features/property/actions/getPropertyByIdAction";
 import PropertyDetailsClient from "./_components/PropertyDetailsClient";
 import { Building2 } from "lucide-react";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 "use server";
 
-import { getProperty } from "@/app/features/auth/service/auth.service";
+import { getProperty } from "@/app/features/api/property.api";
 
 const propertyAction = async () => {
   try {

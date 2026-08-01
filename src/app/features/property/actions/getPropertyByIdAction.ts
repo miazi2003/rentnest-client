@@ -1,6 +1,6 @@
 "use server";
 
-import { getPropertyById } from "@/app/features/auth/service/auth.service";
+import { getPropertyById } from "@/app/features/api/property.api";
 
 export async function getPropertyByIdAction(id: string) {
   try {

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getRentalRequest, getRentalRequestById } from "@/app/features/auth/service/auth.service";
+import { getRentalRequest, getRentalRequestById } from "@/app/features/api/rental.api";
 import PaymentPageClient from "./_components/PaymentPageClient";
 
 interface PageProps {

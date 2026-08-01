@@ -1,4 +1,5 @@
-import { getPaymentHistory, getRentalRequest } from "@/app/features/auth/service/auth.service";
+import { getRentalRequest } from "@/app/features/api/rental.api";
+import { getPaymentHistory } from "@/app/features/api/payment.api";
 import TenantDashboardClient from "./_components/TenantDashboardClient";
 
 const TenantDashboardPage = async () => {

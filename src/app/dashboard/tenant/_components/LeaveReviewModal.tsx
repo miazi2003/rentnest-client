@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-import { handleGetPropertyReviewsAction } from "@/app/(auth)/_action/reviewActions";
+import { handleGetPropertyReviewsAction } from "@/app/features/review/actions/reviewActions";
 
 interface LeaveReviewModalProps {
   request: IRentalRequest | null;

@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { IRentalRequest } from "@/app/dashboard/tenant/types/tenant.types";
 import { RentalStatusBadge } from "@/app/dashboard/tenant/_components/RentalStatusBadge";
-import { handleCreateCheckoutSessionAction } from "@/app/(auth)/_action/paymentActions";
+import { handleCreateCheckoutSessionAction } from "@/app/features/payment/actions/paymentActions";
 
 // Shadcn UI components
 import {

@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { login } from "@/app/features/auth/service/auth.service";
+import { login } from "@/app/features/api/auth.api";
 import { LoginState } from "@/app/features/auth/types";
 import { loginValidation } from "@/app/features/auth/validations";
 

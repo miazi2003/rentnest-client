@@ -8,7 +8,7 @@ import {
 
 import { registerState } from "../types";
 import { toast } from "sonner";
-import { registerAction } from "@/app/(auth)/_action/registerAction";
+import { registerAction } from "@/app/features/auth/actions/registerAction";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");

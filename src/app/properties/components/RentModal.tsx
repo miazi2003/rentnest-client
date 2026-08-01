@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Building2, Calendar, Hash, CheckCircle2 } from "lucide-react";
-import { createRentalAction } from "@/app/(auth)/_action/createRentalAction";
+import { createRentalAction } from "@/app/features/rental/actions/createRentalAction";
 import { toast } from "sonner";
 
 export interface RentModalProps {
