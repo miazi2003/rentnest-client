@@ -1,21 +1,37 @@
 import propertyAction from "@/app/features/property/actions/propertyAction";
 import React from "react";
-import { Building2 } from "lucide-react";
+import { Building2, Plus } from "lucide-react";
 import PropertiesListClient from "./components/PropertiesListClient";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { getCurrentUser } from "../features/api/auth.api";
 
 export default async function PropertiesPage() {
   const response = await propertyAction();
   const properties = Array.isArray(response?.data) ? response.data : [];
 
+  const currentUserRes = await getCurrentUser();
+  const user = currentUserRes?.data?.data || currentUserRes?.data;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      <div className="space-y-2 text-center sm:text-left">
-        <h1 className="text-3xl font-black tracking-tight text-foreground">
-          Explore Properties
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Discover your next home or rental property from our verified listings.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1 text-center sm:text-left">
+          <h1 className="text-3xl font-black tracking-tight text-foreground">
+            Explore Properties
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Discover your next home or rental property from our verified listings.
+          </p>
+        </div>
+        {user?.role === "LANDLORD" && (
+          <Link href="/landlord/properties/new">
+            <Button className="rounded-2xl font-bold text-xs px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/25 flex items-center gap-1.5 cursor-pointer shrink-0">
+              <Plus className="w-4 h-4" />
+              Create Property
+            </Button>
+          </Link>
+        )}
       </div>
 
       {properties.length === 0 ? (

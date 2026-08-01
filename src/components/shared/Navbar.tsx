@@ -124,9 +124,11 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2.5 group cursor-pointer select-none"
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-all duration-300">
-            <Building2 className="w-5 h-5 transition-transform duration-300 group-hover:rotate-3" />
-          </div>
+          <img
+            src="/favicon.ico"
+            alt="RentNest Logo"
+            className="w-10 h-10 shrink-0 rounded-2xl object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-all duration-300"
+          />
           <span className="font-heading tracking-tight text-xl font-black bg-gradient-to-r from-foreground via-foreground/90 to-emerald-600 bg-clip-text text-transparent">
             Rent<span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Nest</span>
           </span>

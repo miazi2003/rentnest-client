@@ -1,8 +1,9 @@
 import { getMyPropertiesAction } from "@/app/features/landlord/actions/getMyPropertiesAction";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Eye, MapPin, Plus } from "lucide-react";
+import { Building2, Eye, MapPin, Plus, Pencil } from "lucide-react";
 import Link from "next/link";
+import { DeletePropertyButton } from "../_components/DeletePropertyButton";
 
 export default async function LandlordPropertiesPage() {
   const myPropertyData = await getMyPropertiesAction();
@@ -82,13 +83,25 @@ export default async function LandlordPropertiesPage() {
                 </CardContent>
               </div>
 
-              <CardFooter className="p-5 pt-3 bg-muted/20">
-                <Link href={`/properties/${property.id}`} className="w-full">
+              <CardFooter className="p-5 pt-3 bg-muted/20 flex items-center gap-2">
+                <Link href={`/properties/${property.id}`} className="flex-1">
                   <Button className="w-full rounded-2xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 cursor-pointer">
                     <Eye className="w-4 h-4" />
                     View Details
                   </Button>
                 </Link>
+                <Link href={`/dashboard/landlord/properties/${property.id}/edit`}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-2xl text-xs font-bold gap-1.5 px-3 py-2 cursor-pointer border-border hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 shrink-0"
+                    title="Edit Property"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                    Edit
+                  </Button>
+                </Link>
+                <DeletePropertyButton propertyId={property.id} />
               </CardFooter>
             </Card>
           ))}

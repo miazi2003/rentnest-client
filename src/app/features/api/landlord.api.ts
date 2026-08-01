@@ -178,3 +178,113 @@ export const createProperty = async(payload : TCreatePropertyPayload) =>{
     };
   }
 }
+
+
+// delete proeprty
+export const deleteProperty = async(propertyId : string) =>{
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      throw new Error("User not logged in");
+    }
+
+    const baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(
+      `${baseUrl}/api/landlord/properties/${propertyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json().catch(() => null);
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to delete property:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+};
+
+// update property
+export const updateProperty = async (
+  propertyId: string,
+  payload: TCreatePropertyPayload
+) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      throw new Error("User not logged in");
+    }
+
+    const baseUrl =
+      process.env.BACKEND_URL ||
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      "http://localhost:5000";
+
+    let response = await fetch(
+      `${baseUrl}/api/landlord/properties/${propertyId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      }
+    );
+
+    if (response.status === 405) {
+      response = await fetch(
+        `${baseUrl}/api/landlord/properties/${propertyId}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+          cache: "no-store",
+        }
+      );
+    }
+
+    const data = await response.json().catch(() => null);
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to update property:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+};

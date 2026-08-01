@@ -2,7 +2,7 @@ import { PropertyEditForm } from "@/app/dashboard/landlord/_components/PropertyE
 import { getCategoriesAction } from "@/app/features/landlord/actions/getCategoriesAction";
 import { getPropertyByIdAction } from "@/app/features/property/actions/getPropertyByIdAction";
 
-export default async function EditPropertyPage({
+export default async function LandlordEditPropertyPage({
   params,
 }: {
   params: Promise<{ id: string }>;
