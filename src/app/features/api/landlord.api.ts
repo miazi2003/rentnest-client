@@ -1,3 +1,4 @@
+import { TCreatePropertyPayload } from "@/app/dashboard/landlord/types/landlord.types";
 import { cookies } from "next/headers";
 
 export const getMyProperties = async () => {
@@ -91,7 +92,7 @@ export const getRentalRequestForLandlord = async () => {
 
 // handle approve or reject request
 
-export const handleAcceptOrRejectRequest = async(requestId : string , status : string) =>{
+export const handleAcceptOrRejectRequest = async (requestId: string, status: string) => {
 try {
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
@@ -122,6 +123,51 @@ try {
     };
   } catch (error) {
     console.error("Failed to Patch :", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+}
+
+// property creat api
+
+export const createProperty = async(payload : TCreatePropertyPayload) =>{
+    try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      throw new Error("User not logged in");
+    }
+
+    const baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(
+      `${baseUrl}/api/landlord/properties`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to Create Property :", error);
 
     return {
       ok: false,

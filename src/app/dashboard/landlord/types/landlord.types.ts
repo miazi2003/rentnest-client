@@ -61,3 +61,15 @@ export interface ILandlordRentalRequest {
   tenantPhone?: string;
   price?: string | number;
 }
+
+
+export type TCreatePropertyPayload = {
+  title: string;
+  description: string;
+  price: number;
+  address: string;
+  latitude: number;
+  longitude: number;
+  images: string[];
+  categoryId: string;
+};

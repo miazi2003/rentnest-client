@@ -63,3 +63,34 @@ export const getPropertyById = async (id: string) => {
     };
   }
 };
+
+export const getCategories = async () => {
+  try {
+    const baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(`${baseUrl}/api/categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+};

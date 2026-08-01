@@ -1,7 +1,7 @@
-import { PropertyCreateForm } from "../../_components/PropertyCreateForm";
+import { PropertyCreateForm } from "@/app/dashboard/landlord/_components/PropertyCreateForm";
 import { getCategoriesAction } from "@/app/features/landlord/actions/getCategoriesAction";
 
-export default async function NewPropertyPage() {
+export default async function LandlordNewPropertyPage() {
   const categories = await getCategoriesAction();
 
   return (

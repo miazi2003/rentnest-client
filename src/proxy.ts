@@ -62,7 +62,8 @@ export function proxy(request: NextRequest) {
   }
 
   if (
-    pathname.startsWith("/dashboard/landlord") &&
+    (pathname.startsWith("/dashboard/landlord") ||
+      pathname.startsWith("/landlord")) &&
     role &&
     role !== "LANDLORD"
   ) {
