@@ -1,0 +1,1 @@
+// Landlord API functions placeholder
