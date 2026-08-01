@@ -55,6 +55,7 @@ export function PropertyEditForm({
     longitude: initialData?.longitude || 90.4125,
     images: initialData?.images || [],
     categoryId: initialData?.categoryId || initialData?.category?.id || "",
+    availability: initialData?.availability || "AVAILABLE",
   });
 
   const [imageUrlInput, setImageUrlInput] = useState("");
@@ -77,6 +78,7 @@ export function PropertyEditForm({
             longitude: prop.longitude || 90.4125,
             images: Array.isArray(prop.images) ? prop.images : [],
             categoryId: prop.categoryId || prop.category?.id || "",
+            availability: prop.availability || "AVAILABLE",
           });
         } else {
           toast.error("Failed to load property details for editing.");
@@ -323,6 +325,55 @@ export function PropertyEditForm({
                       ))
                     )}
                   </select>
+                </div>
+              </div>
+
+              {/* Availability Toggle */}
+              <div className="sm:col-span-2 space-y-2 pt-2">
+                <div className="flex items-center justify-between p-4 rounded-2xl border border-border bg-muted/20">
+                  <div className="space-y-0.5">
+                    <label className="text-xs font-bold text-foreground block flex items-center gap-2">
+                      <span>Listing Availability</span>
+                      <span
+                        className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                          formData.availability === "AVAILABLE"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+                        }`}
+                      >
+                        {formData.availability === "AVAILABLE" ? "AVAILABLE" : "UNAVAILABLE"}
+                      </span>
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                      {formData.availability === "AVAILABLE"
+                        ? "Property is AVAILABLE for tenants to submit rental requests."
+                        : "Property is UNAVAILABLE. New rental requests will be disabled."}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={formData.availability === "AVAILABLE"}
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        availability:
+                          prev.availability === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE",
+                      }))
+                    }
+                    className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+                      formData.availability === "AVAILABLE"
+                        ? "bg-emerald-600"
+                        : "bg-slate-300 dark:bg-slate-700"
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                        formData.availability === "AVAILABLE" ? "translate-x-5" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             </div>

@@ -148,7 +148,15 @@ export default function PropertyDetailsClient({ property }: PropertyDetailsClien
             )}
 
             {/* Apply for Rent CTA Button */}
-            {!user || user.role === "TENANT" ? (
+            {property.availability === "UNAVAILABLE" ? (
+              <Button
+                disabled
+                className="w-full rounded-2xl py-3 text-sm font-bold bg-muted text-muted-foreground border border-border cursor-not-allowed opacity-80 gap-2"
+              >
+                <Calendar className="w-4 h-4 opacity-50" />
+                Unavailable
+              </Button>
+            ) : !user || user.role === "TENANT" ? (
               <Button
                 onClick={handleApplyClick}
                 className="w-full rounded-2xl py-3 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 gap-2 cursor-pointer"

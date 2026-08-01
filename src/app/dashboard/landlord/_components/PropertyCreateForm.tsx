@@ -48,6 +48,7 @@ export function PropertyCreateForm({
     longitude: 90.4125,
     images: [],
     categoryId: categories[0]?.id || "",
+    availability: "AVAILABLE",
   });
 
   useEffect(() => {

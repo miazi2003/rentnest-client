@@ -52,21 +52,34 @@ export default async function LandlordPropertiesPage() {
             >
               <div>
                 <CardHeader className="p-5 pb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center shrink-0">
-                      <Building2 className="w-5 h-5" />
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center shrink-0">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base font-bold text-foreground line-clamp-1">
+                          {property.title}
+                        </CardTitle>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
+                          <span className="truncate">
+                            {property.address || property.location || "Location N/A"}
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <CardTitle className="text-base font-bold text-foreground line-clamp-1">
-                        {property.title}
-                      </CardTitle>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
-                        <span className="truncate">
-                          {property.address || property.location || "Location N/A"}
-                        </span>
-                      </p>
-                    </div>
+
+                    {/* Read-Only Availability Badge */}
+                    {property.availability === "UNAVAILABLE" ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 shrink-0">
+                        🔴 Unavailable
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+                        🟢 Available
+                      </span>
+                    )}
                   </div>
                 </CardHeader>
 

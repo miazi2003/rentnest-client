@@ -1,3 +1,9 @@
+import { PropertyTable } from "./_components/PropertyTable";
+
 export default function AdminPropertiesPage() {
-  return <div>Admin Properties</div>;
+  return (
+    <div>
+      <PropertyTable />
+    </div>
+  );
 }

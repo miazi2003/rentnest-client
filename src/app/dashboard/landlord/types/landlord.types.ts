@@ -72,4 +72,5 @@ export type TCreatePropertyPayload = {
   longitude: number;
   images: string[];
   categoryId: string;
+  availability?: string;
 };
