@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import AuthProvider from "@/providers/AuthProviders";
+import Navbar from "@/components/shared/Navbar";
 
 const montserratHeading = Montserrat({subsets:['latin'],variable:'--font-heading'});
 
@@ -37,8 +38,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
          <Toaster />
          <AuthProvider>
-          {children}
-        </AuthProvider>
+            <Navbar />
+            <main className="flex-1 flex flex-col">{children}</main>
+         </AuthProvider>
         
         </body>
     </html>

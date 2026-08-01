@@ -52,23 +52,46 @@ export async function register(payload: RegisterPayload) {
 }
 
 export async function getCurrentUser() {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/auth/me`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      return {
+        ok: false,
+        status: 401,
+        data: null,
+        message: "No token found",
+      };
     }
-  );
 
-  const data = await response.json();
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/api/auth/me`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
-  return {
-    ok: response.ok,
-    status: response.status,
-    data,
-  };
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message: error instanceof Error ? error.message : "Failed to fetch user",
+    };
+  }
 }
 
 // Tenant Role
@@ -367,3 +390,38 @@ export const getPropertyReviews = async (propertyId: string) => {
     };
   }
 };
+
+
+
+export const getProperty = async() =>{
+try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/api/properties`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+    };
+  } catch (error) {
+    console.error("Failed to fetch property:", error);
+
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+}
