@@ -1,9 +1,7 @@
 import propertyAction from "@/app/(auth)/_action/propertyAction";
 import React from "react";
-import Link from "next/link";
-import { Building2, MapPin, DollarSign, Calendar } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Building2 } from "lucide-react";
+import PropertiesListClient from "./components/PropertiesListClient";
 
 export default async function PropertiesPage() {
   const response = await propertyAction();
@@ -31,48 +29,7 @@ export default async function PropertiesPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property: any) => (
-            <Card key={property.id} className="rounded-3xl overflow-hidden border-border/80 hover:shadow-xl transition-all duration-300">
-              <CardHeader className="p-5 pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center shrink-0">
-                    <Building2 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-base font-bold text-foreground line-clamp-1">
-                      {property.title}
-                    </CardTitle>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
-                      <span className="truncate">{property.address || property.location || "Location N/A"}</span>
-                    </p>
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent className="px-5 py-3 space-y-2 text-xs">
-                <p className="text-muted-foreground line-clamp-2">
-                  {property.description}
-                </p>
-                <div className="flex justify-between items-center pt-2 border-t border-border/60">
-                  <span className="text-muted-foreground">Price per day:</span>
-                  <span className="font-extrabold text-foreground text-sm flex items-center">
-                    ${Number(property.price || 0).toLocaleString()}
-                  </span>
-                </div>
-              </CardContent>
-
-              <CardFooter className="p-5 pt-3 bg-muted/20">
-                <Link href={`/dashboard/tenant`} className="w-full">
-                  <Button className="w-full rounded-2xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white">
-                    Apply for Rent
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <PropertiesListClient properties={properties} />
       )}
     </div>
   );
