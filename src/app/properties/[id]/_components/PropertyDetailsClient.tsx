@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import RentModal from "../../components/RentModal";
+import { useAuth } from "@/app/features/auth/hooks/use-auth";
 
 interface PropertyDetailsClientProps {
   property: {
@@ -35,8 +36,29 @@ interface PropertyDetailsClientProps {
   };
 }
 
+
+
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 export default function PropertyDetailsClient({ property }: PropertyDetailsClientProps) {
+  const router = useRouter();
+  const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(user?.role , "user role")
+
+  const handleApplyClick = () => {
+    if (!user) {
+      toast.error("Please log in to apply for rent");
+      router.push("/login");
+      return;
+    }
+    if (user.role !== "TENANT") {
+      toast.error("Only tenants can apply for property rentals");
+      return;
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
@@ -126,13 +148,29 @@ export default function PropertyDetailsClient({ property }: PropertyDetailsClien
             )}
 
             {/* Apply for Rent CTA Button */}
-            <Button
-              onClick={() => setIsModalOpen(true)}
-              className="w-full rounded-2xl py-3 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 gap-2 cursor-pointer"
-            >
-              <Calendar className="w-4 h-4" />
-              Apply for Rent
-            </Button>
+            {!user || user.role === "TENANT" ? (
+              <Button
+                onClick={handleApplyClick}
+                className="w-full rounded-2xl py-3 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 gap-2 cursor-pointer"
+              >
+                <Calendar className="w-4 h-4" />
+                Apply for Rent
+              </Button>
+            ) : user.role === "LANDLORD" ? (
+              <Button
+                disabled
+                className="w-full rounded-2xl py-3 text-xs font-bold bg-muted text-muted-foreground border border-border cursor-not-allowed opacity-80"
+              >
+                Landlords cannot apply for rentals
+              </Button>
+            ) : (
+              <Button
+                disabled
+                className="w-full rounded-2xl py-3 text-xs font-bold bg-muted text-muted-foreground border border-border cursor-not-allowed opacity-80"
+              >
+                Admin Account
+              </Button>
+            )}
 
             <div className="space-y-2 pt-2 border-t border-border/60 text-xs text-muted-foreground">
               <p className="flex items-center gap-2">
@@ -149,15 +187,17 @@ export default function PropertyDetailsClient({ property }: PropertyDetailsClien
       </div>
 
       {/* Rent Application Modal */}
-      <RentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        property={{
-          id: property.id,
-          title: property.title,
-          price: property.price,
-        }}
-      />
+      {user?.role === "TENANT" && (
+        <RentModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          property={{
+            id: property.id,
+            title: property.title,
+            price: property.price,
+          }}
+        />
+      )}
     </div>
   );
 }
