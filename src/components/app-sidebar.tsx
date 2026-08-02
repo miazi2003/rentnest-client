@@ -17,6 +17,7 @@ import {
   HelpCircle,
   LogOut,
   Sparkles,
+  User2,
 } from "lucide-react";
 
 import {
@@ -75,6 +76,11 @@ const adminNavItems: NavItem[] = [
     title: "Dashboard",
     href: "/dashboard/admin",
     icon: Shield,
+  },
+  {
+    title: "Users",
+    href: "/dashboard/admin/users",
+    icon: User2,
   },
 ];
 

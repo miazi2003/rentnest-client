@@ -1,9 +1,12 @@
+import { getUsersAction } from "@/app/features/admin/actions/userActions";
 import { UserTable } from "./_components/UserTable";
 
-export default function AdminUsersPage() {
+export default async function AdminUsersPage() {
+  const users = await getUsersAction()
+  console.log(users)
   return (
     <div>
-      <UserTable />
+      <UserTable users = {users}/>
     </div>
   );
 }
