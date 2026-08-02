@@ -1,8 +1,21 @@
-"use me";
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Sparkles } from "lucide-react";
+import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  FileText,
+  History,
+  Home,
+  Search,
+  ShieldCheck,
+  Star,
+  XCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   IRentalRequest,
@@ -13,7 +26,6 @@ import {
 } from "../types/tenant.types";
 
 import {
-  TenantStatsCards,
   TenantTabsHeader,
   RentalRequestsTable,
   PaymentHistoryTable,
@@ -23,11 +35,49 @@ import {
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { handleCreateReviewAction } from "@/app/features/review/actions/reviewActions";
+import { StatsCard, type StatsCardProps } from "@/components/StatsCard";
+import { DashboardSection } from "@/components/DashboardSection";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 interface TenantDashboardClientProps {
   initialRequests?: IRentalRequest[];
   initialPayments?: IPaymentItem[];
   defaultTab?: TenantDashboardTab;
+}
+
+type QuickAction = {
+  title: string;
+  description: string;
+  href: string;
+  icon: LucideIcon;
+  iconBg: string;
+  iconColor: string;
+};
+
+const quickActions: QuickAction[] = [
+  { title: "Browse Properties", description: "Find your next rental home", href: "/properties", icon: Search, iconBg: "bg-emerald-50 group-hover:bg-emerald-100 dark:bg-emerald-950/60", iconColor: "text-emerald-600 dark:text-emerald-400" },
+  { title: "Rental Requests", description: "Review your applications", href: "/dashboard/tenant", icon: FileText, iconBg: "bg-amber-50 group-hover:bg-amber-100 dark:bg-amber-950/60", iconColor: "text-amber-600 dark:text-amber-400" },
+  { title: "Payment History", description: "View completed transactions", href: "/dashboard/tenant/payments", icon: CreditCard, iconBg: "bg-blue-50 group-hover:bg-blue-100 dark:bg-blue-950/60", iconColor: "text-blue-600 dark:text-blue-400" },
+  { title: "My Reviews", description: "See your property feedback", href: "/dashboard/tenant/reviews", icon: Star, iconBg: "bg-purple-50 group-hover:bg-purple-100 dark:bg-purple-950/60", iconColor: "text-purple-600 dark:text-purple-400" },
+];
+
+function SummaryRow({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: number; tone: string }) {
+  return (
+    <div className={cn("flex items-center justify-between rounded-lg p-3", tone)}>
+      <div className="flex items-center gap-2.5"><Icon className="size-4" /><span className="text-sm font-medium text-foreground">{label}</span></div>
+      <span className="text-sm font-bold text-foreground">{value}</span>
+    </div>
+  );
 }
 
 // Fallback sample data to demonstrate all status types & actions if live database has few records
@@ -343,33 +393,66 @@ export default function TenantDashboardClient({
     }
   };
 
+  const countStatus = (status: string) =>
+    requestsList.filter(
+      (request) => (request.status || "PENDING").toUpperCase() === status,
+    ).length;
+  const completedRequests = countStatus("COMPLETED");
+  const rejectedRequests = countStatus("REJECTED");
+  const paidPayments = paymentsList.filter(
+    (payment) => (payment.status || "COMPLETED").toUpperCase() !== "FAILED",
+  ).length;
+  const paymentCompletion = paymentsList.length
+    ? Math.round((paidPayments / paymentsList.length) * 100)
+    : 0;
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(amount);
+  const statCards: StatsCardProps[] = [
+    { title: "Total Requests", value: stats.totalRequests.toLocaleString(), subtitle: "Your rental applications", icon: "rentals", iconBgColor: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
+    { title: "Pending Requests", value: stats.pendingRequests.toLocaleString(), subtitle: "Awaiting landlord response", icon: "rentals", iconBgColor: "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
+    { title: "Active Rentals", value: stats.activeRentals.toLocaleString(), subtitle: "Your current homes", icon: "properties", iconBgColor: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
+    { title: "Total Payments", value: formatCurrency(stats.totalPaymentAmount), subtitle: `${stats.totalPaymentsCount} completed transactions`, icon: "payments", iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
+  ];
+
   return (
-    <div className="space-y-8 pb-10">
-      {/* Header section banner */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-r from-emerald-900/90 via-teal-900 to-cyan-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl border border-white/10 relative overflow-hidden">
-        <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="space-y-1.5 z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 text-emerald-200 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
-            Tenant Portal
-          </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Tenant Dashboard
-          </h1>
-          <p className="text-emerald-100/80 text-sm max-w-xl">
-            Track your rental applications, execute instant rent payments, and view past transaction logs seamlessly.
-          </p>
+    <div className="w-full space-y-8 pb-8">
+      <div className="flex flex-col justify-between gap-4 pb-2 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Welcome Back, Tenant</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Track your rental requests, active homes, payments, and reviews.</p>
         </div>
+        <Link href="/properties"><Button size="sm" className="h-9 gap-2 bg-emerald-600 text-xs font-medium hover:bg-emerald-700"><Search className="size-3.5" />Browse Properties</Button></Link>
       </div>
 
-      {/* TOP STATS CARDS COMPONENT */}
-      <TenantStatsCards stats={stats} />
+      <DashboardSection>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {statCards.map((stat) => <StatsCard key={stat.title} {...stat} />)}
+        </div>
+      </DashboardSection>
 
-      {/* SHADCN TABS ROOT */}
+      <DashboardSection>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card className="rounded-xl border-none bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
+            <CardHeader className="pb-4"><div className="flex items-center justify-between"><div className="flex items-center gap-2"><div className="rounded-lg bg-emerald-50 p-2 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"><Home className="size-5" /></div><div><CardTitle className="text-base font-bold">Rental Overview</CardTitle><CardDescription className="text-xs">Your application and rental lifecycle</CardDescription></div></div><Badge variant="outline" className="border-none bg-muted/60 text-xs font-normal">{requestsList.length} Total</Badge></div></CardHeader>
+            <CardContent className="space-y-3"><SummaryRow icon={Clock} label="Pending Requests" value={stats.pendingRequests} tone="bg-amber-50/60 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400" /><SummaryRow icon={CheckCircle2} label="Approved Requests" value={stats.approvedRequests} tone="bg-emerald-50/60 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400" /><SummaryRow icon={ShieldCheck} label="Active Rentals" value={stats.activeRentals} tone="bg-blue-50/60 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400" /><SummaryRow icon={XCircle} label="Rejected Requests" value={rejectedRequests} tone="bg-rose-50/60 text-rose-600 dark:bg-rose-950/20 dark:text-rose-400" /><SummaryRow icon={CheckCircle2} label="Completed Rentals" value={completedRequests} tone="bg-purple-50/60 text-purple-600 dark:bg-purple-950/20 dark:text-purple-400" /></CardContent>
+          </Card>
+
+          <Card className="rounded-xl border-none bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
+            <CardHeader className="pb-4"><div className="flex items-center justify-between"><div className="flex items-center gap-2"><div className="rounded-lg bg-purple-50 p-2 text-purple-600 dark:bg-purple-950 dark:text-purple-400"><CreditCard className="size-5" /></div><div><CardTitle className="text-base font-bold">Payment Summary</CardTitle><CardDescription className="text-xs">Your completed rent transactions</CardDescription></div></div><Badge variant="outline" className="border-none bg-muted/60 text-xs font-normal">{paymentsList.length} Total</Badge></div></CardHeader>
+            <CardContent className="space-y-5"><div className="space-y-3 rounded-xl bg-slate-50/70 p-4 dark:bg-muted/30"><div className="flex items-center justify-between"><span className="text-sm font-semibold">Payment Completion</span><span className="text-sm font-bold">{paymentCompletion}%</span></div><Progress value={paymentCompletion} className="h-2 bg-amber-100 dark:bg-amber-950/50" indicatorClassName="bg-emerald-500" /><div className="grid grid-cols-2 gap-4 pt-1"><div><p className="text-xs text-muted-foreground">Total Paid</p><p className="mt-1 text-lg font-bold text-emerald-600">{formatCurrency(stats.totalPaymentAmount)}</p></div><div><p className="text-xs text-muted-foreground">Transactions</p><p className="mt-1 text-lg font-bold text-foreground">{stats.totalPaymentsCount}</p></div></div></div><div className="flex items-center justify-between rounded-lg bg-blue-50/60 p-3 dark:bg-blue-950/20"><div className="flex items-center gap-2.5"><History className="size-4 text-blue-600" /><span className="text-sm font-medium">Payment records</span></div><Link href="/dashboard/tenant/payments" className="text-xs font-semibold text-blue-600 hover:underline">View history</Link></div></CardContent>
+          </Card>
+        </div>
+      </DashboardSection>
+
+      <DashboardSection title="Rental Activity" subtitle="Search and manage your requests and payment records">
       <Tabs
         value={activeTab}
         onValueChange={(val) => setActiveTab(val as TenantDashboardTab)}
-        className="bg-card text-card-foreground rounded-3xl border border-border shadow-sm overflow-hidden flex flex-col gap-0"
+        className="flex flex-col gap-0 overflow-hidden rounded-xl border-none bg-white text-card-foreground shadow-sm dark:bg-card"
       >
         {/* SHADCN TABS HEADER */}
         <TenantTabsHeader
@@ -397,6 +480,13 @@ export default function TenantDashboardClient({
           <PaymentHistoryTable payments={filteredPayments} />
         </TabsContent>
       </Tabs>
+      </DashboardSection>
+
+      <DashboardSection title="Quick Actions" subtitle="Frequently used tenant shortcuts">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {quickActions.map(({ title, description, href, icon: Icon, iconBg, iconColor }) => <Link key={title} href={href} className="group block"><Card className="h-full rounded-xl border-none bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-card"><CardContent className="flex h-full flex-col justify-between gap-4 p-5"><div className="flex items-center justify-between"><div className={cn("flex size-11 items-center justify-center rounded-xl transition-all duration-200", iconBg, iconColor)}><Icon className="size-5" /></div><div className="flex size-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground"><ArrowUpRight className="size-4" /></div></div><div><h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">{title}</h3><p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{description}</p></div></CardContent></Card></Link>)}
+        </div>
+      </DashboardSection>
 
       {/* SHADCN DIALOG MODALS */}
       <PayNowModal

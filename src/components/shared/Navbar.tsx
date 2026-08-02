@@ -92,6 +92,10 @@ export default function Navbar() {
     { label: "Dashboard", href: dashboardHref, icon: LayoutDashboard },
   ];
 
+  if (pathname.startsWith("/dashboard")) {
+    return null;
+  }
+
   const getRoleBadgeStyle = (role?: string) => {
     switch (role) {
       case "ADMIN":
@@ -238,7 +242,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                      href={dashboardHref}
+                      href="/dashboard/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-foreground hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
                     >
