@@ -2,7 +2,13 @@ import React from "react";
 import { Clock, CheckCircle2, XCircle, Check } from "lucide-react";
 
 interface RentalStatusBadgeProps {
-  status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED" | string;
+  status:
+    | "PENDING"
+    | "APPROVED"
+    | "ACTIVE"
+    | "REJECTED"
+    | "COMPLETED"
+    | string;
 }
 
 export function RentalStatusBadge({ status }: RentalStatusBadgeProps) {
@@ -30,6 +36,13 @@ export function RentalStatusBadge({ status }: RentalStatusBadgeProps) {
           COMPLETED
         </span>
       );
+      case "ACTIVE":
+  return (
+    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800">
+      <CheckCircle2 className="w-3 h-3 text-blue-600" />
+      ACTIVE
+    </span>
+  );
     case "PENDING":
     default:
       return (

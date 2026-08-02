@@ -140,6 +140,7 @@ export function RentalTable({ rentals }: RentalTableProps) {
     return [];
   }, [rentals]);
 
+  console.log(rentals.data?.data , "test error in another")
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [sortField, setSortField] = useState<SortField>("createdAt");
@@ -175,6 +176,9 @@ export function RentalTable({ rentals }: RentalTableProps) {
       return matchesSearch && matchesStatus;
     });
   }, [rentalList, searchTerm, statusFilter]);
+
+
+  console.log(rentalList , "test rental new")
 
   // Sorting Logic
   const sortedRentals = useMemo(() => {

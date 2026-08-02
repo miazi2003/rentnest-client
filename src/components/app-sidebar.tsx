@@ -20,6 +20,7 @@ import {
   User2,
   Text,
   Receipt,
+  ListSortDescending,
 } from "lucide-react";
 
 import {
@@ -97,7 +98,7 @@ const adminNavItems: NavItem[] = [
   {
     title: "categories",
     href: "/dashboard/admin/categories",
-    icon: Receipt,
+    icon: ListSortDescending,
   },
 ];
 
