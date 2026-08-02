@@ -1,9 +1,11 @@
+import rentalActions from "@/app/features/admin/actions/rentalActions";
 import { RentalTable } from "./_components/RentalTable";
 
-export default function AdminRentalsPage() {
+export default async function AdminRentalsPage() {
+  const rentals = await rentalActions()
   return (
     <div>
-      <RentalTable />
+      <RentalTable rentals = {rentals}/>
     </div>
   );
 }

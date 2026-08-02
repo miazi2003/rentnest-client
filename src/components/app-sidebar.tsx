@@ -18,6 +18,8 @@ import {
   LogOut,
   Sparkles,
   User2,
+  Text,
+  Receipt,
 } from "lucide-react";
 
 import {
@@ -81,6 +83,21 @@ const adminNavItems: NavItem[] = [
     title: "Users",
     href: "/dashboard/admin/users",
     icon: User2,
+  },
+  {
+    title: "Properties",
+    href: "/dashboard/admin/properties",
+    icon: Building2,
+  },
+  {
+    title: "Rentals",
+    href: "/dashboard/admin/rentals",
+    icon: Receipt,
+  },
+  {
+    title: "categories",
+    href: "/dashboard/admin/categories",
+    icon: Receipt,
   },
 ];
 
