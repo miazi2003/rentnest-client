@@ -4,17 +4,23 @@ A modern rental property marketplace built with the Next.js App Router. RentNest
 
 ## Live Links
 
-- Live Frontend: `<ADD_LIVE_FRONTEND_URL>`
-- Frontend Repository: `<ADD_GITHUB_REPOSITORY_URL>`
-- Backend API: `<ADD_BACKEND_API_URL>`
-- Demo Video: `<ADD_DEMO_VIDEO_URL>`
+- Live Frontend: https://rentnest-client-so3z.vercel.app/
+- Backend API: https://l2-a4-rentnest.vercel.app/
 
 ## Admin Credentials
 
-- Email: `<ADD_ADMIN_EMAIL>`
-- Password: `<ADD_ADMIN_PASSWORD>`
+- Email: `admin@rentnest.com`
+- Password: `Admin@RentNest2027`
 
-No tenant or landlord demo credentials are stored in the frontend repository. Add them here if required for evaluation.
+## Tenant Credentials
+
+- Email: `tenant@rentnest.com`
+- Password: `Tenant@RentNest2026`
+
+## Landlord Credentials
+
+- Email: `landlord@rentnest.com`
+- Password: `Landlord@RentNest2028`
 
 ## Project Overview
 
