@@ -9,6 +9,7 @@ import {
 import { registerState } from "../types";
 import { toast } from "sonner";
 import { registerAction } from "@/app/features/auth/actions/registerAction";
+import Link from "next/link";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -58,7 +59,7 @@ const RegisterForm = () => {
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
             />
           </div>
 
@@ -77,7 +78,7 @@ const RegisterForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
             />
           </div>
 
@@ -98,7 +99,7 @@ const RegisterForm = () => {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="012........"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
             />
           </div>
 
@@ -115,6 +116,7 @@ const RegisterForm = () => {
                   value="LANDLORD"
                   checked={role === "LANDLORD"}
                   onChange={(e) => setRole(e.target.value)}
+                  className="accent-emerald-600"
                 />
                 <span>Landlord</span>
               </label>
@@ -126,6 +128,7 @@ const RegisterForm = () => {
                   value="TENANT"
                   checked={role === "TENANT"}
                   onChange={(e) => setRole(e.target.value)}
+                  className="accent-emerald-600"
                 />
                 <span>Tenant</span>
               </label>
@@ -149,17 +152,21 @@ const RegisterForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all duration-200 bg-gray-50/50 text-gray-900 text-sm placeholder:text-gray-400"
             />
           </div>
 
           <button
             type="submit"
             disabled={pending}
-            className="w-full py-3.5 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.99] text-sm mt-2"
+            className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold rounded-xl shadow-md shadow-emerald-700/15 hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.99] text-sm mt-2"
           >
             {pending ? "Registering..." : "Register"}
           </button>
+          <p className="pt-1 text-center text-xs text-gray-500">
+            Already have an account?{" "}
+            <Link href="/login" className="font-bold text-emerald-700 hover:text-emerald-600">Log in</Link>
+          </p>
         </form>
       </CardContent>
     </Card>

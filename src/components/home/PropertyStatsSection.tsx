@@ -15,7 +15,7 @@ export function PropertyStatsSection({ totalProperties }: PropertyStatsSectionPr
   const propertyLabel = totalProperties === 1 ? "Listed property" : "Listed properties";
 
   return (
-    <section className="bg-[#f1f0e8] pb-16 sm:pb-20 lg:p-28">
+    <section className="bg-backgorund pb-16 sm:pb-20 lg:p-28">
       <div className="mx-auto grid w-full max-w-[1600px] gap-4 px-5 sm:px-8 lg:grid-cols-2 lg:px-12">
         <div className="relative flex min-h-[540px] flex-col overflow-hidden rounded-[2rem] bg-[#f2f1ed] p-7 text-center text-slate-950 sm:rounded-[2.5rem] sm:p-12 lg:min-h-[620px] shadow-xl">
           <div className="pointer-events-none absolute -left-20 top-4 size-80 rounded-full border-[45px] border-white/45" />

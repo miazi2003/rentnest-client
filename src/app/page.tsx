@@ -14,8 +14,8 @@ export default async function HomePage() {
       <HomeHero />
       <HomeAwaySection />
       <PropertyCarouselSection properties={properties} />
-      <PropertyStatsSection totalProperties={properties.length} />
       <ReviewsSection />
+      <PropertyStatsSection totalProperties={properties.length} />
     </>
   );
 }
