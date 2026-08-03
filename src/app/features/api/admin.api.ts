@@ -14,10 +14,8 @@ export async function getUsersList() {
       };
     }
 
-    const baseUrl =
-      process.env.BACKEND_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
 
     const response = await fetch(`${baseUrl}/api/admin/users`, {
       method: "GET",
@@ -68,10 +66,8 @@ export async function getAllProperty() {
       };
     }
 
-    const baseUrl =
-      process.env.BACKEND_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
 
     const response = await fetch(`${baseUrl}/api/admin/properties`, {
       method: "GET",
@@ -121,10 +117,8 @@ export const getAllRentalRequest = async() =>{
       };
     }
 
-    const baseUrl =
-      process.env.BACKEND_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
 
     const response = await fetch(`${baseUrl}/api/admin/rentals`, {
       method: "GET",
@@ -157,4 +151,3 @@ export const getAllRentalRequest = async() =>{
     };
   }
 }
-

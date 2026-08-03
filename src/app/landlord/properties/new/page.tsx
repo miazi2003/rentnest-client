@@ -1,6 +1,8 @@
 import { PropertyCreateForm } from "@/app/dashboard/landlord/_components/PropertyCreateForm";
 import { getCategoriesAction } from "@/app/features/landlord/actions/getCategoriesAction";
 
+export const dynamic = "force-dynamic";
+
 export default async function LandlordNewPropertyPage() {
   const categories = await getCategoriesAction();
 

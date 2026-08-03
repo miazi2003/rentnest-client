@@ -26,7 +26,7 @@ export const createReview = async (payload: {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -55,11 +55,11 @@ export const getPropertyReviews = async (propertyId: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,

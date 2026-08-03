@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getCurrentUser } from "../features/api/auth.api";
 
+export const dynamic = "force-dynamic";
+
 export default async function PropertiesPage() {
   const response = await propertyAction();
   const properties = Array.isArray(response?.data) ? response.data : [];

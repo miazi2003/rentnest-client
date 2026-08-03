@@ -1,9 +1,6 @@
 import { cookies } from "next/headers";
 
-const getBaseUrl = () =>
-  process.env.BACKEND_URL ||
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+const getBaseUrl = () => process.env.BACKEND_URL;
 
 const getAuthToken = async () => {
   const cookieStore = await cookies();
@@ -17,6 +14,7 @@ const getAuthToken = async () => {
 export async function getCategoriesApi() {
   try {
     const baseUrl = getBaseUrl();
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
     let response = await fetch(`${baseUrl}/api/categories`, {
       method: "GET",
       headers: {
@@ -61,7 +59,9 @@ export async function createCategoryApi(payload: {
 }) {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`${getBaseUrl()}/api/admin/categories`, {
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
+    const response = await fetch(`${baseUrl}/api/admin/categories`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -95,6 +95,7 @@ export async function updateCategoryApi(
   try {
     const token = await getAuthToken();
     const baseUrl = getBaseUrl();
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
 
     let response = await fetch(`${baseUrl}/api/admin/categories/${id}`, {
       method: "PUT",
@@ -138,7 +139,9 @@ export async function updateCategoryApi(
 export async function deleteCategoryApi(id: string) {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`${getBaseUrl()}/api/admin/categories/${id}`, {
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
+    const response = await fetch(`${baseUrl}/api/admin/categories/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

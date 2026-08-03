@@ -24,7 +24,7 @@ export const getMyProperties = async () => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -69,7 +69,7 @@ export const getRentalRequestForLandlord = async () => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -114,7 +114,7 @@ try {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -145,7 +145,8 @@ export const createProperty = async(payload : TCreatePropertyPayload) =>{
       throw new Error("User not logged in");
     }
 
-    const baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
     const response = await fetch(
       `${baseUrl}/api/landlord/properties`,
       {
@@ -159,7 +160,7 @@ export const createProperty = async(payload : TCreatePropertyPayload) =>{
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -190,7 +191,8 @@ export const deleteProperty = async(propertyId : string) =>{
       throw new Error("User not logged in");
     }
 
-    const baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
     const response = await fetch(
       `${baseUrl}/api/landlord/properties/${propertyId}`,
       {
@@ -236,10 +238,8 @@ export const updateProperty = async (
       throw new Error("User not logged in");
     }
 
-    const baseUrl =
-      process.env.BACKEND_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
 
     let response = await fetch(
       `${baseUrl}/api/landlord/properties/${propertyId}`,

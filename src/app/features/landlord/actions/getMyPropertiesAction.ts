@@ -3,8 +3,10 @@
 import { getMyProperties } from "../../api/landlord.api";
 
 export async function getMyPropertiesAction() {
-const result =  await getMyProperties()
-const myProperties = result.data?.data
-console.log(myProperties , "my property test")
-return myProperties
+  const result = await getMyProperties();
+  const data = result?.data;
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data?.properties)) return data.properties;
+  return [];
 }

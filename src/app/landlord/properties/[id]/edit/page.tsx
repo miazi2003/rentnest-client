@@ -2,6 +2,8 @@ import { PropertyEditForm } from "@/app/dashboard/landlord/_components/PropertyE
 import { getCategoriesAction } from "@/app/features/landlord/actions/getCategoriesAction";
 import { getPropertyByIdAction } from "@/app/features/property/actions/getPropertyByIdAction";
 
+export const dynamic = "force-dynamic";
+
 export default async function LandlordEditPropertyPage({
   params,
 }: {

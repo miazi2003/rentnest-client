@@ -7,11 +7,11 @@ export const getProperty = async () => {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -40,11 +40,11 @@ export const getPropertyById = async (id: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        next: { revalidate: 60 },
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -66,16 +66,17 @@ export const getPropertyById = async (id: string) => {
 
 export const getCategories = async () => {
   try {
-    const baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
     const response = await fetch(`${baseUrl}/api/categories`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store",
+      next: { revalidate: 300 },
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,

@@ -21,7 +21,7 @@ export const getRentalRequest = async () => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -62,7 +62,7 @@ export const getRentalRequestById = async (id: string) => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -113,7 +113,7 @@ export const createRentalRequest = async (payload: {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,

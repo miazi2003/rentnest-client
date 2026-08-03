@@ -69,7 +69,8 @@ export function PropertyCreateForm({
         // Fallback to client-side fetch if server action returns empty
         if (!data || data.length === 0) {
           try {
-            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+            if (!backendUrl) throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured");
             const res = await fetch(`${backendUrl}/api/categories`);
             if (res.ok) {
               const json = await res.json();

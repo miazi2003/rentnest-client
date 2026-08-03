@@ -21,7 +21,7 @@ export const getPaymentHistory = async () => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -63,7 +63,7 @@ export const createCheckoutSession = async (rentalRequestId: string) => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
@@ -104,7 +104,7 @@ export const verifyPaymentSession = async (sessionId: string) => {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,

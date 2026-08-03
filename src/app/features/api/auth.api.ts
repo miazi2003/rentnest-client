@@ -7,45 +7,41 @@ export type LoginPayload = {
 };
 
 export async function login(payload: LoginPayload) {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/auth/login`,
-    {
+  try {
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
+    const response = await fetch(`${baseUrl}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-    }
-  );
+    });
+    const data = await response.json().catch(() => null);
 
-  const data = await response.json();
-
-  return {
-    ok: response.ok,
-    status: response.status,
-    data,
-  };
+    return { ok: response.ok, status: response.status, data };
+  } catch (error) {
+    return { ok: false, status: 500, data: null, message: error instanceof Error ? error.message : "Login failed" };
+  }
 }
 
 export async function register(payload: RegisterPayload) {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/auth/register`,
-    {
+  try {
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
+    const response = await fetch(`${baseUrl}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-    }
-  );
+    });
+    const data = await response.json().catch(() => null);
 
-  const data = await response.json();
-
-  return {
-    ok: response.ok,
-    status: response.status,
-    data,
-  };
+    return { ok: response.ok, status: response.status, data };
+  } catch (error) {
+    return { ok: false, status: 500, data: null, message: error instanceof Error ? error.message : "Registration failed" };
+  }
 }
 
 export async function getCurrentUser() {
@@ -62,8 +58,10 @@ export async function getCurrentUser() {
       };
     }
 
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/auth/me`,
+      `${baseUrl}/api/auth/me`,
       {
         method: "GET",
         headers: {
@@ -74,7 +72,7 @@ export async function getCurrentUser() {
       }
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
 
     return {
       ok: response.ok,
