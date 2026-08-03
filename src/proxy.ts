@@ -4,7 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const publicRoutes = ["/", "/login", "/register"];
+  const publicRoutes = ["/", "/about", "/login", "/register"];
 
   const isPublic =
     publicRoutes.includes(pathname) ||
