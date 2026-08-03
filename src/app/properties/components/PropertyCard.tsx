@@ -52,7 +52,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </p>
         )}
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+        <div className="mt-auto flex flex-col items-stretch gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             {property.price !== undefined && property.price !== null && (
               <p className="text-lg font-black tracking-[-0.035em] text-slate-950 dark:text-white">
@@ -62,7 +62,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             )}
           </div>
 
-          <Link href={`/properties/${property.id}`} className="flex h-12 shrink-0 items-center gap-3 rounded-full bg-slate-950 py-1.5 pl-5 pr-1.5 text-xs font-bold text-white transition-transform hover:scale-[1.025] dark:bg-white dark:text-slate-950">
+          <Link href={`/properties/${property.id}`} className="flex h-12 shrink-0 items-center justify-between gap-3 rounded-full bg-slate-950 py-1.5 pl-5 pr-1.5 text-xs font-bold text-white transition-transform hover:scale-[1.025] sm:justify-start dark:bg-white dark:text-slate-950">
             View home
             <span className="flex size-9 items-center justify-center rounded-full bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
               <ArrowUpRight className="size-5" />

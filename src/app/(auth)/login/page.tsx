@@ -8,9 +8,9 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans">
-      <div className="w-full max-w-[1220px] bg-white rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-3 sm:p-4 flex flex-col lg:flex-row min-h-[640px]">
+      <div className="w-full max-w-[1220px] bg-white rounded-[22px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-2.5 sm:p-4 flex flex-col lg:flex-row lg:min-h-[640px]">
         {/* LEFT COLUMN - HERO SECTION (48%) */}
-        <div className="relative w-full lg:w-[48%] min-h-[420px] sm:min-h-[500px] lg:min-h-[640px] rounded-[24px] overflow-hidden flex flex-col justify-between p-8 sm:p-10 lg:p-12">
+        <div className="relative w-full lg:w-[48%] min-h-[280px] sm:min-h-[420px] lg:min-h-[640px] rounded-[18px] sm:rounded-[24px] overflow-hidden flex flex-col justify-between p-6 sm:p-10 lg:p-12">
           <Image
             src={heroImageSvg}
             alt="Luxury modern house on open hand"
@@ -34,7 +34,7 @@ export default function LoginPage() {
         </div>
 
         {/* RIGHT COLUMN - CONTENT & SLOT (52%) */}
-        <div className="w-full lg:w-[52%] flex flex-col justify-center px-6 py-10 sm:px-12 sm:py-14 lg:px-16 lg:py-16">
+        <div className="w-full lg:w-[52%] flex flex-col justify-center px-4 py-8 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
           {/* Logo Placeholder (48x48) */}
           <div className="w-[48px] h-[48px] relative mb-10">
             <Image
@@ -48,7 +48,7 @@ export default function LoginPage() {
           </div>
 
           {/* Heading */}
-          <h2 className="text-[42px] font-bold text-gray-900 leading-tight mb-4">
+          <h2 className="text-3xl sm:text-[42px] font-bold text-gray-900 leading-tight mb-4">
             Login to your account
           </h2>
 

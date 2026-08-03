@@ -103,7 +103,7 @@ export function RecentUsersTable({
   return (
     <Card className="rounded-xl border-none bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
               <Users className="h-5 w-5" />
@@ -121,7 +121,7 @@ export function RecentUsersTable({
         </div>
       </CardHeader>
 
-      <CardContent className="p-0">
+      <CardContent className="min-w-0 p-0">
         <Table>
           <TableHeader>
             <TableRow className="border-none bg-slate-50/50 dark:bg-muted/30">

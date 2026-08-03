@@ -21,7 +21,7 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
 }) => {
   if (payments.length === 0) {
     return (
-      <div className="p-12 text-center space-y-3">
+      <div className="space-y-3 p-7 text-center sm:p-12">
         <div className="w-14 h-14 bg-muted text-muted-foreground rounded-2xl flex items-center justify-center mx-auto">
           <CreditCard className="w-7 h-7" />
         </div>
@@ -36,6 +36,8 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
   }
 
   return (
+    <>
+    <div className="hidden md:block">
     <Table>
       <TableHeader>
         <TableRow className="bg-muted/50">
@@ -128,5 +130,28 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
         })}
       </TableBody>
     </Table>
+    </div>
+
+    <div className="space-y-3 p-3 md:hidden">
+      {payments.map((pay) => {
+        const transaction = pay.transactionId || pay.id;
+        const title = pay.propertyTitle || pay.property?.title || "Rent Payment";
+        const date = pay.createdAt ? new Date(pay.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Recent";
+        return (
+          <article key={pay.id} className="rounded-2xl bg-muted/35 p-4 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0"><h3 className="truncate text-sm font-extrabold">{title}</h3><p className="mt-1 text-[11px] text-muted-foreground">{date}</p></div>
+              <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">{pay.status || "COMPLETED"}</span>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+              <div><p className="text-[10px] text-muted-foreground">Amount paid</p><p className="mt-1 text-base font-black text-emerald-600">${Number(pay.amount).toLocaleString()}</p></div>
+              <div><p className="text-[10px] text-muted-foreground">Method</p><p className="mt-1 truncate font-semibold">{pay.paymentMethod || "Online Transfer"}</p></div>
+            </div>
+            <p className="mt-4 truncate rounded-xl bg-background/70 px-3 py-2 font-mono text-[10px] text-muted-foreground">Ref: {transaction}</p>
+          </article>
+        );
+      })}
+    </div>
+    </>
   );
 };

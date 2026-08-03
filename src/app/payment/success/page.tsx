@@ -5,7 +5,7 @@ export default function RootPaymentSuccessPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-12 text-center text-sm font-semibold text-muted-foreground">
+        <div className="p-6 text-center text-sm font-semibold text-muted-foreground sm:p-12">
           Loading Payment Verification...
         </div>
       }

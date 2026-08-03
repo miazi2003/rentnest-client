@@ -14,7 +14,7 @@ export default async function PropertiesPage() {
   const user = currentUserRes?.data?.data || currentUserRes?.data;
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1 text-center sm:text-left">
           <h1 className="text-3xl font-black tracking-tight text-foreground">
@@ -35,7 +35,7 @@ export default async function PropertiesPage() {
       </div>
 
       {properties.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-muted/30 border border-border space-y-3">
+        <div className="p-7 sm:p-12 text-center rounded-3xl bg-muted/30 border border-border space-y-3">
           <div className="w-14 h-14 bg-muted text-muted-foreground rounded-2xl flex items-center justify-center mx-auto">
             <Building2 className="w-7 h-7" />
           </div>

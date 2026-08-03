@@ -104,7 +104,7 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
             Select Payment Gateway
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-3">
             <button
               type="button"
               onClick={() => setPayMethod("card")}
@@ -166,7 +166,7 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
         </div>
 
         {/* Dialog Footer Actions */}
-        <DialogFooter className="flex-row items-center gap-3 pt-2">
+        <DialogFooter className="flex-col-reverse items-stretch gap-3 pt-2 sm:flex-row sm:items-center">
           <Button
             type="button"
             variant="outline"

@@ -32,7 +32,6 @@ interface RentalRequestsTableProps {
 
 export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
   requests,
-  onOpenPayModal,
   onOpenReviewModal,
 }) => {
   const getPropertyTitle = (req: IRentalRequest) =>
@@ -57,7 +56,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
 
   if (requests.length === 0) {
     return (
-      <div className="p-12 text-center space-y-3">
+      <div className="space-y-3 p-7 text-center sm:p-12">
         <div className="w-14 h-14 bg-muted text-muted-foreground rounded-2xl flex items-center justify-center mx-auto">
           <GitPullRequest className="w-7 h-7" />
         </div>
@@ -72,6 +71,8 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
   }
 
   return (
+    <>
+    <div className="hidden md:block">
     <Table>
       <TableHeader>
         <TableRow className="bg-muted/50">
@@ -211,5 +212,36 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
         })}
       </TableBody>
     </Table>
+    </div>
+
+    <div className="space-y-3 p-3 md:hidden">
+      {requests.map((req) => {
+        const status = (req.status || "PENDING").toUpperCase();
+        return (
+          <article key={req.id} className="rounded-2xl bg-muted/35 p-4 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="truncate text-sm font-extrabold">{getPropertyTitle(req)}</h3>
+                <p className="mt-1 truncate text-[11px] text-muted-foreground">{getPropertyLocation(req)}</p>
+              </div>
+              <RentalStatusBadge status={status} />
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+              <div><p className="text-[10px] text-muted-foreground">Landlord</p><p className="mt-1 truncate font-semibold">{getLandlordName(req)}</p></div>
+              <div><p className="text-[10px] text-muted-foreground">Rent</p><p className="mt-1 font-extrabold">${getRentAmount(req).toLocaleString()}</p></div>
+              <div className="col-span-2"><p className="text-[10px] text-muted-foreground">Rental period</p><p className="mt-1 font-semibold">{req.startDate || "Flexible"} {req.endDate ? `→ ${req.endDate}` : ""}</p></div>
+            </div>
+            <div className="mt-4 flex justify-end border-t border-border/60 pt-3">
+              {status === "APPROVED" && <Link className="w-full" href={`/dashboard/tenant/requests/${req.id}/pay`}><Button size="sm" className="w-full rounded-xl bg-blue-600 text-xs font-bold text-white"><CreditCard className="size-3.5" /> Pay Now</Button></Link>}
+              {status === "COMPLETED" && <Button size="sm" onClick={() => onOpenReviewModal(req)} className="w-full rounded-xl bg-emerald-600 text-xs font-bold text-white"><Star className="size-3.5" /> Leave Review</Button>}
+              {status === "ACTIVE" && <span className="text-xs font-semibold text-emerald-600">Active rental</span>}
+              {status === "PENDING" && <span className="text-xs font-semibold text-amber-600">Under review</span>}
+              {status === "REJECTED" && <span className="text-xs text-muted-foreground">No actions available</span>}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+    </>
   );
 };

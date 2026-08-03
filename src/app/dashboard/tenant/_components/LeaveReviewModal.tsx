@@ -155,7 +155,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
         </div>
 
         {/* Dialog Footer Actions */}
-        <DialogFooter className="flex-row items-center gap-3 pt-2">
+        <DialogFooter className="flex-col-reverse items-stretch gap-3 pt-2 sm:flex-row sm:items-center">
           <Button
             type="button"
             variant="outline"
