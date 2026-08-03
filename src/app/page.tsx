@@ -2,6 +2,7 @@ import { HomeHero } from "@/components/home/HomeHero";
 import { HomeAwaySection } from "@/components/home/HomeAwaySection";
 import { PropertyCarouselSection } from "@/components/home/PropertyCarouselSection";
 import { PropertyStatsSection } from "@/components/home/PropertyStatsSection";
+import { ReviewsSection } from "@/components/home/ReviewsSection";
 import propertyAction from "@/app/features/property/actions/propertyAction";
 
 export default async function HomePage() {
@@ -14,6 +15,7 @@ export default async function HomePage() {
       <HomeAwaySection />
       <PropertyCarouselSection properties={properties} />
       <PropertyStatsSection totalProperties={properties.length} />
+      <ReviewsSection />
     </>
   );
 }

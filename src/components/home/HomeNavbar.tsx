@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { homeNavigation } from "./home-content";
+import { PublicUserMenu } from "./PublicUserMenu";
 
 export function HomeNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +17,9 @@ export function HomeNavbar() {
     <header className={`${isHome ? "absolute bg-transparent text-white" : "sticky bg-background/90 text-foreground shadow-sm backdrop-blur-xl"} inset-x-0 top-0 z-50 transition-colors`}>
       <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-5 sm:px-8 lg:h-24 lg:px-12">
         <div className="flex items-center gap-8 lg:gap-12">
-          <Link href="/" className="font-heading text-xl font-black tracking-[-0.05em]" aria-label="RentNest home">
-            Rent<span className="text-emerald-300">Nest</span>
+          <Link href="/" className="flex items-center gap-2.5 font-heading text-xl font-black tracking-[-0.05em]" aria-label="RentNest home">
+            <Image src="/favicon.ico" alt="RentNest logo" width={40} height={40} priority className="size-10 rounded-xl object-contain" />
+            <span>Rent<span className={isHome ? "text-emerald-300" : "text-emerald-600 dark:text-emerald-400"}>Nest</span></span>
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Home navigation">
@@ -39,13 +42,15 @@ export function HomeNavbar() {
           </nav>
         </div>
 
-        <Link href="/properties" className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[11px] font-bold backdrop-blur-md transition-colors md:flex ${isHome ? "border border-white/45 bg-white/10 hover:bg-white hover:text-slate-950" : "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"}`}>
-          Explore homes <ArrowUpRight className="size-3.5" />
-        </Link>
-
-        <button type="button" onClick={() => setIsOpen((value) => !value)} className={`flex size-10 items-center justify-center rounded-full border backdrop-blur-md md:hidden ${isHome ? "border-white/35 bg-black/10" : "border-border bg-muted"}`} aria-label="Toggle navigation" aria-expanded={isOpen}>
-          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link href="/properties" className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[11px] font-bold backdrop-blur-md transition-colors md:flex ${isHome ? "border border-white/45 bg-white/10 hover:bg-white hover:text-slate-950" : "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"}`}>
+            Explore homes <ArrowUpRight className="size-3.5" />
+          </Link>
+          <PublicUserMenu overlay={isHome} />
+          <button type="button" onClick={() => setIsOpen((value) => !value)} className={`flex size-10 items-center justify-center rounded-full border backdrop-blur-md md:hidden ${isHome ? "border-white/35 bg-black/10" : "border-border bg-muted"}`} aria-label="Toggle navigation" aria-expanded={isOpen}>
+            {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
 
       {isOpen && (
