@@ -150,20 +150,20 @@ export function AppSidebar() {
       case "LANDLORD":
         return {
           title: "Landlord Portal",
-          href: "/dashboard/landlord",
+          href: "/",
           badgeColor: "text-purple-500 fill-purple-500",
         };
       case "ADMIN":
         return {
           title: "Admin Portal",
-          href: "/dashboard/admin",
+          href: "/",
           badgeColor: "text-amber-500 fill-amber-500",
         };
       case "TENANT":
       default:
         return {
           title: "Tenant Portal",
-          href: "/dashboard/tenant",
+          href: "/",
           badgeColor: "text-emerald-500 fill-emerald-500",
         };
     }
