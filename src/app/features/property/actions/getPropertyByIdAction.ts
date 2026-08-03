@@ -1,10 +1,15 @@
 "use server";
 
 import { getPropertyById } from "@/app/features/api/property.api";
+import { entityIdSchema, validationMessage } from "../../shared-validations";
 
 export async function getPropertyByIdAction(id: string) {
   try {
-    const result = await getPropertyById(id);
+    const validated = entityIdSchema.safeParse(id);
+    if (!validated.success) {
+      return { ok: false, status: 400, data: null, message: validationMessage(validated.error) };
+    }
+    const result = await getPropertyById(validated.data);
 
     if (!result || !result.ok) {
       return {

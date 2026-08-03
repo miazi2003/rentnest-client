@@ -2,11 +2,18 @@
 
 import { TCreatePropertyPayload } from "@/app/dashboard/landlord/types/landlord.types";
 import { createProperty } from "../../api/landlord.api";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { propertyPayloadSchema } from "../validations";
+import { validationMessage } from "../../shared-validations";
 
 export async function createPropertyAction(payload: TCreatePropertyPayload) {
   try {
-    const res = await createProperty(payload);
+    const validated = propertyPayloadSchema.safeParse(payload);
+    if (!validated.success) {
+      return { ok: false, status: 400, data: null, message: validationMessage(validated.error) };
+    }
+
+    const res = await createProperty(validated.data);
     if (res.ok) {
       revalidatePath("/dashboard/landlord/properties");
     }

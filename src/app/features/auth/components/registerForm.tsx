@@ -54,7 +54,7 @@ const RegisterForm = () => {
             <input
               id="name"
               type="text"
-              name="userName"
+              name="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"

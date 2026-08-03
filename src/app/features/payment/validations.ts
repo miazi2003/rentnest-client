@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { entityIdSchema } from "../shared-validations";
 
 export const createCheckoutSessionValidation = z.object({
-  rentalRequestId: z.string().min(1, "Rental request ID is required"),
+  rentalRequestId: entityIdSchema,
 });
 
 export const verifyPaymentSessionValidation = z.object({
-  sessionId: z.string().min(1, "Stripe session ID is required"),
+  sessionId: z.string().trim().min(1, "Stripe session ID is required").max(255, "Stripe session ID is too long").regex(/^cs_[A-Za-z0-9_]+$/, "Invalid Stripe session ID"),
 });
 
 export type CreateCheckoutSessionInput = z.infer<

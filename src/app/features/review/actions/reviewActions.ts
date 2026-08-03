@@ -2,6 +2,7 @@
 
 import { createReview, getPropertyReviews } from "@/app/features/api/review.api";
 import { createReviewValidation } from "@/app/features/review/validations";
+import { entityIdSchema, validationMessage } from "../../shared-validations";
 
 export async function handleCreateReviewAction(payload: {
   propertyId: string;
@@ -34,16 +35,17 @@ export async function handleCreateReviewAction(payload: {
 
 export async function handleGetPropertyReviewsAction(propertyId: string) {
   try {
-    if (!propertyId) {
+    const validated = entityIdSchema.safeParse(propertyId);
+    if (!validated.success) {
       return {
         ok: false,
         status: 400,
-        message: "Property ID is required",
+        message: validationMessage(validated.error),
         data: null,
       };
     }
 
-    const result = await getPropertyReviews(propertyId);
+    const result = await getPropertyReviews(validated.data);
     return result;
   } catch (error) {
     console.error("Action error getPropertyReviews:", error);

@@ -7,6 +7,8 @@ import {
   updateCategoryApi,
   deleteCategoryApi,
 } from "../../api/category.api";
+import { categoryIdSchema, categorySchema } from "../validations";
+import { validationMessage } from "../../shared-validations";
 
 export async function getCategoriesAction() {
   try {
@@ -27,7 +29,11 @@ export async function createCategoryAction(payload: {
   description: string;
 }) {
   try {
-    const res = await createCategoryApi(payload);
+    const validated = categorySchema.safeParse(payload);
+    if (!validated.success) {
+      return { ok: false, status: 400, data: null, message: validationMessage(validated.error) };
+    }
+    const res = await createCategoryApi(validated.data);
     if (res.ok) {
       revalidatePath("/dashboard/admin/categories");
       revalidatePath("/properties");
@@ -49,7 +55,15 @@ export async function updateCategoryAction(
   payload: { name: string; description: string }
 ) {
   try {
-    const res = await updateCategoryApi(id, payload);
+    const validatedId = categoryIdSchema.safeParse(id);
+    const validatedPayload = categorySchema.safeParse(payload);
+    if (!validatedId.success) {
+      return { ok: false, status: 400, data: null, message: validationMessage(validatedId.error) };
+    }
+    if (!validatedPayload.success) {
+      return { ok: false, status: 400, data: null, message: validationMessage(validatedPayload.error) };
+    }
+    const res = await updateCategoryApi(validatedId.data, validatedPayload.data);
     if (res.ok) {
       revalidatePath("/dashboard/admin/categories");
       revalidatePath("/properties");
@@ -68,7 +82,11 @@ export async function updateCategoryAction(
 
 export async function deleteCategoryAction(id: string) {
   try {
-    const res = await deleteCategoryApi(id);
+    const validated = categoryIdSchema.safeParse(id);
+    if (!validated.success) {
+      return { ok: false, status: 400, data: null, message: validationMessage(validated.error) };
+    }
+    const res = await deleteCategoryApi(validated.data);
     if (res.ok) {
       revalidatePath("/dashboard/admin/categories");
       revalidatePath("/properties");
