@@ -3,13 +3,14 @@ import { getPaymentHistory } from "@/app/features/api/payment.api";
 import TenantDashboardClient from "./_components/TenantDashboardClient";
 
 const TenantDashboardPage = async () => {
-  // rental request
-  const result = await getRentalRequest();
+  const [result, payment] = await Promise.all([
+    getRentalRequest(),
+    getPaymentHistory(),
+  ]);
+
   const rawRequests = result?.data?.data ?? result?.data;
   const rentalRequests = Array.isArray(rawRequests) ? rawRequests : [];
 
-  // payment history
-  const payment = await getPaymentHistory();
   const rawPayments = payment?.data?.data ?? payment?.data;
   const paymentHistory = Array.isArray(rawPayments) ? rawPayments : [];
 
@@ -22,5 +23,4 @@ const TenantDashboardPage = async () => {
 };
 
 export default TenantDashboardPage;
-
 

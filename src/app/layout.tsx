@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import AuthProvider from "@/providers/AuthProviders";
 import Navbar from "@/components/shared/Navbar";
+import { GlobalNavigationLoader } from "@/components/GlobalNavigationLoader";
+import Footer from "@/components/shared/Footer";
 
 const montserratHeading = Montserrat({subsets:['latin'],variable:'--font-heading'});
 
@@ -37,10 +39,12 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", raleway.variable, montserratHeading.variable)}
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+         <GlobalNavigationLoader />
          <Toaster />
          <AuthProvider>
             <Navbar />
             <main className="flex-1 flex flex-col">{children}</main>
+            <Footer />
          </AuthProvider>
         
         </body>

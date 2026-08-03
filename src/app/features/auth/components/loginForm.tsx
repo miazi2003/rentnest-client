@@ -8,8 +8,13 @@ import {
 import { loginAction } from "@/app/features/auth/actions/loginActions";
 import { LoginState } from "../types";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/features/auth/hooks/use-auth";
+import type { IUser } from "../types";
 
 const LoginForm = () => {
+  const router = useRouter();
+  const { setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,10 +35,21 @@ const LoginForm = () => {
 
     if (state.success) {
       toast.success(state.message);
+      const authenticatedUser = state.data as IUser;
+      setUser(authenticatedUser);
+
+      const dashboardByRole: Record<IUser["role"], string> = {
+        ADMIN: "/dashboard/admin",
+        LANDLORD: "/dashboard/landlord",
+        TENANT: "/dashboard/tenant",
+      };
+
+      window.dispatchEvent(new Event("rentnest:navigation-start"));
+      router.replace(dashboardByRole[authenticatedUser.role] || "/dashboard");
     } else {
       toast.error(state.message);
     }
-  }, [state]);
+  }, [router, setUser, state]);
 
   return (
     <Card className="w-full shadow-none border-none bg-transparent">
