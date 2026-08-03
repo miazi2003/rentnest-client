@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
 import { logoutAction } from "@/app/features/auth/actions/logoutAction";
@@ -22,6 +23,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HomeNavbar } from "@/components/home/HomeNavbar";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -62,12 +64,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-    setDropdownOpen(false);
-  }, [pathname]);
-
   const handleLogout = async () => {
     setDropdownOpen(false);
     try {
@@ -91,6 +87,10 @@ export default function Navbar() {
     { label: "About Us", href: "/about", icon: Info },
     { label: "Dashboard", href: dashboardHref, icon: LayoutDashboard },
   ];
+
+  if (pathname === "/") {
+    return <HomeNavbar />;
+  }
 
   if (pathname.startsWith("/dashboard")) {
     return null;
@@ -128,9 +128,11 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2.5 group cursor-pointer select-none"
         >
-          <img
+          <Image
             src="/favicon.ico"
             alt="RentNest Logo"
+            width={40}
+            height={40}
             className="w-10 h-10 shrink-0 rounded-2xl object-contain shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-all duration-300"
           />
           <span className="font-heading tracking-tight text-xl font-black bg-gradient-to-r from-foreground via-foreground/90 to-emerald-600 bg-clip-text text-transparent">
@@ -318,6 +320,7 @@ export default function Navbar() {
                 <Link
                   key={item.label}
                   href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 ${
                     isActive
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-extrabold shadow-xs"
