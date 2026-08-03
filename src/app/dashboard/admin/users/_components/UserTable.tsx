@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { updateUserStatusAction } from "@/app/features/admin/actions/userActions";
 import {
   Table,
   TableHeader,
@@ -138,6 +141,7 @@ type SortField = "name" | "email" | "role" | "status" | "createdAt";
 type SortOrder = "asc" | "desc";
 
 export function UserTable({ users }: UserTableProps) {
+  const router = useRouter();
   // Extract initial user list from props or fallback to sample users if prop is omitted
   const rawUsersList = useMemo(() => {
     if (users === undefined) return DEFAULT_SAMPLE_USERS;
@@ -171,11 +175,51 @@ export function UserTable({ users }: UserTableProps) {
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusOverrides, setStatusOverrides] = useState<Record<string, IUser["status"]>>({});
+  const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   const pageSize = 5;
+
+  const usersList = useMemo(
+    () => rawUsersList.map((user: IUser) => {
+      const userId = user.id || user._id;
+      return userId && statusOverrides[userId]
+        ? { ...user, status: statusOverrides[userId] }
+        : user;
+    }),
+    [rawUsersList, statusOverrides]
+  );
+
+  const handleStatusChange = (user: IUser) => {
+    const userId = user.id || user._id;
+    if (!userId || isPending) {
+      if (!userId) toast.error("User ID is missing.");
+      return;
+    }
+
+    const nextStatus = user.status === "ACTIVE" ? "BLOCKED" : "ACTIVE";
+    setUpdatingUserId(userId);
+
+    startTransition(async () => {
+      const result = await updateUserStatusAction(userId, nextStatus);
+
+      if (result.ok) {
+        setStatusOverrides((current) => ({ ...current, [userId]: nextStatus }));
+        toast.success(
+          result.message || (nextStatus === "BLOCKED" ? "User banned successfully." : "User unbanned successfully.")
+        );
+        router.refresh();
+      } else {
+        toast.error(result.message || "Failed to update user status.");
+      }
+
+      setUpdatingUserId(null);
+    });
+  };
 
   // Filter & Search Logic
   const filteredUsers = useMemo(() => {
-    return rawUsersList.filter((u: IUser) => {
+    return usersList.filter((u: IUser) => {
       const matchesSearch =
         u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         u.email?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -185,7 +229,7 @@ export function UserTable({ users }: UserTableProps) {
 
       return matchesSearch && matchesRole && matchesStatus;
     });
-  }, [rawUsersList, searchTerm, roleFilter, statusFilter]);
+  }, [usersList, searchTerm, roleFilter, statusFilter]);
 
   // Sorting Logic
   const sortedUsers = useMemo(() => {
@@ -271,7 +315,7 @@ export function UserTable({ users }: UserTableProps) {
         <div className="flex items-center gap-2 self-start sm:self-auto bg-slate-100 dark:bg-slate-800 px-3.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
           <Users className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-            Total Users: {rawUsersList.length}
+            Total Users: {usersList.length}
           </span>
         </div>
       </div>
@@ -412,7 +456,12 @@ export function UserTable({ users }: UserTableProps) {
             <TableBody>
               {paginatedUsers.length > 0 ? (
                 paginatedUsers.map((user) => (
-                  <UserRow key={user.id || user.email} user={user} />
+                  <UserRow
+                    key={user.id || user._id || user.email}
+                    user={user}
+                    isUpdating={updatingUserId === (user.id || user._id)}
+                    onStatusChange={handleStatusChange}
+                  />
                 ))
               ) : (
                 <TableRow>
@@ -436,7 +485,7 @@ export function UserTable({ users }: UserTableProps) {
               const avatarBg = getUserAvatarColor(user.name || "");
               return (
                 <div
-                  key={user.id || user.email}
+                  key={user.id || user._id || user.email}
                   className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs space-y-3"
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -460,16 +509,20 @@ export function UserTable({ users }: UserTableProps) {
                       {user.status === "ACTIVE" ? (
                         <button
                           type="button"
+                          onClick={() => handleStatusChange(user)}
+                          disabled={updatingUserId === (user.id || user._id)}
                           className="px-3 py-1 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-md transition-colors shadow-2xs"
                         >
-                          Ban
+                          {updatingUserId === (user.id || user._id) ? "Updating..." : "Ban"}
                         </button>
                       ) : (
                         <button
                           type="button"
+                          onClick={() => handleStatusChange(user)}
+                          disabled={updatingUserId === (user.id || user._id)}
                           className="px-3 py-1 text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 border border-green-200/80 rounded-md transition-colors shadow-2xs"
                         >
-                          Unban
+                          {updatingUserId === (user.id || user._id) ? "Updating..." : "Unban"}
                         </button>
                       )}
                     </div>

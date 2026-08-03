@@ -4,7 +4,8 @@ import { UserStatusBadge } from "./UserStatusBadge";
 import { UserRoleBadge } from "./UserRoleBadge";
 
 export interface IUser {
-  id: string;
+  id?: string;
+  _id?: string;
   name: string;
   email: string;
   phone: string;
@@ -16,6 +17,8 @@ export interface IUser {
 
 interface UserRowProps {
   user: IUser;
+  isUpdating?: boolean;
+  onStatusChange: (user: IUser) => void;
 }
 
 export function formatDate(dateStr: string) {
@@ -51,7 +54,7 @@ export function getUserAvatarColor(name: string) {
   return colors[Math.abs(hash) % colors.length];
 }
 
-export function UserRow({ user }: UserRowProps) {
+export function UserRow({ user, isUpdating = false, onStatusChange }: UserRowProps) {
   const initial = user.name ? user.name.charAt(0).toUpperCase() : "U";
   const avatarBg = getUserAvatarColor(user.name || "");
 
@@ -101,16 +104,20 @@ export function UserRow({ user }: UserRowProps) {
         {user.status === "ACTIVE" ? (
           <button
             type="button"
+            onClick={() => onStatusChange(user)}
+            disabled={isUpdating}
             className="inline-flex items-center justify-center px-3 py-1 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-md transition-all shadow-xs active:scale-95 cursor-pointer dark:bg-red-950/40 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/50"
           >
-            Ban
+            {isUpdating ? "Updating..." : "Ban"}
           </button>
         ) : (
           <button
             type="button"
+            onClick={() => onStatusChange(user)}
+            disabled={isUpdating}
             className="inline-flex items-center justify-center px-3 py-1 text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 border border-green-200/80 rounded-md transition-all shadow-xs active:scale-95 cursor-pointer dark:bg-green-950/40 dark:text-green-400 dark:border-green-800 dark:hover:bg-green-900/50"
           >
-            Unban
+            {isUpdating ? "Updating..." : "Unban"}
           </button>
         )}
       </TableCell>

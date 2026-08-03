@@ -72,12 +72,13 @@ Landlord list actions return empty arrays when the API fails or returns an unexp
 | Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
 |---|---|---|---|---|---|---|---|
 | User directory | `/dashboard/admin`, `/dashboard/admin/users` | `getUsersAction` → `getUsersList` | GET | `/api/admin/users` | Bearer token; admin route protection | `cache: "no-store"` | Load users for dashboard statistics and the searchable, sortable user table. |
+| User status management | `/dashboard/admin/users` | `UserTable`/`UserRow` → `updateUserStatusAction` → `updateUserStatus` | PATCH | `/api/admin/users/:id` | Bearer token; admin route protection | `cache: "no-store"`; revalidates `/dashboard/admin` and `/dashboard/admin/users` | Ban or unban a validated user by changing status to `BLOCKED` or `ACTIVE`. |
 | Property monitoring | `/dashboard/admin`, `/dashboard/admin/properties` | `PropertyAction` → `getAllProperty` | GET | `/api/admin/properties` | Bearer token; admin route protection | `cache: "no-store"` | Load all properties for admin summaries and inspection. |
 | Rental monitoring | `/dashboard/admin`, `/dashboard/admin/rentals` | `rentalActions` → `getAllRentalRequest` | GET | `/api/admin/rentals` | Bearer token; admin route protection | `cache: "no-store"` | Load all rental requests for platform monitoring. |
 
 Admin API helpers handle missing tokens, fetch failures, non-JSON responses, and backend status/message values. Admin pages and tables normalize supported response shapes and render empty states.
 
-No admin user/property/rental mutation endpoint is consumed by the current frontend; those modules provide monitoring and table interactions only.
+No admin property or rental mutation endpoint is consumed by the current frontend; those modules provide monitoring and table interactions only.
 
 ## Category APIs
 

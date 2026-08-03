@@ -49,6 +49,58 @@ export async function getUsersList() {
   }
 }
 
+export async function updateUserStatus(
+  userId: string,
+  status: "ACTIVE" | "BLOCKED"
+) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      return {
+        ok: false,
+        status: 401,
+        data: null,
+        message: "User not logged in",
+      };
+    }
+
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
+
+    const response = await fetch(`${baseUrl}/api/admin/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+      cache: "no-store",
+    });
+
+    const data = await response.json().catch(() => null);
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+      message:
+        data?.message ??
+        (response.ok ? "User status updated successfully" : "Failed to update user status"),
+    };
+  } catch (error) {
+    console.error("Failed to update user status:", error);
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message:
+        error instanceof Error ? error.message : "Failed to update user status",
+    };
+  }
+}
+
 
 
 //get All property
