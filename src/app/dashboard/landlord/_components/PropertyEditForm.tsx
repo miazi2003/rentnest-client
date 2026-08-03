@@ -15,7 +15,6 @@ import {
   Loader2,
   ArrowLeft,
   CheckCircle2,
-  Sparkles,
   Edit3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -213,7 +212,7 @@ export function PropertyEditForm({
 
   if (fetchingProperty) {
     return (
-      <Card className="max-w-4xl mx-auto rounded-3xl border border-border shadow-xl p-12 text-center space-y-4">
+      <Card className="mx-auto max-w-4xl space-y-4 rounded-[2rem] border-0 bg-card p-12 text-center shadow-sm shadow-slate-900/5 ring-0 dark:shadow-black/10">
         <Loader2 className="w-10 h-10 animate-spin text-emerald-600 mx-auto" />
         <p className="text-sm font-bold text-foreground">Loading property details...</p>
       </Card>
@@ -221,15 +220,13 @@ export function PropertyEditForm({
   }
 
   return (
-    <Card className="max-w-4xl mx-auto rounded-3xl border border-border shadow-xl overflow-hidden bg-card">
+    <Card className="mx-auto max-w-4xl gap-0 overflow-hidden rounded-[2rem] border-0 bg-card py-0 shadow-sm shadow-slate-900/5 ring-0 dark:shadow-black/10">
 
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-6 sm:p-8 text-white relative">
-        <div className="flex items-center justify-between gap-4">
+      <div className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 p-6 text-white sm:p-9">
+        <div className="pointer-events-none absolute -right-16 -top-20 size-56 rounded-full bg-white/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/3 size-48 rounded-full bg-teal-300/20 blur-3xl" />
+        <div className="relative flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              Edit Property Listing
-            </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
               Update Property
             </h2>
@@ -249,12 +246,12 @@ export function PropertyEditForm({
         </div>
       </div>
 
-      <CardContent className="p-6 sm:p-8">
+      <CardContent className="bg-muted/20 p-4 sm:p-7 lg:p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-border pb-2">
-              <Building2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <div className="space-y-5 rounded-3xl bg-card p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <Building2 className="size-9 shrink-0 rounded-xl bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400" />
               <h3 className="text-base font-extrabold text-foreground">
                 Basic Information
               </h3>
@@ -273,7 +270,7 @@ export function PropertyEditForm({
                   onChange={handleChange}
                   placeholder="e.g. Modern 3-Bedroom Apartment in Gulshan"
                   required
-                  className="rounded-2xl text-xs h-11 border-border focus:ring-2 focus:ring-emerald-500"
+                  className="h-12 rounded-2xl border-0 bg-background px-4 text-sm shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] transition-all focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                 />
               </div>
 
@@ -292,7 +289,7 @@ export function PropertyEditForm({
                     placeholder="2500"
                     min="1"
                     required
-                    className="rounded-2xl text-xs h-11 pl-9 border-border focus:ring-2 focus:ring-emerald-500"
+                    className="h-12 rounded-2xl border-0 bg-background pl-10 text-sm shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] transition-all focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                   />
                 </div>
               </div>
@@ -309,7 +306,7 @@ export function PropertyEditForm({
                     value={formData.categoryId}
                     onChange={handleChange}
                     disabled={fetchingCategories}
-                    className="w-full h-11 rounded-2xl border border-border bg-background pl-9 pr-4 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer"
+                    className="h-12 w-full cursor-pointer rounded-2xl border-0 bg-background pl-10 pr-4 text-sm font-medium text-foreground shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] outline-none transition-all focus:ring-2 focus:ring-emerald-500/50"
                   >
                     {categoryList.length === 0 ? (
                       <option value="">
@@ -328,15 +325,15 @@ export function PropertyEditForm({
 
 
               <div className="sm:col-span-2 space-y-2 pt-2">
-                <div className="flex items-center justify-between p-4 rounded-2xl border border-border bg-muted/20">
+                <div className="flex items-center justify-between rounded-2xl bg-muted/40 p-4">
                   <div className="space-y-0.5">
                     <label className="text-xs font-bold text-foreground block flex items-center gap-2">
                       <span>Listing Availability</span>
                       <span
                         className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider ${
                           formData.availability === "AVAILABLE"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         {formData.availability === "AVAILABLE" ? "AVAILABLE" : "UNAVAILABLE"}
@@ -367,7 +364,7 @@ export function PropertyEditForm({
                     }`}
                   >
                     <span
-                      className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
                         formData.availability === "AVAILABLE" ? "translate-x-5" : "translate-x-0"
                       }`}
                     />
@@ -378,9 +375,9 @@ export function PropertyEditForm({
           </div>
 
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-border pb-2">
-              <MapPin className="w-5 h-5 text-emerald-600 shrink-0" />
+          <div className="space-y-5 rounded-3xl bg-card p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <MapPin className="size-9 shrink-0 rounded-xl bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400" />
               <h3 className="text-base font-extrabold text-foreground">
                 Location Details
               </h3>
@@ -399,7 +396,7 @@ export function PropertyEditForm({
                   onChange={handleChange}
                   placeholder="e.g. House 42, Road 11, Banani, Dhaka"
                   required
-                  className="rounded-2xl text-xs h-11 border-border focus:ring-2 focus:ring-emerald-500"
+                  className="h-12 rounded-2xl border-0 bg-background px-4 text-sm shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] transition-all focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                 />
               </div>
 
@@ -415,7 +412,7 @@ export function PropertyEditForm({
                   value={formData.latitude}
                   onChange={handleChange}
                   placeholder="23.8103"
-                  className="rounded-2xl text-xs h-11 border-border"
+                  className="h-12 rounded-2xl border-0 bg-background px-4 text-sm shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                 />
               </div>
 
@@ -431,17 +428,17 @@ export function PropertyEditForm({
                   value={formData.longitude}
                   onChange={handleChange}
                   placeholder="90.4125"
-                  className="rounded-2xl text-xs h-11 border-border"
+                  className="h-12 rounded-2xl border-0 bg-background px-4 text-sm shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                 />
               </div>
             </div>
           </div>
 
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-border pb-2">
+          <div className="space-y-5 rounded-3xl bg-card p-5 sm:p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-emerald-600 shrink-0" />
+                <ImageIcon className="size-9 shrink-0 rounded-xl bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400" />
                 <h3 className="text-base font-extrabold text-foreground">
                   Property Images
                 </h3>
@@ -458,12 +455,12 @@ export function PropertyEditForm({
                   value={imageUrlInput}
                   onChange={(e) => setImageUrlInput(e.target.value)}
                   placeholder="Paste image URL (e.g. https://images.unsplash.com/...)"
-                  className="rounded-2xl text-xs h-11 flex-1 border-border"
+                  className="h-12 flex-1 rounded-2xl border-0 bg-background px-4 text-sm shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] focus-visible:ring-2 focus-visible:ring-emerald-500/50"
                 />
                 <Button
                   type="button"
                   onClick={handleAddImage}
-                  className="rounded-2xl h-11 px-5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 cursor-pointer shrink-0"
+                  className="h-12 shrink-0 cursor-pointer gap-1.5 rounded-2xl bg-emerald-600 px-5 text-xs font-bold text-white transition-colors hover:bg-emerald-700"
                 >
                   <Plus className="w-4 h-4" />
                   Add URL
@@ -476,7 +473,7 @@ export function PropertyEditForm({
                   {formData.images.map((img, idx) => (
                     <div
                       key={idx}
-                      className="relative group rounded-2xl overflow-hidden border border-border h-24 bg-muted"
+                      className="group relative h-24 overflow-hidden rounded-2xl bg-muted"
                     >
                       <img
                         src={img}
@@ -503,9 +500,9 @@ export function PropertyEditForm({
           </div>
 
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-border pb-2">
-              <FileText className="w-5 h-5 text-emerald-600 shrink-0" />
+          <div className="space-y-5 rounded-3xl bg-card p-5 sm:p-6">
+            <div className="flex items-center gap-3">
+              <FileText className="size-9 shrink-0 rounded-xl bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400" />
               <h3 className="text-base font-extrabold text-foreground">
                 Property Description
               </h3>
@@ -521,18 +518,18 @@ export function PropertyEditForm({
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Describe key features, rooms, amenities, neighborhood highlights..."
-                className="w-full rounded-2xl border border-border bg-background p-4 text-xs font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                className="w-full resize-none rounded-2xl border-0 bg-background p-4 text-sm font-medium text-foreground shadow-[inset_0_0_0_1px_rgba(148,163,184,0.12)] outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/50"
               />
             </div>
           </div>
 
 
-          <div className="pt-4 border-t border-border flex flex-col-reverse sm:flex-row justify-end gap-3">
+          <div className="flex flex-col-reverse justify-end gap-3 rounded-3xl bg-card p-4 sm:flex-row">
             <Button
               type="button"
               variant="outline"
               onClick={() => router.back()}
-              className="rounded-2xl py-3 text-xs font-bold border-border"
+              className="rounded-2xl border-0 bg-muted px-6 py-3 text-xs font-bold transition-colors hover:bg-muted/80"
             >
               Cancel
             </Button>
@@ -540,7 +537,7 @@ export function PropertyEditForm({
             <Button
               type="submit"
               disabled={loading}
-              className="rounded-2xl py-3 px-8 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 gap-2 cursor-pointer transition-all active:scale-95"
+              className="cursor-pointer gap-2 rounded-2xl bg-emerald-600 px-8 py-3 text-xs font-bold text-white transition-colors hover:bg-emerald-700 active:scale-95"
             >
               {loading ? (
                 <>
