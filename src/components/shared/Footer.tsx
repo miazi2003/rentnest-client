@@ -3,11 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Building2, Home, LogIn, UserPlus } from "lucide-react";
+import { Building2, Home, Info, LogIn, UserPlus } from "lucide-react";
 
 const footerLinks = [
   { label: "Home", href: "/", icon: Home },
   { label: "Properties", href: "/properties", icon: Building2 },
+  { label: "About us", href: "/about", icon: Info },
   { label: "Log in", href: "/login", icon: LogIn },
   { label: "Create account", href: "/register", icon: UserPlus },
 ];
