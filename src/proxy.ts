@@ -44,7 +44,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Role based protection
   if (
     pathname.startsWith("/dashboard/admin") &&
     role &&

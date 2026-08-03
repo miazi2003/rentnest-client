@@ -142,16 +142,13 @@ type SortOrder = "asc" | "desc";
 
 export function UserTable({ users }: UserTableProps) {
   const router = useRouter();
-  // Extract initial user list from props or fallback to sample users if prop is omitted
   const rawUsersList = useMemo(() => {
     if (users === undefined) return DEFAULT_SAMPLE_USERS;
     if (Array.isArray(users)) return users;
 
     if (users && typeof users === "object") {
-      // 1. Direct array in data: users.data = [...]
       if (Array.isArray(users.data)) return users.data;
 
-      // 2. Nested array in data: users.data.data or users.data.users or users.data.result
       const d = users.data;
       if (d && typeof d === "object") {
         if (Array.isArray(d.data)) return d.data;
@@ -160,7 +157,6 @@ export function UserTable({ users }: UserTableProps) {
         if (Array.isArray(d.payload)) return d.payload;
       }
 
-      // 3. Directly in users object: users.users = [...] or users.result = [...]
       if ("users" in users && Array.isArray((users as any).users)) return (users as any).users;
       if ("result" in users && Array.isArray((users as any).result)) return (users as any).result;
     }
@@ -168,7 +164,6 @@ export function UserTable({ users }: UserTableProps) {
     return [];
   }, [users]);
 
-  // Filters & State
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
@@ -217,7 +212,6 @@ export function UserTable({ users }: UserTableProps) {
     });
   };
 
-  // Filter & Search Logic
   const filteredUsers = useMemo(() => {
     return usersList.filter((u: IUser) => {
       const matchesSearch =
@@ -231,7 +225,6 @@ export function UserTable({ users }: UserTableProps) {
     });
   }, [usersList, searchTerm, roleFilter, statusFilter]);
 
-  // Sorting Logic
   const sortedUsers = useMemo(() => {
     return [...filteredUsers].sort((a, b) => {
       let aValue = a[sortField] || "";
@@ -251,7 +244,6 @@ export function UserTable({ users }: UserTableProps) {
     });
   }, [filteredUsers, sortField, sortOrder]);
 
-  // Pagination Calculations
   const totalPages = Math.max(1, Math.ceil(sortedUsers.length / pageSize));
   const validCurrentPage = Math.min(currentPage, totalPages);
 
@@ -280,7 +272,6 @@ export function UserTable({ users }: UserTableProps) {
     );
   };
 
-  // Generate pagination items matching reference: Previous | 1 | 2 | 3 | ... | Next
   const paginationRange = useMemo(() => {
     const pages: (number | string)[] = [];
     if (totalPages <= 5) {
@@ -302,7 +293,7 @@ export function UserTable({ users }: UserTableProps) {
 
   return (
     <div className="w-full space-y-6">
-      {/* Page Title & Header Summary */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
@@ -320,11 +311,11 @@ export function UserTable({ users }: UserTableProps) {
         </div>
       </div>
 
-      {/* Main Card Container */}
+
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 sm:p-6 space-y-5">
-        {/* Controls Toolbar (Search & Filters) */}
+
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-1">
-          {/* Global Search Input */}
+
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
@@ -339,14 +330,14 @@ export function UserTable({ users }: UserTableProps) {
             />
           </div>
 
-          {/* Filters Group */}
+
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium mr-1 hidden sm:flex">
               <Filter className="w-3.5 h-3.5" />
               <span>Filters:</span>
             </div>
 
-            {/* Role Filter */}
+
             <select
               value={roleFilter}
               onChange={(e) => {
@@ -361,7 +352,7 @@ export function UserTable({ users }: UserTableProps) {
               <option value="ADMIN">ADMIN</option>
             </select>
 
-            {/* Status Filter */}
+
             <select
               value={statusFilter}
               onChange={(e) => {
@@ -377,12 +368,12 @@ export function UserTable({ users }: UserTableProps) {
           </div>
         </div>
 
-        {/* Desktop & Tablet Data Table */}
+
         <div className="hidden md:block rounded-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-2xs">
           <Table>
             <TableHeader className="bg-slate-50/70 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800">
               <TableRow className="hover:bg-transparent border-slate-200/80 dark:border-slate-800">
-                {/* 1. User Header */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -394,7 +385,7 @@ export function UserTable({ users }: UserTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 2. Email Header */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -406,12 +397,12 @@ export function UserTable({ users }: UserTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 3. Phone Header (Hide on Tablet) */}
+
                 <TableHead className="hidden lg:table-cell py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   Phone
                 </TableHead>
 
-                {/* 4. Role Header */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -423,7 +414,7 @@ export function UserTable({ users }: UserTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 5. Status Header */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -435,7 +426,7 @@ export function UserTable({ users }: UserTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 6. Joined Header */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -447,7 +438,7 @@ export function UserTable({ users }: UserTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 7. Action Header (Not sortable) */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200 text-right">
                   Action
                 </TableHead>
@@ -477,7 +468,7 @@ export function UserTable({ users }: UserTableProps) {
           </Table>
         </div>
 
-        {/* Mobile View: Stacked Responsive Cards */}
+
         <div className="block md:hidden space-y-3">
           {paginatedUsers.length > 0 ? (
             paginatedUsers.map((user) => {
@@ -567,19 +558,19 @@ export function UserTable({ users }: UserTableProps) {
           )}
         </div>
 
-        {/* Footer & Client-Side Pagination matching reference */}
+
         {sortedUsers.length > 0 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800/80">
-            {/* Record Summary */}
+
             <div className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center sm:text-left">
               Showing <span className="font-semibold text-slate-700 dark:text-slate-200">{startItemIndex}</span> to{" "}
               <span className="font-semibold text-slate-700 dark:text-slate-200">{endItemIndex}</span> of{" "}
               <span className="font-semibold text-slate-700 dark:text-slate-200">{sortedUsers.length}</span> users
             </div>
 
-            {/* Pagination Controls: Previous | 1 | 2 | 3 | ... | Next */}
+
             <div className="flex items-center gap-1.5">
-              {/* Previous Button */}
+
               <button
                 type="button"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -590,7 +581,7 @@ export function UserTable({ users }: UserTableProps) {
                 <span>Previous</span>
               </button>
 
-              {/* Page Number Buttons */}
+
               <div className="flex items-center gap-1">
                 {paginationRange.map((page, idx) => {
                   if (typeof page === "string") {
@@ -622,7 +613,7 @@ export function UserTable({ users }: UserTableProps) {
                 })}
               </div>
 
-              {/* Next Button */}
+
               <button
                 type="button"
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}

@@ -44,7 +44,6 @@ export const getMyProperties = async () => {
   }
 };
 
-//get rentel request for landlord
 
 export const getRentalRequestForLandlord = async () => {
   try {
@@ -90,7 +89,6 @@ export const getRentalRequestForLandlord = async () => {
 };
 
 
-// handle approve or reject request
 
 export const handleAcceptOrRejectRequest = async (requestId: string, status: string) => {
 try {
@@ -134,7 +132,6 @@ try {
   }
 }
 
-// property creat api
 
 export const createProperty = async(payload : TCreatePropertyPayload) =>{
     try {
@@ -181,7 +178,6 @@ export const createProperty = async(payload : TCreatePropertyPayload) =>{
 }
 
 
-// delete proeprty
 export const deleteProperty = async(propertyId : string) =>{
   try {
     const cookieStore = await cookies();
@@ -225,7 +221,6 @@ export const deleteProperty = async(propertyId : string) =>{
   }
 };
 
-// update property
 export const updateProperty = async (
   propertyId: string,
   payload: TCreatePropertyPayload

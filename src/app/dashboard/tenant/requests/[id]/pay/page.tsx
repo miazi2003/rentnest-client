@@ -11,11 +11,9 @@ interface PageProps {
 export default async function RequestPayPage({ params }: PageProps) {
   const { id } = await params;
 
-  // 1. Try fetching request directly by ID from API
   const result = await getRentalRequestById(id);
   let rentalRequest = result?.data?.data ?? result?.data;
 
-  // 2. If single item API returns array or null, search in main rental list
   if (!rentalRequest || (typeof rentalRequest === "object" && !rentalRequest.id && !rentalRequest._id)) {
     const listRes = await getRentalRequest();
     const rawList = listRes?.data?.data ?? listRes?.data;
@@ -26,7 +24,6 @@ export default async function RequestPayPage({ params }: PageProps) {
     }
   }
 
-  // Check if rental request is already paid/active/completed. If so, block access & redirect away immediately.
   if (rentalRequest) {
     const statusUpper = (rentalRequest.status || "").toUpperCase();
     if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
@@ -34,7 +31,6 @@ export default async function RequestPayPage({ params }: PageProps) {
     }
   }
 
-  // 3. Fallback request object if testing offline or ID not in DB
   const requestData = rentalRequest || {
     id: id || "req-101",
     status: "APPROVED",

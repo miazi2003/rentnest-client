@@ -15,7 +15,6 @@ import { DashboardSection } from "@/components/DashboardSection";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 
-// Robust array extractor to handle all possible API payload shapes
 function extractArray(response: any, keys: string[] = []): any[] {
   if (!response) return [];
   if (Array.isArray(response)) return response;
@@ -58,7 +57,6 @@ function formatDate(dateStr?: string): string {
 }
 
 export default async function AdminDashboardPage() {
-  // Fetch data directly using server actions
   const [usersRes, propertiesRes, adminRentalsRes, userRentalsRes, categoriesRes] = await Promise.all([
     getUsersAction().catch(() => null),
     PropertyAction().catch(() => null),
@@ -67,15 +65,12 @@ export default async function AdminDashboardPage() {
     getCategoriesAction().catch(() => null),
   ]);
 
-  // Extract data arrays
   const rawUsers = extractArray(usersRes, ["users"]);
   const rawProperties = extractArray(propertiesRes, ["properties"]);
-  
-  // Extract rentals from rentalActions() and getRentalRequest()
+
   const adminRentals = extractArray(adminRentalsRes, ["rentals", "requests"]);
   const userRentals = extractArray(userRentalsRes, ["rentals", "requests"]);
 
-  // Merge and deduplicate rentals
   const mergedRentals = [...adminRentals, ...userRentals];
   const rentalMap = new Map<string, any>();
   mergedRentals.forEach((r, idx) => {
@@ -87,7 +82,6 @@ export default async function AdminDashboardPage() {
   const rawRentals = Array.from(rentalMap.values());
   const rawCategories = extractArray(categoriesRes, ["categories"]);
 
-  // Calculate User Stats
   const hasUsersData = rawUsers.length > 0;
   const totalUsersCount = hasUsersData ? rawUsers.length : 1248;
   const activeUsersCount = hasUsersData
@@ -97,7 +91,6 @@ export default async function AdminDashboardPage() {
     ? rawUsers.filter((u: any) => (u.status || "").toUpperCase() === "BLOCKED").length
     : 68;
 
-  // Calculate Property Stats
   const hasPropertiesData = rawProperties.length > 0;
   const totalPropertiesCount = hasPropertiesData ? rawProperties.length : 450;
   const availablePropertiesCount = hasPropertiesData
@@ -107,7 +100,6 @@ export default async function AdminDashboardPage() {
     ? rawProperties.filter((p: any) => (p.status || "").toUpperCase() !== "AVAILABLE").length
     : 88;
 
-  // Calculate Rental Stats
   const hasRentalsData = rawRentals.length > 0;
   const totalRentalsCount = hasRentalsData ? rawRentals.length : 89;
   const pendingRentalsCount = hasRentalsData
@@ -126,17 +118,14 @@ export default async function AdminDashboardPage() {
     ? rawRentals.filter((r: any) => (r.status || "").toUpperCase() === "COMPLETED").length
     : 210;
 
-  // Calculate Payments sum from completed/paid rentals if available
   const totalPaymentsAmount = hasRentalsData
     ? rawRentals
         .filter((r: any) => r.paymentStatus === "PAID" || r.status === "COMPLETED" || r.status === "APPROVED")
         .reduce((sum: number, r: any) => sum + Number(r.totalPrice || r.price || 0), 0)
     : 42850;
 
-  // Calculate Categories count
   const totalCategoriesCount = rawCategories.length > 0 ? rawCategories.length : 14;
 
-  // Construct Stats Cards Array
   const statsData: StatsCardProps[] = [
     {
       title: "Total Users",
@@ -188,7 +177,6 @@ export default async function AdminDashboardPage() {
     },
   ];
 
-  // Construct Platform Summary Data
   const platformSummaryData: PlatformSummaryData = {
     users: {
       total: totalUsersCount,
@@ -210,7 +198,6 @@ export default async function AdminDashboardPage() {
     completed: completedRentalsCount,
   };
 
-  // Filter and map actual pending rental requests from API
   const pendingRequestsList: PendingRequestItem[] = rawRentals
     .filter((r: any) => {
       const status = String(r.status || "PENDING").toUpperCase();
@@ -235,7 +222,6 @@ export default async function AdminDashboardPage() {
       status: "Pending",
     }));
 
-  // Filter and map actual registered users from API
   const recentUsersList: UserItem[] = rawUsers.slice(0, 5).map((u: any, idx: number) => {
     const rawRole = (u.role || "TENANT").toUpperCase();
     const role = rawRole === "ADMIN" ? "Admin" : rawRole === "LANDLORD" ? "Landlord" : "Tenant";
@@ -254,7 +240,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8 pb-8">
-      {/* SECTION 1 — Dashboard Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
@@ -277,7 +263,7 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* SECTION 2 — Statistics Cards */}
+
       <DashboardSection>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
           {statsData.map((stat) => (
@@ -286,7 +272,7 @@ export default async function AdminDashboardPage() {
         </div>
       </DashboardSection>
 
-      {/* SECTION 3 — Platform Overview */}
+
       <DashboardSection>
         <PlatformSummary
           platformData={platformSummaryData}
@@ -294,12 +280,12 @@ export default async function AdminDashboardPage() {
         />
       </DashboardSection>
 
-      {/* SECTION 4 — Recent Activities */}
+
       <DashboardSection>
         <ActivityList />
       </DashboardSection>
 
-      {/* SECTION 5 & 6 — Tables Grid (Pending Rental Requests & Recently Registered Users) */}
+
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <PendingRequestsTable
           rentals={adminRentalsRes}
@@ -309,7 +295,7 @@ export default async function AdminDashboardPage() {
         />
       </div>
 
-      {/* SECTION 7 — Quick Actions */}
+
       <DashboardSection
         title="Quick Actions"
         subtitle="Frequently used admin shortcuts and shortcuts to manage platform resources"

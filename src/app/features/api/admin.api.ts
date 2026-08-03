@@ -103,7 +103,6 @@ export async function updateUserStatus(
 
 
 
-//get All property
 export async function getAllProperty() {
   try {
     const cookieStore = await cookies();
@@ -154,7 +153,6 @@ export async function getAllProperty() {
 }
 
 
-//get all rental request
 export const getAllRentalRequest = async() =>{
       try {
     const cookieStore = await cookies();

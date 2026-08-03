@@ -76,18 +76,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-{/* 
-      <section className="border-y border-border/70 bg-muted/35">
-        <div className="mx-auto grid w-full max-w-7xl divide-y divide-border/70 px-4 sm:px-6 md:grid-cols-3 md:divide-x md:divide-y-0 lg:px-8">
-          {values.map(({ icon: Icon, title, text }) => (
-            <article key={title} className="px-2 py-10 first:pl-0 md:px-8 md:py-14 md:first:pl-0 md:last:pr-0">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><Icon className="size-5" aria-hidden="true" /></div>
-              <h3 className="mt-5 font-heading text-lg font-extrabold tracking-tight">{title}</h3>
-              <p className="mt-2 text-xs leading-5 text-muted-foreground">{text}</p>
-            </article>
-          ))}
-        </div>
-      </section> */}
+
     </div>
   );
 }

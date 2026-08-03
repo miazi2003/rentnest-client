@@ -54,7 +54,6 @@ export interface ILandlordRentalRequest {
   updatedAt?: string;
   tenant?: ITenantUser;
   property?: ILandlordProperty;
-  // Fallbacks for flat API responses
   propertyTitle?: string;
   tenantName?: string;
   tenantEmail?: string;

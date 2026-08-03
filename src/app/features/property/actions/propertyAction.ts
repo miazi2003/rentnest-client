@@ -16,7 +16,6 @@ const propertyAction = async () => {
       };
     }
 
-    // Safely extract properties array regardless of response nesting
     const rawData = result.data;
     const properties = Array.isArray(rawData?.data)
       ? rawData.data

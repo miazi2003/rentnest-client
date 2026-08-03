@@ -77,14 +77,14 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
 
           return (
             <TableRow key={pay.id}>
-              {/* Transaction ID */}
+
               <TableCell className="py-4 px-6">
                 <span className="font-mono text-xs font-bold text-foreground bg-muted px-2.5 py-1 rounded-md border border-border">
                   {txn}
                 </span>
               </TableCell>
 
-              {/* Property & Landlord */}
+
               <TableCell className="py-4 px-6">
                 <div>
                   <p className="font-bold text-foreground leading-tight">
@@ -96,14 +96,14 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
                 </div>
               </TableCell>
 
-              {/* Amount */}
+
               <TableCell className="py-4 px-6">
                 <span className="font-bold text-emerald-600 dark:text-emerald-400 text-base">
                   ${Number(pay.amount).toLocaleString()}
                 </span>
               </TableCell>
 
-              {/* Method */}
+
               <TableCell className="py-4 px-6">
                 <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
                   <CreditCard className="w-3.5 h-3.5 text-blue-500" />
@@ -111,14 +111,14 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
                 </div>
               </TableCell>
 
-              {/* Date */}
+
               <TableCell className="py-4 px-6">
                 <span className="text-xs font-medium text-muted-foreground">
                   {dateStr}
                 </span>
               </TableCell>
 
-              {/* Status */}
+
               <TableCell className="py-4 px-6 text-right">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />

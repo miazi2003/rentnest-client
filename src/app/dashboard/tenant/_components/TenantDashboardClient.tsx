@@ -80,7 +80,6 @@ function SummaryRow({ icon: Icon, label, value, tone }: { icon: LucideIcon; labe
   );
 }
 
-// Fallback sample data to demonstrate all status types & actions if live database has few records
 const SAMPLE_REQUESTS: IRentalRequest[] = [
   {
     id: "req-101",
@@ -212,7 +211,6 @@ export default function TenantDashboardClient({
   initialPayments = [],
   defaultTab = "requests",
 }: TenantDashboardClientProps) {
-  // Merge live backend data with fallback samples if empty
   const rawRequests =
     initialRequests && initialRequests.length > 0
       ? initialRequests
@@ -225,18 +223,14 @@ export default function TenantDashboardClient({
   const [requestsList, setRequestsList] = useState<IRentalRequest[]>(rawRequests);
   const [paymentsList, setPaymentsList] = useState<IPaymentItem[]>(rawPayments);
 
-  // Active Tab: 'requests' | 'payments'
   const [activeTab, setActiveTab] = useState<TenantDashboardTab>(defaultTab);
 
-  // Filters & Search
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
-  // Modals state
   const [payModalItem, setPayModalItem] = useState<IRentalRequest | null>(null);
   const [reviewModalItem, setReviewModalItem] = useState<IRentalRequest | null>(null);
 
-  // Memoized stats for performance
   const stats: ITenantStats = useMemo(() => {
     const totalRequests = requestsList.length;
     const pendingRequests = requestsList.filter(
@@ -264,7 +258,6 @@ export default function TenantDashboardClient({
     };
   }, [requestsList, paymentsList]);
 
-  // Helper getters
   const getPropertyTitle = (req: IRentalRequest) =>
     req.property?.title || req.propertyTitle || "Rental Property";
 
@@ -285,7 +278,6 @@ export default function TenantDashboardClient({
     return Number(val) || 0;
   };
 
-  // Filter requests
   const filteredRequests = useMemo(() => {
     return requestsList.filter((req) => {
       const title = getPropertyTitle(req).toLowerCase();
@@ -303,7 +295,6 @@ export default function TenantDashboardClient({
     });
   }, [requestsList, searchQuery, statusFilter]);
 
-  // Filter payments
   const filteredPayments = useMemo(() => {
     return paymentsList.filter((pay) => {
       const title = (pay.propertyTitle || pay.property?.title || "").toLowerCase();
@@ -315,7 +306,6 @@ export default function TenantDashboardClient({
     });
   }, [paymentsList, searchQuery]);
 
-  // Payment Callback
   const handleConfirmPayment = (request: IRentalRequest, method: PayMethod) => {
     const statusUpper = (request.status || "").toUpperCase();
     if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
@@ -327,12 +317,10 @@ export default function TenantDashboardClient({
     const title = getPropertyTitle(request);
     const amount = getRentAmount(request);
 
-    // Update request status to ACTIVE
     setRequestsList((prev) =>
       prev.map((r) => (r.id === request.id ? { ...r, status: "ACTIVE" } : r))
     );
 
-    // Add new payment entry
     const newPayment: IPaymentItem = {
       id: `pay-${Date.now()}`,
       transactionId: `TXN-${Math.floor(10000000 + Math.random() * 90000000)}`,
@@ -358,7 +346,6 @@ export default function TenantDashboardClient({
     setPayModalItem(null);
   };
 
-  // Review Callback
   const handleSubmitReview = async (
     request: IRentalRequest,
     rating: number,
@@ -454,7 +441,7 @@ export default function TenantDashboardClient({
         onValueChange={(val) => setActiveTab(val as TenantDashboardTab)}
         className="flex flex-col gap-0 overflow-hidden rounded-xl border-none bg-white text-card-foreground shadow-sm dark:bg-card"
       >
-        {/* SHADCN TABS HEADER */}
+
         <TenantTabsHeader
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -466,7 +453,7 @@ export default function TenantDashboardClient({
           setStatusFilter={setStatusFilter}
         />
 
-        {/* TAB 1 CONTENT: RENTAL REQUESTS TABLE */}
+
         <TabsContent value="requests" className="mt-0 p-0">
           <RentalRequestsTable
             requests={filteredRequests}
@@ -475,7 +462,7 @@ export default function TenantDashboardClient({
           />
         </TabsContent>
 
-        {/* TAB 2 CONTENT: PAYMENT HISTORY TABLE */}
+
         <TabsContent value="payments" className="mt-0 p-0">
           <PaymentHistoryTable payments={filteredPayments} />
         </TabsContent>
@@ -488,7 +475,7 @@ export default function TenantDashboardClient({
         </div>
       </DashboardSection>
 
-      {/* SHADCN DIALOG MODALS */}
+
       <PayNowModal
         request={payModalItem}
         onClose={() => setPayModalItem(null)}

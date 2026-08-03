@@ -41,7 +41,7 @@ export default function TenantReviewsClient() {
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Banner */}
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-r from-emerald-900/90 via-teal-900 to-cyan-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl border border-white/10 relative overflow-hidden">
         <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-1.5 z-10">
@@ -58,7 +58,7 @@ export default function TenantReviewsClient() {
         </div>
       </div>
 
-      {/* Reviews Grid */}
+
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">

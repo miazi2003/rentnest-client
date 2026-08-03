@@ -12,7 +12,6 @@ import {
 
 export async function handleCreateCheckoutSessionAction(rentalRequestId: string) {
   try {
-    // 1. Zod schema validation
     const validated = createCheckoutSessionValidation.safeParse({
       rentalRequestId,
     });
@@ -26,7 +25,6 @@ export async function handleCreateCheckoutSessionAction(rentalRequestId: string)
       };
     }
 
-    // 2. Execute service call
     const result = await createCheckoutSession(validated.data.rentalRequestId);
     return result;
   } catch (error) {
@@ -42,7 +40,6 @@ export async function handleCreateCheckoutSessionAction(rentalRequestId: string)
 
 export async function handleVerifyPaymentSessionAction(sessionId: string) {
   try {
-    // 1. Zod schema validation
     const validated = verifyPaymentSessionValidation.safeParse({ sessionId });
 
     if (!validated.success) {
@@ -54,10 +51,8 @@ export async function handleVerifyPaymentSessionAction(sessionId: string) {
       };
     }
 
-    // 2. Execute service call
     const result = await verifyPaymentSession(validated.data.sessionId);
 
-    // If verification success, fetch updated rental request details
     if (result.ok && result.data?.rentalRequestId) {
       const rentalDetail = await getRentalRequestById(result.data.rentalRequestId);
       return {

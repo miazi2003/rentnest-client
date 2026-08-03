@@ -28,7 +28,7 @@ export const TenantStatsCards: React.FC<TenantStatsCardsProps> = ({ stats }) => 
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {/* Card 1: Total Requests */}
+
       <div className="group relative bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -50,7 +50,7 @@ export const TenantStatsCards: React.FC<TenantStatsCardsProps> = ({ stats }) => 
         </div>
       </div>
 
-      {/* Card 2: Pending Requests */}
+
       <div className="group relative bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -74,7 +74,7 @@ export const TenantStatsCards: React.FC<TenantStatsCardsProps> = ({ stats }) => 
         </div>
       </div>
 
-      {/* Card 3: Active Rentals */}
+
       <div className="group relative bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -100,7 +100,7 @@ export const TenantStatsCards: React.FC<TenantStatsCardsProps> = ({ stats }) => 
         </div>
       </div>
 
-      {/* Card 4: Total Payment Amount */}
+
       <div className="group relative bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">

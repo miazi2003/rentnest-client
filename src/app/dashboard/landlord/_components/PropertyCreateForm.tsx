@@ -38,7 +38,6 @@ export function PropertyCreateForm({
   const [categoryList, setCategoryList] = useState<ICategory[]>(categories);
   const [fetchingCategories, setFetchingCategories] = useState(false);
 
-  // Form State
   const [formData, setFormData] = useState<TCreatePropertyPayload>({
     title: "",
     description: "",
@@ -66,7 +65,6 @@ export function PropertyCreateForm({
         setFetchingCategories(true);
         let data = await getCategoriesAction();
 
-        // Fallback to client-side fetch if server action returns empty
         if (!data || data.length === 0) {
           try {
             const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -182,7 +180,7 @@ export function PropertyCreateForm({
 
   return (
     <Card className="max-w-4xl mx-auto rounded-3xl border border-border shadow-xl overflow-hidden bg-card">
-      {/* Header Banner */}
+
       <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-6 sm:p-8 text-white relative">
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-1">
@@ -211,7 +209,7 @@ export function PropertyCreateForm({
 
       <CardContent className="p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Section 1: Basic Information */}
+
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-border pb-2">
               <Building2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -221,7 +219,7 @@ export function PropertyCreateForm({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Title */}
+
               <div className="sm:col-span-2 space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center gap-1">
                   Property Title <span className="text-rose-500">*</span>
@@ -237,7 +235,7 @@ export function PropertyCreateForm({
                 />
               </div>
 
-              {/* Price */}
+
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center gap-1">
                   Rent Price per Day ($) <span className="text-rose-500">*</span>
@@ -257,7 +255,7 @@ export function PropertyCreateForm({
                 </div>
               </div>
 
-              {/* Category */}
+
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center gap-1">
                   Property Category <span className="text-rose-500">*</span>
@@ -288,7 +286,7 @@ export function PropertyCreateForm({
             </div>
           </div>
 
-          {/* Section 2: Location Details */}
+
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-border pb-2">
               <MapPin className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -298,7 +296,7 @@ export function PropertyCreateForm({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Address */}
+
               <div className="sm:col-span-3 space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center gap-1">
                   Full Address / Location <span className="text-rose-500">*</span>
@@ -314,7 +312,7 @@ export function PropertyCreateForm({
                 />
               </div>
 
-              {/* Latitude */}
+
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground">
                   Latitude (Optional)
@@ -330,7 +328,7 @@ export function PropertyCreateForm({
                 />
               </div>
 
-              {/* Longitude */}
+
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground">
                   Longitude (Optional)
@@ -348,7 +346,7 @@ export function PropertyCreateForm({
             </div>
           </div>
 
-          {/* Section 3: Media & Images */}
+
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-border pb-2">
               <div className="flex items-center gap-2">
@@ -381,7 +379,7 @@ export function PropertyCreateForm({
                 </Button>
               </div>
 
-              {/* Image Preview Grid */}
+
               {formData.images.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
                   {formData.images.map((img, idx) => (
@@ -413,7 +411,7 @@ export function PropertyCreateForm({
             </div>
           </div>
 
-          {/* Section 4: Description */}
+
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-border pb-2">
               <FileText className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -437,7 +435,7 @@ export function PropertyCreateForm({
             </div>
           </div>
 
-          {/* Submit Actions */}
+
           <div className="pt-4 border-t border-border flex flex-col-reverse sm:flex-row justify-end gap-3">
             <Button
               type="button"

@@ -1,4 +1,3 @@
-// types.ts
 
 import { DialogTitle } from "@base-ui/react";
 
@@ -25,7 +24,7 @@ export type RegisterPayload = {
     name : string,
     email : string ,
     password : string,
-    phone : string , 
+    phone : string ,
     role : ROLE
 }
 

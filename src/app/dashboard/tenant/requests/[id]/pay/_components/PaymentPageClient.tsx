@@ -21,7 +21,6 @@ import { IRentalRequest } from "@/app/dashboard/tenant/types/tenant.types";
 import { RentalStatusBadge } from "@/app/dashboard/tenant/_components/RentalStatusBadge";
 import { handleCreateCheckoutSessionAction } from "@/app/features/payment/actions/paymentActions";
 
-// Shadcn UI components
 import {
   Card,
   CardHeader,
@@ -40,7 +39,6 @@ interface PaymentPageClientProps {
 export default function PaymentPageClient({ request }: PaymentPageClientProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Safely extract database fields
   const requestId = request?.id || (request as any)?._id || "";
   const propertyTitle = request?.title || request?.property?.title || "Rental Property";
   const propertyAddress = request?.address || request?.property?.address || request?.location || "Location N/A";
@@ -50,7 +48,6 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
   const landlordEmail = request?.landlord?.email || request?.property?.landlord?.email || "landlord@rentnest.com";
   const landlordPhone = request?.landlord?.phone || request?.property?.landlord?.phone || "N/A";
 
-  // Parse price cleanly from DB without hardcoded fallbacks
   const rawPrice =
     request?.totalPrice ??
     request?.property?.price ??
@@ -59,11 +56,9 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
     request?.amount;
   const price = rawPrice ? Number(rawPrice) : 0;
 
-  // Check if rental request is already paid/active to prevent double purchase
   const reqStatus = (request?.status || "").toUpperCase();
   const isAlreadyPaid = reqStatus === "ACTIVE" || reqStatus === "COMPLETED";
 
-  // Initiate Stripe Hosted Checkout (POST /api/payments/checkout)
   const handlePay = async () => {
     if (!requestId) {
       toast.error("Invalid rental request ID. Cannot initiate checkout.");
@@ -78,7 +73,6 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
     setIsProcessing(true);
 
     try {
-      // Store rental request info in session storage so success page can display the exact ID
       if (typeof window !== "undefined") {
         sessionStorage.setItem("lastRentalRequestId", requestId);
         sessionStorage.setItem("lastPropertyTitle", propertyTitle);
@@ -86,7 +80,6 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
         localStorage.setItem("lastRentalRequestId", requestId);
       }
 
-      // Send ONLY rentalRequestId to backend. Never trust client amounts.
       const res = await handleCreateCheckoutSessionAction(requestId);
 
       if (!res.ok) {
@@ -96,7 +89,6 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
         return;
       }
 
-      // Extract Checkout Session URL from backend response
       const sessionUrl =
         res?.data?.data?.url ||
         res?.data?.url ||
@@ -105,7 +97,6 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
 
       if (sessionUrl) {
         toast.success("Redirecting to Stripe Hosted Checkout...");
-        // Redirect to Stripe Hosted Checkout Page
         window.location.href = sessionUrl;
       } else {
         toast.error("Stripe session URL not returned from server.");
@@ -120,7 +111,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
 
   return (
     <div className="max-w-xl mx-auto space-y-6 pb-12">
-      {/* Navigation Header */}
+
       <div className="flex items-center justify-between gap-4">
         <Link href="/dashboard/tenant/requests">
           <Button variant="outline" size="sm" className="gap-2 rounded-xl border-border">
@@ -135,7 +126,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
         </div>
       </div>
 
-      {/* Hero Banner */}
+
       <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl border border-white/10 relative overflow-hidden">
         <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-1 z-10 relative">
@@ -152,7 +143,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
         </div>
       </div>
 
-      {/* Main Payment Card */}
+
       <Card className="rounded-3xl border-border shadow-md overflow-hidden bg-card text-card-foreground">
         <CardHeader className="bg-muted/50 pb-4 border-b border-border">
           <div className="flex items-center justify-between">
@@ -168,7 +159,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
         </CardHeader>
 
         <CardContent className="p-6 space-y-5">
-          {/* Property Details */}
+
           <div className="flex items-start gap-4 p-4 rounded-2xl bg-muted/40 border border-border/80">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center shrink-0">
               <Building2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -187,7 +178,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
             </div>
           </div>
 
-          {/* Landlord Details */}
+
           <div className="space-y-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Landlord Details
@@ -219,7 +210,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
 
           <Separator />
 
-          {/* Already Paid Warning Alert */}
+
           {isAlreadyPaid && (
             <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 text-xs space-y-1">
               <div className="flex items-center gap-2 font-bold text-sm text-emerald-700 dark:text-emerald-400">
@@ -232,7 +223,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
             </div>
           )}
 
-          {/* Amount Display */}
+
           <div className="flex justify-between items-center p-4 rounded-2xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50">
             <div className="space-y-0.5">
               <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -256,7 +247,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
             </p>
           </div>
 
-          {/* Single Pay Now Button initiating Stripe Checkout Session */}
+
           <Button
             disabled={isProcessing || isAlreadyPaid}
             onClick={handlePay}

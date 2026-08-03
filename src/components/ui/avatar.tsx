@@ -19,7 +19,6 @@ function Avatar({ className, src, alt = "Avatar", fallback = "U", ...props }: Av
       {...props}
     >
       {src && !hasError ? (
-        // Using standard img element for avatar fallback handling
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}

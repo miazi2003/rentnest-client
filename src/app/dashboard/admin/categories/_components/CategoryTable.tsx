@@ -66,7 +66,6 @@ type SortField = "name" | "description" | "createdAt";
 type SortOrder = "asc" | "desc";
 
 export function CategoryTable({ categories }: CategoryTableProps) {
-  // Extract category list safely from prop or fallback to default sample data
   const categoryList = useMemo(() => {
     if (categories === undefined) return DEFAULT_SAMPLE_CATEGORIES;
     if (Array.isArray(categories)) return categories;
@@ -84,7 +83,6 @@ export function CategoryTable({ categories }: CategoryTableProps) {
     return [];
   }, [categories]);
 
-  // Modal States
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedCategoryForEdit, setSelectedCategoryForEdit] =
     useState<ICategory | null>(null);
@@ -93,14 +91,12 @@ export function CategoryTable({ categories }: CategoryTableProps) {
   const [selectedCategoryForDelete, setSelectedCategoryForDelete] =
     useState<ICategory | null>(null);
 
-  // Filters & Sorting
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
-  // Filter Logic
   const filteredCategories = useMemo(() => {
     return categoryList.filter((cat: ICategory) => {
       const nameStr = cat.name || "";
@@ -113,7 +109,6 @@ export function CategoryTable({ categories }: CategoryTableProps) {
     });
   }, [categoryList, searchTerm]);
 
-  // Sorting Logic
   const sortedCategories = useMemo(() => {
     return [...filteredCategories].sort((a: ICategory, b: ICategory) => {
       let aValue: any = a[sortField] || "";
@@ -133,7 +128,6 @@ export function CategoryTable({ categories }: CategoryTableProps) {
     });
   }, [filteredCategories, sortField, sortOrder]);
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedCategories.length / pageSize));
   const validPage = Math.min(currentPage, totalPages);
 
@@ -200,7 +194,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
 
   return (
     <div className="w-full space-y-6">
-      {/* Header Bar */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
@@ -230,9 +224,9 @@ export function CategoryTable({ categories }: CategoryTableProps) {
         </div>
       </div>
 
-      {/* Main Table Card */}
+
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 sm:p-6 space-y-5">
-        {/* Controls Toolbar */}
+
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pb-1">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -249,12 +243,12 @@ export function CategoryTable({ categories }: CategoryTableProps) {
           </div>
         </div>
 
-        {/* Desktop Table View */}
+
         <div className="hidden md:block rounded-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-2xs">
           <Table>
             <TableHeader className="bg-slate-50/70 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800">
               <TableRow className="hover:bg-transparent">
-                {/* 1. Category Name */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -266,7 +260,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 2. Description */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -278,7 +272,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 3. Date Created */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
@@ -290,7 +284,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
                   </button>
                 </TableHead>
 
-                {/* 4. Actions */}
+
                 <TableHead className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-200 text-right">
                   Actions
                 </TableHead>
@@ -303,7 +297,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
                     key={cat.id || cat._id}
                     className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
                   >
-                    {/* Category Name */}
+
                     <TableCell className="font-medium py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/60 flex items-center justify-center shrink-0">
@@ -315,20 +309,20 @@ export function CategoryTable({ categories }: CategoryTableProps) {
                       </div>
                     </TableCell>
 
-                    {/* Description */}
+
                     <TableCell className="py-4 text-xs text-slate-600 dark:text-slate-400 max-w-xs truncate">
                       {cat.description || "—"}
                     </TableCell>
 
-                    {/* Created Date */}
+
                     <TableCell className="py-4 text-xs text-slate-600 dark:text-slate-400 whitespace-nowrap">
                       {formatDate(cat.createdAt)}
                     </TableCell>
 
-                    {/* Actions */}
+
                     <TableCell className="py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {/* Edit Button */}
+
                         <button
                           type="button"
                           onClick={() => handleOpenEdit(cat)}
@@ -338,7 +332,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
                           <span>Edit</span>
                         </button>
 
-                        {/* Delete Button */}
+
                         <button
                           type="button"
                           onClick={() => handleOpenDelete(cat)}
@@ -365,7 +359,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
           </Table>
         </div>
 
-        {/* Mobile View: Stacked Cards */}
+
         <div className="block md:hidden space-y-3">
           {paginatedCategories.length > 0 ? (
             paginatedCategories.map((cat) => (
@@ -417,7 +411,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
           )}
         </div>
 
-        {/* Footer Pagination */}
+
         {sortedCategories.length > 0 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800">
             <div className="text-xs text-slate-500 font-medium">
@@ -451,7 +445,7 @@ export function CategoryTable({ categories }: CategoryTableProps) {
         )}
       </div>
 
-      {/* Modals */}
+
       <CategoryFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}

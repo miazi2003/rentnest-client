@@ -107,7 +107,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
 
           return (
             <TableRow key={req.id}>
-              {/* Property Column */}
+
               <TableCell className="py-4 px-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 flex items-center justify-center shrink-0">
@@ -124,7 +124,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
                 </div>
               </TableCell>
 
-              {/* Landlord Info */}
+
               <TableCell className="py-4 px-6">
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4 text-muted-foreground" />
@@ -139,7 +139,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
                 </div>
               </TableCell>
 
-              {/* Rental Period */}
+
               <TableCell className="py-4 px-6">
                 <div className="flex items-center gap-2 text-xs text-foreground font-medium">
                   <Calendar className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -150,19 +150,19 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
                 </div>
               </TableCell>
 
-              {/* Rent Amount */}
+
               <TableCell className="py-4 px-6">
                 <div className="font-bold text-foreground text-sm">
                   ${rent.toLocaleString()}{" "}
                 </div>
               </TableCell>
 
-              {/* Request Status Badge */}
+
               <TableCell className="py-4 px-6">
                 <RentalStatusBadge status={status} />
               </TableCell>
 
-              {/* Actions Column */}
+
               <TableCell className="py-4 px-6 text-right">
                 {status === "APPROVED" && (
                   <Link href={`/dashboard/tenant/requests/${req.id}/pay`}>

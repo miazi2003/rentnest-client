@@ -91,7 +91,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           </div>
         </DialogHeader>
 
-        {/* Target Property info */}
+
         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-1">
           <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Property
@@ -102,7 +102,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           <p className="text-xs text-slate-500 dark:text-slate-400">Landlord: {landlordName}</p>
         </div>
 
-        {/* Star Rating selector */}
+
         <div className="space-y-2 text-center">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
             Your Rating ({hoverRating || rating} / 5 Stars)
@@ -129,7 +129,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           </div>
         </div>
 
-        {/* Already Reviewed Alert */}
+
         {alreadyReviewed && (
           <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs">
             <p className="font-bold">Review Already Submitted</p>
@@ -139,7 +139,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           </div>
         )}
 
-        {/* Review Comment Area */}
+
         <div className="space-y-2">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
             Written Feedback
@@ -154,7 +154,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
           />
         </div>
 
-        {/* Dialog Footer Actions */}
+
         <DialogFooter className="flex-col-reverse items-stretch gap-3 pt-2 sm:flex-row sm:items-center">
           <Button
             type="button"

@@ -112,7 +112,6 @@ export function PendingRequestsTable({
   requests,
   onView,
 }: PendingRequestsTableProps) {
-  // Extract raw list from rentals prop (from rentalActions()) or requests prop
   const rawList = React.useMemo(() => {
     if (Array.isArray(requests) && requests.length > 0) return requests;
 
@@ -129,14 +128,12 @@ export function PendingRequestsTable({
       }
     }
 
-    // Fallback if no props or empty data
     if (requests !== undefined) return requests;
     if (rentals === undefined) return defaultPendingRequests;
 
     return defaultPendingRequests;
   }, [rentals, requests]);
 
-  // Filter strictly for pending items ONLY
   const pendingItems = React.useMemo(() => {
     if (!Array.isArray(rawList) || rawList.length === 0) return [];
 
@@ -146,7 +143,6 @@ export function PendingRequestsTable({
     });
   }, [rawList]);
 
-  // Map items into standard PendingRequestItem format
   const displayRequests = React.useMemo(() => {
     return pendingItems.slice(0, 5).map((item: RawPendingRequest, idx: number) => {
       const tenantRecord = typeof item.tenant === "object" ? item.tenant : undefined;

@@ -67,7 +67,7 @@ export function PlatformSummary({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* LEFT CARD: Platform Summary */}
+
       <Card className="rounded-xl border-none bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -86,7 +86,7 @@ export function PlatformSummary({
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* User Breakdown */}
+
           <div className="space-y-3 p-4 rounded-xl bg-slate-50/70 dark:bg-muted/30">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -122,7 +122,7 @@ export function PlatformSummary({
             </div>
           </div>
 
-          {/* Property Breakdown */}
+
           <div className="space-y-3 p-4 rounded-xl bg-slate-50/70 dark:bg-muted/30">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -160,7 +160,7 @@ export function PlatformSummary({
         </CardContent>
       </Card>
 
-      {/* RIGHT CARD: Rental Summary */}
+
       <Card className="rounded-xl border-none bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -180,7 +180,7 @@ export function PlatformSummary({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
-            {/* Pending Requests */}
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50/60 dark:bg-amber-950/20">
               <div className="flex items-center gap-2.5">
                 <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
@@ -191,7 +191,7 @@ export function PlatformSummary({
               </Badge>
             </div>
 
-            {/* Approved */}
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -202,7 +202,7 @@ export function PlatformSummary({
               </Badge>
             </div>
 
-            {/* Rejected */}
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-rose-50/60 dark:bg-rose-950/20">
               <div className="flex items-center gap-2.5">
                 <XCircle className="h-4 w-4 text-rose-600 dark:text-rose-400" />
@@ -213,7 +213,7 @@ export function PlatformSummary({
               </Badge>
             </div>
 
-            {/* Active Rentals */}
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50/60 dark:bg-blue-950/20">
               <div className="flex items-center gap-2.5">
                 <PlayCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -224,7 +224,7 @@ export function PlatformSummary({
               </Badge>
             </div>
 
-            {/* Completed Rentals */}
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-purple-50/60 dark:bg-purple-950/20">
               <div className="flex items-center gap-2.5">
                 <CheckCheck className="h-4 w-4 text-purple-600 dark:text-purple-400" />

@@ -83,7 +83,7 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
           </div>
         </DialogHeader>
 
-        {/* Property Summary */}
+
         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
           <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Target Property
@@ -99,7 +99,7 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
           </div>
         </div>
 
-        {/* Select Method */}
+
         <div className="space-y-2">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
             Select Payment Gateway
@@ -146,7 +146,7 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
           </div>
         </div>
 
-        {/* Payment Account Display */}
+
         <div className="space-y-3">
           <div className="relative">
             <input
@@ -165,7 +165,7 @@ export const PayNowModal: React.FC<PayNowModalProps> = ({
           </div>
         </div>
 
-        {/* Dialog Footer Actions */}
+
         <DialogFooter className="flex-col-reverse items-stretch gap-3 pt-2 sm:flex-row sm:items-center">
           <Button
             type="button"

@@ -125,7 +125,6 @@ export function AppSidebar() {
   const router = useRouter();
   const { user, setUser } = useAuth();
 
-  // Determine current role based on user context or route fallback
   const currentRole = useMemo(() => {
     if (user?.role) return user.role;
     if (pathname?.startsWith("/dashboard/landlord")) return "LANDLORD";
@@ -187,7 +186,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200 shadow-sm">
-      {/* Sidebar Header */}
+
       <SidebarHeader className="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 px-4 group-data-[collapsible=icon]:px-2">
         <Link
           href={portalInfo.href}
@@ -210,9 +209,9 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
 
-      {/* Sidebar Content */}
+
       <SidebarContent className="px-2 py-3 gap-4 group-data-[collapsible=icon]:px-0">
-        {/* Main Navigation */}
+
         <SidebarGroup>
           <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 px-2 mb-1">
             Overview
@@ -254,7 +253,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Account & Settings */}
+
         <SidebarGroup>
           <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 px-2 mb-1">
             Management
@@ -291,7 +290,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Sidebar Footer */}
+
       <SidebarFooter className="p-2 border-t border-gray-200 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:py-2 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
         <SidebarMenu className="group-data-[collapsible=icon]:items-center">
           <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">

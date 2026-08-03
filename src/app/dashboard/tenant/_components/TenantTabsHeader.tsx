@@ -27,7 +27,7 @@ export const TenantTabsHeader: React.FC<TenantTabsHeaderProps> = ({
 }) => {
   return (
     <div className="p-4 sm:p-6 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 bg-muted/40">
-      {/* Shadcn UI Tabs List & Triggers */}
+
       <TabsList className="h-auto p-1 bg-muted rounded-2xl">
         <TabsTrigger
           value="requests"
@@ -64,7 +64,7 @@ export const TenantTabsHeader: React.FC<TenantTabsHeaderProps> = ({
         </TabsTrigger>
       </TabsList>
 
-      {/* Search & Filter Bar */}
+
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative w-full md:w-auto md:min-w-[220px]">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />

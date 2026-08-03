@@ -35,7 +35,6 @@ export async function loginAction(
       };
     }
 
-    // Save cookie in Next.js
     const cookieStore = await cookies();
 
     cookieStore.set("accessToken", result.data.data.accessToken, {

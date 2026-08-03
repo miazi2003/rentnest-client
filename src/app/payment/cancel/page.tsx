@@ -5,7 +5,6 @@ import React from "react";
 import Link from "next/link";
 import { XCircle, RefreshCw, LayoutDashboard, Building2 } from "lucide-react";
 
-// Shadcn UI components
 import {
   Card,
   CardHeader,
@@ -20,7 +19,7 @@ export default function RootPaymentCancelPage() {
   return (
     <div className="max-w-md mx-auto space-y-6 py-12 pb-16">
       <Card className="rounded-3xl border-border shadow-xl overflow-hidden bg-card text-card-foreground">
-        {/* Header Alert Section */}
+
         <CardHeader className="bg-rose-500/10 border-b border-rose-500/20 text-center pb-6 pt-8">
           <div className="w-16 h-16 bg-rose-500 text-white rounded-full flex items-center justify-center mx-auto shadow-lg shadow-rose-500/30 mb-3">
             <XCircle className="w-9 h-9" />
@@ -39,7 +38,7 @@ export default function RootPaymentCancelPage() {
           </p>
         </CardContent>
 
-        {/* Footer Action Buttons */}
+
         <CardFooter className="bg-muted/30 p-6 border-t border-border flex flex-col gap-3">
           <Link href="/dashboard/tenant/requests" className="w-full">
             <Button className="w-full rounded-2xl text-xs gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 shadow-md shadow-blue-500/20">

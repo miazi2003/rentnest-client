@@ -18,7 +18,6 @@ import {
 import { toast } from "sonner";
 import { handleVerifyPaymentSessionAction } from "@/app/features/payment/actions/paymentActions";
 
-// Shadcn UI components
 import {
   Card,
   CardHeader,
@@ -50,7 +49,6 @@ export default function PaymentSuccessClient() {
   const [paymentData, setPaymentData] = useState<PaymentVerificationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Poll GET /api/payments/verify/:sessionId with retry logic if webhook is processing
   const verifyPayment = useCallback(async (attemptsRemaining = 5) => {
     if (!sessionId) {
       setLoading(false);
@@ -62,14 +60,12 @@ export default function PaymentSuccessClient() {
     setError(null);
 
     try {
-      // Execute backend verification GET /api/payments/verify/:sessionId
       const res = await handleVerifyPaymentSessionAction(sessionId);
 
       if (res.ok && res.data) {
         const payload = res.data.data || res.data;
         const statusStr = (payload?.status || payload?.paymentStatus || "PAID").toUpperCase();
 
-        // If webhook is still processing, show friendly message and poll
         if ((statusStr === "PENDING" || statusStr === "PROCESSING") && attemptsRemaining > 1) {
           setVerifyingText(`Awaiting Stripe webhook confirmation... (Attempt ${6 - attemptsRemaining} of 5)`);
           setTimeout(() => {
@@ -78,7 +74,6 @@ export default function PaymentSuccessClient() {
           return;
         }
 
-        // Extract stored request information if missing from Stripe response
         const urlRentalRequestId =
           searchParams.get("rentalRequestId") ||
           searchParams.get("rental_request_id") ||
@@ -212,7 +207,7 @@ export default function PaymentSuccessClient() {
           </div>
         ) : (
           <>
-            {/* Header Success Banner */}
+
             <CardHeader className="bg-emerald-500/10 border-b border-emerald-500/20 text-center pb-6 pt-8">
               <div className="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/30 mb-3">
                 <CheckCircle2 className="w-9 h-9" />
@@ -226,7 +221,7 @@ export default function PaymentSuccessClient() {
             </CardHeader>
 
             <CardContent className="p-6 space-y-5">
-              {/* Payment Receipt Details */}
+
               <div className="space-y-3">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                   <Receipt className="w-4 h-4 text-emerald-600" />
@@ -282,7 +277,7 @@ export default function PaymentSuccessClient() {
                 </div>
               </div>
 
-              {/* Stripe Official Receipt Link */}
+
               {paymentData?.receiptUrl && (
                 <div className="pt-1">
                   <a
@@ -299,7 +294,7 @@ export default function PaymentSuccessClient() {
               )}
             </CardContent>
 
-            {/* Navigation Action Buttons */}
+
             <CardFooter className="bg-muted/30 p-6 border-t border-border flex flex-col sm:flex-row items-center gap-3">
               <Link href="/dashboard/tenant/requests" className="w-full sm:w-1/2">
                 <Button

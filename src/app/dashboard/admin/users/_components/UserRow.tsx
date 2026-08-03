@@ -60,7 +60,7 @@ export function UserRow({ user, isUpdating = false, onStatusChange }: UserRowPro
 
   return (
     <TableRow className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-      {/* 1. User (Avatar + Name) */}
+
       <TableCell className="font-medium">
         <div className="flex items-center gap-3">
           <div
@@ -74,32 +74,32 @@ export function UserRow({ user, isUpdating = false, onStatusChange }: UserRowPro
         </div>
       </TableCell>
 
-      {/* 2. Email */}
+
       <TableCell className="text-slate-600 dark:text-slate-400">
         {user.email}
       </TableCell>
 
-      {/* 3. Phone (Hide on Tablet) */}
+
       <TableCell className="hidden lg:table-cell text-slate-600 dark:text-slate-400">
         {user.phone || "—"}
       </TableCell>
 
-      {/* 4. Role */}
+
       <TableCell>
         <UserRoleBadge role={user.role} />
       </TableCell>
 
-      {/* 5. Status */}
+
       <TableCell>
         <UserStatusBadge status={user.status} />
       </TableCell>
 
-      {/* 6. Joined */}
+
       <TableCell className="text-slate-600 dark:text-slate-400 text-sm whitespace-nowrap">
         {formatDate(user.createdAt)}
       </TableCell>
 
-      {/* 7. Action */}
+
       <TableCell className="text-right">
         {user.status === "ACTIVE" ? (
           <button

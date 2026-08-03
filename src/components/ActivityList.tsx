@@ -117,7 +117,7 @@ export function ActivityList({ activities = defaultActivities }: ActivityListPro
                 key={activity.id}
                 className="relative flex items-center justify-between gap-4 group"
               >
-                {/* Timeline node icon */}
+
                 <div
                   className={cn(
                     "absolute -left-6 top-0.5 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full shadow-xs transition-transform group-hover:scale-110",

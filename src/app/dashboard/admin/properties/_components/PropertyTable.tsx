@@ -129,7 +129,6 @@ export function PropertyTable({ properties }: PropertyTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
-  // Filter Logic
   const filteredProperties = useMemo(() => {
     return propertyList.filter((p: any) => {
       const titleStr = typeof p.title === "string" ? p.title : p.title?.name || "";
@@ -150,7 +149,6 @@ export function PropertyTable({ properties }: PropertyTableProps) {
     });
   }, [propertyList, searchTerm, categoryFilter, statusFilter]);
 
-  // Sorting Logic
   const sortedProperties = useMemo(() => {
     return [...filteredProperties].sort((a, b) => {
       let aValue: any = a[sortField];
@@ -170,7 +168,6 @@ export function PropertyTable({ properties }: PropertyTableProps) {
     });
   }, [filteredProperties, sortField, sortOrder]);
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedProperties.length / pageSize));
   const validPage = Math.min(currentPage, totalPages);
 
@@ -221,7 +218,7 @@ export function PropertyTable({ properties }: PropertyTableProps) {
 
   return (
     <div className="w-full space-y-6">
-      {/* Header Info */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
@@ -239,9 +236,9 @@ export function PropertyTable({ properties }: PropertyTableProps) {
         </div>
       </div>
 
-      {/* Main Card Container */}
+
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 sm:p-6 space-y-5">
-        {/* Search & Filters */}
+
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-1">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -294,7 +291,7 @@ export function PropertyTable({ properties }: PropertyTableProps) {
           </div>
         </div>
 
-        {/* Desktop Table View */}
+
         <div className="hidden md:block rounded-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-2xs">
           <Table>
             <TableHeader className="bg-slate-50/70 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800">
@@ -444,7 +441,7 @@ export function PropertyTable({ properties }: PropertyTableProps) {
           </Table>
         </div>
 
-        {/* Footer Pagination */}
+
         {sortedProperties.length > 0 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800">
             <div className="text-xs text-slate-500 font-medium">
