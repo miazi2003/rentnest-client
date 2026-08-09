@@ -17,22 +17,22 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const tags = property.amenities?.slice(0, 2) || [];
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-2.5 shadow-[0_18px_45px_-30px_rgba(15,23,42,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_60px_-30px_rgba(15,23,42,0.55)] dark:border-white/10 dark:bg-card">
+    <article className="flex h-full flex-col overflow-hidden rounded-[1.75rem] border-0 bg-white p-2.5 shadow-[0_18px_45px_-20px_rgba(15,23,42,0.45)] dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
       <div className="flex flex-1 flex-col px-3 pb-5 pt-3 sm:px-4 sm:pt-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="line-clamp-1 text-[1.7rem] font-medium leading-none tracking-[-0.065em] text-slate-950 dark:text-white">
+            <h2 className="line-clamp-1 text-[1.7rem] font-medium leading-none tracking-[-0.065em] text-slate-950 dark:text-white font-heading">
               {property.title}
             </h2>
             <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-slate-500 dark:text-slate-400">
               {location && (
                 <span className="flex min-w-0 items-center gap-1">
-                  <MapPin className="size-3 shrink-0" />
+                  <MapPin className="size-3 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   <span className="max-w-40 truncate">{location}</span>
                 </span>
               )}
               {property.category?.name && (
-                <span className="flex items-center gap-2 before:size-1 before:rounded-full before:bg-slate-400">
+                <span className="flex items-center gap-2 before:size-1 before:rounded-full before:bg-slate-400 dark:before:bg-slate-500">
                   {property.category.name}
                 </span>
               )}
@@ -40,7 +40,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </div>
 
           {availability && (
-            <span className="shrink-0 rounded-full border border-slate-300 px-3 py-2 text-[10px] font-bold text-slate-800 dark:border-white/25 dark:text-slate-200">
+            <span className="shrink-0 rounded-full border border-slate-300 px-3 py-1.5 text-[10px] font-bold text-slate-800 dark:border-white/20 dark:text-slate-200">
               {availability}
             </span>
           )}
@@ -52,7 +52,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </p>
         )}
 
-        <div className="mt-auto flex flex-col items-stretch gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-auto flex flex-col items-stretch gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between border-t border-slate-100 dark:border-white/10">
           <div>
             {property.price !== undefined && property.price !== null && (
               <p className="text-lg font-black tracking-[-0.035em] text-slate-950 dark:text-white">
@@ -62,9 +62,12 @@ export function PropertyCard({ property }: PropertyCardProps) {
             )}
           </div>
 
-          <Link href={`/properties/${property.id}`} className="flex h-12 shrink-0 items-center justify-between gap-3 rounded-full bg-slate-950 py-1.5 pl-5 pr-1.5 text-xs font-bold text-white transition-transform hover:scale-[1.025] sm:justify-start dark:bg-white dark:text-slate-950">
+          <Link
+            href={`/properties/${property.id}`}
+            className="flex h-12 shrink-0 items-center justify-between gap-3 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 py-1.5 pl-5 pr-1.5 text-xs font-bold sm:justify-start"
+          >
             View home
-            <span className="flex size-9 items-center justify-center rounded-full bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
+            <span className="flex size-9 items-center justify-center rounded-full bg-white text-slate-950 dark:bg-slate-950 dark:text-white shadow-xs">
               <ArrowUpRight className="size-5" />
             </span>
           </Link>
@@ -73,19 +76,29 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
       <div className="relative aspect-[1.08] overflow-hidden rounded-[1.35rem] bg-slate-100 dark:bg-slate-900">
         {image ? (
-          <Image src={image} alt={property.title} fill unoptimized sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]" />
+          <Image
+            src={image}
+            alt={property.title}
+            fill
+            unoptimized
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+          />
         ) : (
           <div className="flex h-full items-center justify-center text-slate-300 dark:text-slate-700">
             <Building2 className="size-14" />
           </div>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/55 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/60 to-transparent" />
 
         {imageCount > 1 && (
-          <div className="absolute left-1/2 top-3 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/10 px-2 py-1.5 backdrop-blur-sm">
+          <div className="absolute left-1/2 top-3 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/20 px-2 py-1.5 backdrop-blur-md">
             {Array.from({ length: imageCount }).map((_, index) => (
-              <span key={index} className={`size-1.5 rounded-full ${index === 0 ? "bg-white" : "bg-white/45"}`} />
+              <span
+                key={index}
+                className={`size-1.5 rounded-full ${index === 0 ? "bg-white" : "bg-white/45"}`}
+              />
             ))}
           </div>
         )}
@@ -93,15 +106,18 @@ export function PropertyCard({ property }: PropertyCardProps) {
         <div className="absolute inset-x-0 bottom-3 flex items-end justify-between gap-3 px-3">
           <div className="flex min-w-0 gap-1.5 overflow-hidden">
             {tags.map((tag) => (
-              <span key={tag} className="truncate rounded-full border border-white/15 bg-slate-950/35 px-3 py-1.5 text-[9px] font-semibold text-white backdrop-blur-md">
+              <span
+                key={tag}
+                className="truncate rounded-full border border-white/20 bg-slate-950/40 px-3 py-1.5 text-[9px] font-semibold text-white backdrop-blur-md"
+              >
                 {tag}
               </span>
             ))}
           </div>
 
           {hasRating && (
-            <span className="flex shrink-0 items-center gap-1 text-xs font-black text-yellow-300">
-              <Star className="size-3.5 fill-current" />
+            <span className="flex shrink-0 items-center gap-1 rounded-full bg-slate-950/50 px-2.5 py-1 text-xs font-black text-amber-300 backdrop-blur-md">
+              <Star className="size-3.5 fill-amber-300 text-amber-300" />
               {rating.toFixed(1)}
             </span>
           )}
