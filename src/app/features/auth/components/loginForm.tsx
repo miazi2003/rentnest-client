@@ -16,7 +16,7 @@ const DEMO_ACCOUNTS = [
     role: "TENANT",
     label: "Tenant Demo",
     email: "tenant@rentnest.com",
-    password: "password123",
+    password: "Admin@RentNest2027",
     icon: UserRound,
     color: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20",
   },
@@ -24,7 +24,7 @@ const DEMO_ACCOUNTS = [
     role: "LANDLORD",
     label: "Landlord Demo",
     email: "landlord@rentnest.com",
-    password: "password123",
+    password: "Landlord@RentNest2028",
     icon: Building2,
     color: "bg-purple-500/10 text-purple-700 dark:text-purple-300 hover:bg-purple-500/20",
   },
@@ -32,7 +32,7 @@ const DEMO_ACCOUNTS = [
     role: "ADMIN",
     label: "Admin Demo",
     email: "admin@rentnest.com",
-    password: "password123",
+    password: "Tenant@RentNest2026",
     icon: ShieldCheck,
     color: "bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20",
   },
@@ -84,9 +84,9 @@ const LoginForm = () => {
     <Card className="w-full shadow-none border-none bg-transparent p-0">
       <CardContent className="px-0 pb-0 space-y-6">
         {/* Quick 1-Click Demo Login Selector */}
-        <div className="rounded-2xl border border-border/80 bg-muted/40 p-4 space-y-3">
+        <div className="rounded-2xl border border-slate-100 dark:border-white/10 bg-slate-50/60 dark:bg-slate-900/40 p-4 space-y-3 shadow-xs">
           <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
-            <Sparkles className="size-4 text-emerald-600 dark:text-emerald-400" />
+       
             <span>Quick Demo Credentials</span>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -123,7 +123,7 @@ const LoginForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground shadow-xs"
               />
             </div>
           </div>
@@ -144,7 +144,7 @@ const LoginForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground shadow-xs"
               />
             </div>
           </div>
@@ -164,7 +164,7 @@ const LoginForm = () => {
           </Button>
 
           {/* Social Authentication Architecture Note */}
-          <div className="mt-4 p-3 rounded-xl bg-muted/30 border border-border/50 text-[11px] text-muted-foreground flex items-start gap-2">
+          <div className="mt-4 p-3 rounded-xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-white/10 text-[11px] text-muted-foreground flex items-start gap-2 shadow-xs">
             <Info className="size-4 text-emerald-600 shrink-0 mt-0.5" />
             <span>
               <strong>Note on Social Login:</strong> RentNest uses custom JWT authentication. Social Login (Google/Facebook OAuth) requires backend OAuth endpoints before UI integration.

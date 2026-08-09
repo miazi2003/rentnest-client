@@ -18,12 +18,11 @@ import {
   LogOut,
   Sparkles,
   User2,
-  Text,
   Receipt,
   ListSortDescending,
+  Plus,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
-
 import {
   Sidebar,
   SidebarHeader,
@@ -46,12 +45,22 @@ type NavItem = {
 
 const tenantNavItems: NavItem[] = [
   {
-    title: "Dashboard",
+    title: "Dashboard Overview",
     href: "/dashboard/tenant",
     icon: LayoutDashboard,
   },
   {
-    title: "Reviews",
+    title: "Rental Requests",
+    href: "/dashboard/tenant/requests",
+    icon: ClipboardList,
+  },
+  {
+    title: "Payment History",
+    href: "/dashboard/tenant/payments",
+    icon: Receipt,
+  },
+  {
+    title: "My Reviews",
     href: "/dashboard/tenant/reviews",
     icon: Star,
   },
@@ -59,7 +68,7 @@ const tenantNavItems: NavItem[] = [
 
 const landlordNavItems: NavItem[] = [
   {
-    title: "Dashboard",
+    title: "Dashboard Overview",
     href: "/dashboard/landlord",
     icon: LayoutDashboard,
   },
@@ -73,31 +82,36 @@ const landlordNavItems: NavItem[] = [
     href: "/dashboard/landlord/requests",
     icon: ClipboardList,
   },
+  {
+    title: "Add Property",
+    href: "/landlord/properties/new",
+    icon: Plus,
+  },
 ];
 
 const adminNavItems: NavItem[] = [
   {
-    title: "Dashboard",
+    title: "Dashboard Overview",
     href: "/dashboard/admin",
     icon: Shield,
   },
   {
-    title: "Users",
+    title: "User Management",
     href: "/dashboard/admin/users",
     icon: User2,
   },
   {
-    title: "Properties",
+    title: "All Properties",
     href: "/dashboard/admin/properties",
     icon: Building2,
   },
   {
-    title: "Rentals",
+    title: "Rental Requests",
     href: "/dashboard/admin/rentals",
     icon: Receipt,
   },
   {
-    title: "categories",
+    title: "Categories",
     href: "/dashboard/admin/categories",
     icon: ListSortDescending,
   },

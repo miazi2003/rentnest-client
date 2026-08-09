@@ -58,7 +58,7 @@ const RegisterForm = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Jane Doe"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground shadow-xs"
               />
             </div>
           </div>
@@ -77,7 +77,7 @@ const RegisterForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground shadow-xs"
               />
             </div>
           </div>
@@ -96,7 +96,7 @@ const RegisterForm = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 (555) 000-0000"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground shadow-xs"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ const RegisterForm = () => {
                 className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all cursor-pointer text-xs font-bold ${
                   role === "TENANT"
                     ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 shadow-xs"
-                    : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    : "border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-muted-foreground hover:bg-muted"
                 }`}
               >
                 <input
@@ -130,7 +130,7 @@ const RegisterForm = () => {
                 className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all cursor-pointer text-xs font-bold ${
                   role === "LANDLORD"
                     ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 shadow-xs"
-                    : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    : "border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-muted-foreground hover:bg-muted"
                 }`}
               >
                 <input
@@ -161,7 +161,7 @@ const RegisterForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200/50 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 text-foreground text-xs font-semibold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-muted-foreground shadow-xs"
               />
             </div>
           </div>

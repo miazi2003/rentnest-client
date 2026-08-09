@@ -8,7 +8,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans bg-background text-foreground">
-      <div className="w-full max-w-[1220px] bg-card text-card-foreground border border-border rounded-[22px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-2.5 sm:p-4 flex flex-col lg:flex-row lg:min-h-[640px]">
+      <div className="w-full max-w-[1220px] bg-card text-card-foreground border border-slate-100 dark:border-white/10 rounded-[22px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-2.5 sm:p-4 flex flex-col lg:flex-row lg:min-h-[640px]">
         <div className="relative w-full lg:w-[48%] min-h-[280px] sm:min-h-[420px] lg:min-h-[640px] rounded-[18px] sm:rounded-[24px] overflow-hidden flex flex-col justify-between p-6 sm:p-10 lg:p-12">
           <Image
             src={heroImageSvg}
