@@ -15,6 +15,8 @@ export interface PropertyItem {
   status?: string;
   avgRating?: number;
   rating?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export function getPropertyAvailability(property: PropertyItem) {

@@ -1,7 +1,8 @@
+import React, { Suspense } from "react";
 import propertyAction from "@/app/features/property/actions/propertyAction";
-import React from "react";
 import { Building2, Plus } from "lucide-react";
 import PropertiesListClient from "./components/PropertiesListClient";
+import { PropertyCardSkeleton } from "./components/PropertyCardSkeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getCurrentUser } from "../features/api/auth.api";
@@ -19,7 +20,7 @@ export default async function PropertiesPage() {
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1 text-center sm:text-left">
-          <h1 className="text-3xl font-black tracking-tight text-foreground">
+          <h1 className="text-3xl font-black tracking-tight text-foreground font-heading">
             Explore Properties
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -47,7 +48,17 @@ export default async function PropertiesPage() {
           </p>
         </div>
       ) : (
-        <PropertiesListClient properties={properties} />
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <PropertyCardSkeleton key={i} />
+              ))}
+            </div>
+          }
+        >
+          <PropertiesListClient properties={properties} />
+        </Suspense>
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import { getPropertyByIdAction } from "@/app/features/property/actions/getPropertyByIdAction";
+import propertyAction from "@/app/features/property/actions/propertyAction";
 import PropertyDetailsClient from "./_components/PropertyDetailsClient";
 import { Building2 } from "lucide-react";
 import Link from "next/link";
@@ -13,8 +14,22 @@ interface PageProps {
 
 export default async function PropertyDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const response = await getPropertyByIdAction(id);
-  const property = response?.data;
+  
+  const [detailRes, listRes] = await Promise.all([
+    getPropertyByIdAction(id).catch(() => null),
+    propertyAction().catch(() => null),
+  ]);
+
+  const property = detailRes?.data;
+  const allProperties = Array.isArray(listRes?.data) ? listRes.data : [];
+  
+  const relatedProperties = allProperties
+    .filter(
+      (p) =>
+        p.id !== id &&
+        (p.category?.name === property?.category?.name || p.location === property?.location)
+    )
+    .slice(0, 3);
 
   if (!property) {
     return (
@@ -35,5 +50,10 @@ export default async function PropertyDetailPage({ params }: PageProps) {
     );
   }
 
-  return <PropertyDetailsClient property={property} />;
+  return (
+    <PropertyDetailsClient
+      property={property}
+      relatedProperties={relatedProperties}
+    />
+  );
 }
