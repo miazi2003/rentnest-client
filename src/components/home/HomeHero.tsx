@@ -61,6 +61,7 @@ export function HomeHero() {
               <Search className="size-4 shrink-0 text-emerald-300" />
               <input
                 type="text"
+                aria-label="Search properties"
                 placeholder="Search location, title, or category..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}

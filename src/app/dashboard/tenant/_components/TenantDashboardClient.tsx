@@ -21,7 +21,6 @@ import {
   IRentalRequest,
   IPaymentItem,
   TenantDashboardTab,
-  PayMethod,
   ITenantStats,
 } from "../types/tenant.types";
 
@@ -29,10 +28,10 @@ import {
   TenantTabsHeader,
   RentalRequestsTable,
   PaymentHistoryTable,
-  PayNowModal,
   LeaveReviewModal,
 } from "./index";
 
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { handleCreateReviewAction } from "@/app/features/review/actions/reviewActions";
 import { StatsCard, type StatsCardProps } from "@/components/StatsCard";
@@ -53,6 +52,7 @@ interface TenantDashboardClientProps {
   initialRequests?: IRentalRequest[];
   initialPayments?: IPaymentItem[];
   defaultTab?: TenantDashboardTab;
+  errorMessage?: string;
 }
 
 type QuickAction = {
@@ -80,155 +80,24 @@ function SummaryRow({ icon: Icon, label, value, tone }: { icon: LucideIcon; labe
   );
 }
 
-const SAMPLE_REQUESTS: IRentalRequest[] = [
-  {
-    id: "req-101",
-    status: "APPROVED",
-    rentAmount: 1200,
-    startDate: "2026-08-01",
-    endDate: "2027-07-31",
-    createdAt: "2026-07-28",
-    property: {
-      title: "Skyline Luxury Apartment 4B",
-      location: "Gulshan 2, Dhaka",
-      rent: 1200,
-    },
-    landlord: {
-      name: "Tanvir Hasan",
-      email: "tanvir.h@example.com",
-      phone: "+880 1711-223344",
-    },
-  },
-  {
-    id: "req-102",
-    status: "ACTIVE",
-    rentAmount: 850,
-    startDate: "2026-06-01",
-    endDate: "2027-05-31",
-    createdAt: "2026-05-20",
-    property: {
-      title: "Greenwood Studio Apartment",
-      location: "Dhanmondi 27, Dhaka",
-      rent: 850,
-    },
-    landlord: {
-      name: "Anisur Rahman",
-      email: "anisur@example.com",
-      phone: "+880 1812-345678",
-    },
-  },
-  {
-    id: "req-103",
-    status: "PENDING",
-    rentAmount: 1500,
-    startDate: "2026-09-01",
-    endDate: "2027-08-31",
-    createdAt: "2026-07-29",
-    property: {
-      title: "Modern Duplex Penthouse",
-      location: "Banani Block D, Dhaka",
-      rent: 1500,
-    },
-    landlord: {
-      name: "Nusrat Jahan",
-      email: "nusrat.j@example.com",
-      phone: "+880 1913-987654",
-    },
-  },
-  {
-    id: "req-104",
-    status: "REJECTED",
-    rentAmount: 950,
-    startDate: "2026-07-01",
-    endDate: "2027-06-30",
-    createdAt: "2026-06-25",
-    property: {
-      title: "Lakeview Resident Suite",
-      location: "Uttara Sector 7, Dhaka",
-      rent: 950,
-    },
-    landlord: {
-      name: "Mahmudul Haq",
-      email: "mahmud.haq@example.com",
-      phone: "+880 1614-556677",
-    },
-  },
-  {
-    id: "req-105",
-    status: "COMPLETED",
-    rentAmount: 700,
-    startDate: "2025-06-01",
-    endDate: "2026-05-31",
-    createdAt: "2025-05-15",
-    property: {
-      title: "Cozy Garden View Flat",
-      location: "Mirpur 10, Dhaka",
-      rent: 700,
-    },
-    landlord: {
-      name: "Syed Alim",
-      email: "syed.alim@example.com",
-      phone: "+880 1515-889900",
-    },
-  },
-];
-
-const SAMPLE_PAYMENTS: IPaymentItem[] = [
-  {
-    id: "pay-501",
-    transactionId: "TXN-98472301",
-    amount: 1200,
-    paymentMethod: "Credit Card (Visa)",
-    createdAt: "2026-07-28T10:30:00Z",
-    status: "COMPLETED",
-    propertyTitle: "Skyline Luxury Apartment 4B",
-    landlordName: "Tanvir Hasan",
-  },
-  {
-    id: "pay-502",
-    transactionId: "TXN-84729104",
-    amount: 850,
-    paymentMethod: "bKash Mobile Wallet",
-    createdAt: "2026-06-01T14:15:00Z",
-    status: "COMPLETED",
-    propertyTitle: "Greenwood Studio Apartment",
-    landlordName: "Anisur Rahman",
-  },
-  {
-    id: "pay-503",
-    transactionId: "TXN-73620195",
-    amount: 850,
-    paymentMethod: "Bank Wire Transfer",
-    createdAt: "2026-07-01T09:00:00Z",
-    status: "COMPLETED",
-    propertyTitle: "Greenwood Studio Apartment",
-    landlordName: "Anisur Rahman",
-  },
-];
 
 export default function TenantDashboardClient({
   initialRequests = [],
   initialPayments = [],
   defaultTab = "requests",
+  errorMessage,
 }: TenantDashboardClientProps) {
-  const rawRequests =
-    initialRequests && initialRequests.length > 0
-      ? initialRequests
-      : SAMPLE_REQUESTS;
-  const rawPayments =
-    initialPayments && initialPayments.length > 0
-      ? initialPayments
-      : SAMPLE_PAYMENTS;
+  const rawRequests = initialRequests;
+  const rawPayments = initialPayments;
 
-  const [requestsList, setRequestsList] = useState<IRentalRequest[]>(rawRequests);
-  const [paymentsList, setPaymentsList] = useState<IPaymentItem[]>(rawPayments);
+  const [requestsList] = useState<IRentalRequest[]>(rawRequests);
+  const [paymentsList] = useState<IPaymentItem[]>(rawPayments);
 
   const [activeTab, setActiveTab] = useState<TenantDashboardTab>(defaultTab);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
-  const [payModalItem, setPayModalItem] = useState<IRentalRequest | null>(null);
   const [reviewModalItem, setReviewModalItem] = useState<IRentalRequest | null>(null);
 
   const stats: ITenantStats = useMemo(() => {
@@ -267,17 +136,6 @@ export default function TenantDashboardClient({
   const getLandlordName = (req: IRentalRequest) =>
     req.landlord?.name || req.landlordName || "Property Landlord";
 
-  const getRentAmount = (req: IRentalRequest) => {
-    const val =
-      req.totalPrice ??
-      req.property?.price ??
-      req.price ??
-      req.rentAmount ??
-      req.amount ??
-      0;
-    return Number(val) || 0;
-  };
-
   const filteredRequests = useMemo(() => {
     return requestsList.filter((req) => {
       const title = getPropertyTitle(req).toLowerCase();
@@ -305,46 +163,6 @@ export default function TenantDashboardClient({
       return title.includes(query) || txn.includes(query) || landlord.includes(query);
     });
   }, [paymentsList, searchQuery]);
-
-  const handleConfirmPayment = (request: IRentalRequest, method: PayMethod) => {
-    const statusUpper = (request.status || "").toUpperCase();
-    if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
-      toast.error("This property rental is already active and paid.");
-      setPayModalItem(null);
-      return;
-    }
-
-    const title = getPropertyTitle(request);
-    const amount = getRentAmount(request);
-
-    setRequestsList((prev) =>
-      prev.map((r) => (r.id === request.id ? { ...r, status: "ACTIVE" } : r))
-    );
-
-    const newPayment: IPaymentItem = {
-      id: `pay-${Date.now()}`,
-      transactionId: `TXN-${Math.floor(10000000 + Math.random() * 90000000)}`,
-      amount: Number(amount),
-      paymentMethod:
-        method === "card"
-          ? "Credit Card (Visa/MC)"
-          : method === "bkash"
-          ? "bKash Mobile Wallet"
-          : "Bank Wire Transfer",
-      createdAt: new Date().toISOString(),
-      status: "COMPLETED",
-      propertyTitle: title,
-      landlordName: getLandlordName(request),
-    };
-
-    setPaymentsList((prev) => [newPayment, ...prev]);
-
-    toast.success(`Payment of $${amount} successful for "${title}"!`, {
-      description: "Your rental agreement is now ACTIVE.",
-    });
-
-    setPayModalItem(null);
-  };
 
   const handleSubmitReview = async (
     request: IRentalRequest,
@@ -407,12 +225,20 @@ export default function TenantDashboardClient({
 
   return (
     <div className="w-full space-y-8 pb-8">
+      {errorMessage && (
+        <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300">
+          {errorMessage}
+        </div>
+      )}
       <div className="flex flex-col justify-between gap-4 pb-2 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Welcome Back, Tenant</h1>
           <p className="mt-1 text-sm text-muted-foreground">Track your rental requests, active homes, payments, and reviews.</p>
         </div>
-        <Link href="/properties"><Button size="sm" className="h-9 gap-2 bg-emerald-600 text-xs font-medium hover:bg-emerald-700"><Search className="size-3.5" />Browse Properties</Button></Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle variant="ghost" />
+          <Link href="/properties"><Button size="sm" className="h-9 gap-2 bg-emerald-600 text-xs font-medium hover:bg-emerald-700"><Search className="size-3.5" />Browse Properties</Button></Link>
+        </div>
       </div>
 
       <DashboardSection>
@@ -457,7 +283,6 @@ export default function TenantDashboardClient({
         <TabsContent value="requests" className="mt-0 p-0">
           <RentalRequestsTable
             requests={filteredRequests}
-            onOpenPayModal={(req) => setPayModalItem(req)}
             onOpenReviewModal={(req) => setReviewModalItem(req)}
           />
         </TabsContent>
@@ -494,13 +319,6 @@ export default function TenantDashboardClient({
         </div>
       </DashboardSection>
 
-
-      <PayNowModal
-        request={payModalItem}
-        onClose={() => setPayModalItem(null)}
-        onConfirmPayment={handleConfirmPayment}
-      />
-
       <LeaveReviewModal
         request={reviewModalItem}
         onClose={() => setReviewModalItem(null)}
@@ -509,3 +327,5 @@ export default function TenantDashboardClient({
     </div>
   );
 }
+
+

@@ -30,6 +30,7 @@ export interface ILandlordProperty {
   description?: string;
   price: string | number;
   address?: string;
+  location?: string;
   latitude?: number;
   longitude?: number;
   images?: string[];

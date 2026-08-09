@@ -11,6 +11,9 @@ export const dynamic = "force-dynamic";
 
 export default async function PropertiesPage() {
   const response = await propertyAction();
+  if (!response.ok) {
+    throw new Error(response.message || "Unable to load properties");
+  }
   const properties = Array.isArray(response?.data) ? response.data : [];
 
   const currentUserRes = await getCurrentUser();

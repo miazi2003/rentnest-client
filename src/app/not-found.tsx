@@ -18,7 +18,7 @@ export default function NotFoundPage() {
         Page Not Found
       </h1>
       <p className="mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
-        Sorry, the page you are looking for doesn't exist, has been removed, or is temporarily unavailable.
+        Sorry, the page you are looking for doesn&apos;t exist, has been removed, or is temporarily unavailable.
       </p>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

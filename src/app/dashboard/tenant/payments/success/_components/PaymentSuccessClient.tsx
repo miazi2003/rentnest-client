@@ -1,4 +1,3 @@
-"use me";
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -13,7 +12,6 @@ import {
   Receipt,
   AlertCircle,
   RefreshCw,
-  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { handleVerifyPaymentSessionAction } from "@/app/features/payment/actions/paymentActions";
@@ -49,7 +47,8 @@ export default function PaymentSuccessClient() {
   const [paymentData, setPaymentData] = useState<PaymentVerificationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const verifyPayment = useCallback(async (attemptsRemaining = 5) => {
+  const verifyPayment = useCallback(async () => {
+    const verifyAttempt = async (attemptsRemaining: number): Promise<void> => {
     if (!sessionId) {
       setLoading(false);
       setError("No session_id parameter found in payment redirect URL.");
@@ -69,7 +68,7 @@ export default function PaymentSuccessClient() {
         if ((statusStr === "PENDING" || statusStr === "PROCESSING") && attemptsRemaining > 1) {
           setVerifyingText(`Awaiting Stripe webhook confirmation... (Attempt ${6 - attemptsRemaining} of 5)`);
           setTimeout(() => {
-            verifyPayment(attemptsRemaining - 1);
+            void verifyAttempt(attemptsRemaining - 1);
           }, 2000);
           return;
         }
@@ -118,10 +117,10 @@ export default function PaymentSuccessClient() {
 
         setPaymentData({
           status: statusStr,
-          amount: Number(payload?.amount || payload?.totalAmount || payload?.price || 4555),
+          amount: Number(payload?.amount ?? payload?.totalAmount ?? payload?.price ?? 0),
           currency: (payload?.currency || "USD").toUpperCase(),
           transactionId: payload?.transactionId || payload?.paymentIntentId || sessionId,
-          date: payload?.createdAt || payload?.date || new Date().toISOString(),
+          date: payload?.createdAt || payload?.date || "",
           receiptUrl: payload?.receiptUrl || payload?.receipt_url || payload?.stripeReceiptUrl,
           rentalRequestId: resolvedRentalRequestId,
           propertyTitle: resolvedPropertyTitle,
@@ -134,7 +133,7 @@ export default function PaymentSuccessClient() {
         if (attemptsRemaining > 1) {
           setVerifyingText(`Confirming transaction with Stripe... (Attempt ${6 - attemptsRemaining} of 5)`);
           setTimeout(() => {
-            verifyPayment(attemptsRemaining - 1);
+            void verifyAttempt(attemptsRemaining - 1);
           }, 2000);
         } else {
           setLoading(false);
@@ -144,17 +143,20 @@ export default function PaymentSuccessClient() {
     } catch (err) {
       if (attemptsRemaining > 1) {
         setTimeout(() => {
-          verifyPayment(attemptsRemaining - 1);
+          void verifyAttempt(attemptsRemaining - 1);
         }, 2000);
       } else {
         setLoading(false);
         setError(err instanceof Error ? err.message : "Error verifying payment session");
       }
     }
-  }, [sessionId]);
+    };
+
+    await verifyAttempt(5);
+  }, [searchParams, sessionId]);
 
   useEffect(() => {
-    verifyPayment(5);
+    void verifyPayment();
   }, [verifyPayment]);
 
   const formattedDate = paymentData?.date
@@ -192,7 +194,7 @@ export default function PaymentSuccessClient() {
             <div className="pt-2 flex justify-center gap-3">
               <Button
                 variant="outline"
-                onClick={() => verifyPayment(3)}
+                onClick={() => void verifyPayment()}
                 className="rounded-xl text-xs gap-2"
               >
                 <RefreshCw className="w-3.5 h-3.5" />

@@ -17,6 +17,7 @@ import {
 import { StatsCard, type StatsCardProps } from "@/components/StatsCard";
 import { DashboardSection } from "@/components/DashboardSection";
 import { AnalyticsCharts } from "@/components/AnalyticsCharts";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { getMyProperties, getRentalRequestForLandlord } from "@/app/features/api/landlord.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -156,6 +157,9 @@ export default async function LandlordDashboardPage() {
     getMyProperties(),
     getRentalRequestForLandlord(),
   ]);
+  if (!propertiesResponse.ok || !requestsResponse.ok) {
+    throw new Error(propertiesResponse.message || requestsResponse.message || "Unable to load landlord dashboard data");
+  }
 
   const properties = extractList(propertiesResponse.data).map(toProperty).filter((item): item is PropertyItem => item !== null);
   const requests = extractList(requestsResponse.data).map(toRental).filter((item): item is RentalItem => item !== null);
@@ -182,7 +186,10 @@ export default async function LandlordDashboardPage() {
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Welcome Back, Landlord</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage your properties, rental requests, and earnings.</p>
         </div>
-        <Link href="/dashboard/landlord/properties/new"><Button size="sm" className="h-9 gap-2 bg-emerald-600 text-xs font-medium hover:bg-emerald-700"><HousePlus className="size-3.5" />Add Property</Button></Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle variant="ghost" />
+          <Link href="/dashboard/landlord/properties/new"><Button size="sm" className="h-9 gap-2 bg-emerald-600 text-xs font-medium hover:bg-emerald-700"><HousePlus className="size-3.5" />Add Property</Button></Link>
+        </div>
       </div>
 
       <DashboardSection>

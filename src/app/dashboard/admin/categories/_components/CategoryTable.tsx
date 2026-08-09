@@ -26,48 +26,18 @@ import {
 } from "lucide-react";
 
 interface CategoryTableProps {
-  categories?: any;
+  categories?: ICategory[] | {
+    data?: ICategory[] | { data?: ICategory[]; result?: ICategory[]; categories?: ICategory[] };
+  };
 }
 
-const DEFAULT_SAMPLE_CATEGORIES: ICategory[] = [
-  {
-    id: "cat-1",
-    name: "Apartment",
-    description: "Modern residential apartments in urban and suburban areas.",
-    createdAt: "2026-01-10T09:00:00Z",
-  },
-  {
-    id: "cat-2",
-    name: "Villa",
-    description: "Luxury private villas with gardens and spacious layouts.",
-    createdAt: "2026-02-14T11:30:00Z",
-  },
-  {
-    id: "cat-3",
-    name: "Studio",
-    description: "Compact single-room living spaces ideal for students and solo renters.",
-    createdAt: "2026-03-01T15:20:00Z",
-  },
-  {
-    id: "cat-4",
-    name: "Penthouse",
-    description: "Top-floor luxury residences with scenic skyline views.",
-    createdAt: "2026-04-18T10:45:00Z",
-  },
-  {
-    id: "cat-5",
-    name: "Commercial Space",
-    description: "Prime retail stores, corporate offices, and business spaces.",
-    createdAt: "2026-05-22T08:15:00Z",
-  },
-];
 
 type SortField = "name" | "description" | "createdAt";
 type SortOrder = "asc" | "desc";
 
 export function CategoryTable({ categories }: CategoryTableProps) {
   const categoryList = useMemo(() => {
-    if (categories === undefined) return DEFAULT_SAMPLE_CATEGORIES;
+    if (categories === undefined) return [];
     if (Array.isArray(categories)) return categories;
 
     if (categories && typeof categories === "object") {
@@ -111,8 +81,8 @@ export function CategoryTable({ categories }: CategoryTableProps) {
 
   const sortedCategories = useMemo(() => {
     return [...filteredCategories].sort((a: ICategory, b: ICategory) => {
-      let aValue: any = a[sortField] || "";
-      let bValue: any = b[sortField] || "";
+      let aValue: string | number = a[sortField] || "";
+      let bValue: string | number = b[sortField] || "";
 
       if (sortField === "createdAt") {
         aValue = new Date(aValue).getTime() || 0;

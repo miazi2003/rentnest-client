@@ -29,113 +29,13 @@ import {
 interface UserTableProps {
   users?: {
     ok?: boolean;
-    data?: any;
+    data?: IUser[] | { data?: IUser[]; users?: IUser[]; result?: IUser[]; payload?: IUser[] };
+    users?: IUser[];
+    result?: IUser[];
     message?: string;
   } | IUser[];
 }
 
-const DEFAULT_SAMPLE_USERS: IUser[] = [
-  {
-    id: "usr-1",
-    name: "Alex Morgan",
-    email: "alex.morgan@example.com",
-    phone: "+1 (555) 234-5678",
-    role: "ADMIN",
-    status: "ACTIVE",
-    createdAt: "2026-01-15T09:30:00Z",
-    updatedAt: "2026-01-15T09:30:00Z",
-  },
-  {
-    id: "usr-2",
-    name: "Sarah Jenkins",
-    email: "sarah.j@example.com",
-    phone: "+1 (555) 876-5432",
-    role: "LANDLORD",
-    status: "ACTIVE",
-    createdAt: "2026-03-22T14:15:00Z",
-    updatedAt: "2026-03-22T14:15:00Z",
-  },
-  {
-    id: "usr-3",
-    name: "Michael Chen",
-    email: "m.chen@example.com",
-    phone: "+1 (555) 345-6789",
-    role: "TENANT",
-    status: "BLOCKED",
-    createdAt: "2026-05-10T11:45:00Z",
-    updatedAt: "2026-05-10T11:45:00Z",
-  },
-  {
-    id: "usr-4",
-    name: "Emma Watson",
-    email: "emma.watson@example.com",
-    phone: "+1 (555) 987-6543",
-    role: "TENANT",
-    status: "ACTIVE",
-    createdAt: "2026-06-01T16:20:00Z",
-    updatedAt: "2026-06-01T16:20:00Z",
-  },
-  {
-    id: "usr-5",
-    name: "David Miller",
-    email: "d.miller@example.com",
-    phone: "+1 (555) 456-7890",
-    role: "LANDLORD",
-    status: "BLOCKED",
-    createdAt: "2026-06-18T08:10:00Z",
-    updatedAt: "2026-06-18T08:10:00Z",
-  },
-  {
-    id: "usr-6",
-    name: "Olivia Taylor",
-    email: "olivia.t@example.com",
-    phone: "+1 (555) 654-3210",
-    role: "TENANT",
-    status: "ACTIVE",
-    createdAt: "2026-07-04T12:00:00Z",
-    updatedAt: "2026-07-04T12:00:00Z",
-  },
-  {
-    id: "usr-7",
-    name: "James Wilson",
-    email: "james.w@example.com",
-    phone: "+1 (555) 789-0123",
-    role: "LANDLORD",
-    status: "ACTIVE",
-    createdAt: "2026-07-15T10:30:00Z",
-    updatedAt: "2026-07-15T10:30:00Z",
-  },
-  {
-    id: "usr-8",
-    name: "Sophia Martinez",
-    email: "sophia.m@example.com",
-    phone: "+1 (555) 890-1234",
-    role: "TENANT",
-    status: "ACTIVE",
-    createdAt: "2026-07-29T09:00:00Z",
-    updatedAt: "2026-07-29T09:00:00Z",
-  },
-  {
-    id: "usr-9",
-    name: "Lucas Anderson",
-    email: "lucas.a@example.com",
-    phone: "+1 (555) 901-2345",
-    role: "TENANT",
-    status: "BLOCKED",
-    createdAt: "2026-08-01T15:45:00Z",
-    updatedAt: "2026-08-01T15:45:00Z",
-  },
-  {
-    id: "usr-10",
-    name: "Grace Thomas",
-    email: "grace.t@example.com",
-    phone: "+1 (555) 012-3456",
-    role: "ADMIN",
-    status: "ACTIVE",
-    createdAt: "2026-08-02T08:00:00Z",
-    updatedAt: "2026-08-02T08:00:00Z",
-  },
-];
 
 type SortField = "name" | "email" | "role" | "status" | "createdAt";
 type SortOrder = "asc" | "desc";
@@ -143,7 +43,7 @@ type SortOrder = "asc" | "desc";
 export function UserTable({ users }: UserTableProps) {
   const router = useRouter();
   const rawUsersList = useMemo(() => {
-    if (users === undefined) return DEFAULT_SAMPLE_USERS;
+    if (users === undefined) return [];
     if (Array.isArray(users)) return users;
 
     if (users && typeof users === "object") {
@@ -157,8 +57,8 @@ export function UserTable({ users }: UserTableProps) {
         if (Array.isArray(d.payload)) return d.payload;
       }
 
-      if ("users" in users && Array.isArray((users as any).users)) return (users as any).users;
-      if ("result" in users && Array.isArray((users as any).result)) return (users as any).result;
+      if (Array.isArray(users.users)) return users.users;
+      if (Array.isArray(users.result)) return users.result;
     }
 
     return [];
@@ -227,8 +127,8 @@ export function UserTable({ users }: UserTableProps) {
 
   const sortedUsers = useMemo(() => {
     return [...filteredUsers].sort((a, b) => {
-      let aValue = a[sortField] || "";
-      let bValue = b[sortField] || "";
+      let aValue: string | number = a[sortField] || "";
+      let bValue: string | number = b[sortField] || "";
 
       if (sortField === "createdAt") {
         aValue = new Date(aValue).getTime() || 0;

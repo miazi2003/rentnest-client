@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
@@ -13,8 +14,6 @@ import {
   Star,
   Shield,
   User,
-  Settings,
-  HelpCircle,
   LogOut,
   Sparkles,
   User2,
@@ -123,16 +122,6 @@ const accountNavItems: NavItem[] = [
     href: "/dashboard/profile",
     icon: User,
   },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-  },
-  {
-    title: "Help & Support",
-    href: "/dashboard/support",
-    icon: HelpCircle,
-  },
 ];
 
 export function AppSidebar() {
@@ -200,16 +189,18 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-gray-200 shadow-sm">
+    <Sidebar collapsible="icon" className="border-r border-gray-200 dark:border-white/10 shadow-sm">
 
-      <SidebarHeader className="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 px-4 group-data-[collapsible=icon]:px-2">
+      <SidebarHeader className="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 dark:border-white/10 px-4 group-data-[collapsible=icon]:px-2">
         <Link
           href={portalInfo.href}
           className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
         >
-          <img
+          <Image
             src="/favicon.ico"
             alt="RentNest Logo"
+            width={36}
+            height={36}
             className="h-9 w-9 shrink-0 rounded-lg object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col gap-0.5 overflow-hidden group-data-[collapsible=icon]:hidden">
@@ -333,4 +324,3 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
-

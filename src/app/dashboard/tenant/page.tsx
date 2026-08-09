@@ -13,14 +13,18 @@ const TenantDashboardPage = async () => {
 
   const rawPayments = payment?.data?.data ?? payment?.data;
   const paymentHistory = Array.isArray(rawPayments) ? rawPayments : [];
+  const errors = [
+    !result?.ok ? result?.message || result?.data?.message || "Unable to load rental requests." : null,
+    !payment?.ok ? payment?.message || payment?.data?.message || "Unable to load payment history." : null,
+  ].filter((message): message is string => Boolean(message));
 
   return (
     <TenantDashboardClient
       initialRequests={rentalRequests}
       initialPayments={paymentHistory}
+      errorMessage={errors.join(" ") || undefined}
     />
   );
 };
 
 export default TenantDashboardPage;
-

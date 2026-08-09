@@ -1,9 +1,7 @@
-"use me";
 "use client";
 
-import React, { useState } from "react";
-import { Star, Building2, Calendar, MessageSquare, Sparkles, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Star, Building2, Calendar, MessageSquare, Sparkles } from "lucide-react";
 
 interface IReview {
   id: string;
@@ -15,29 +13,8 @@ interface IReview {
   landlordName: string;
 }
 
-const SAMPLE_REVIEWS: IReview[] = [
-  {
-    id: "rev-1",
-    propertyTitle: "Greenwood Studio Apartment",
-    location: "Dhanmondi 27, Dhaka",
-    rating: 5,
-    comment: "Excellent experience! Clean building, high-speed fiber internet pre-installed, and very responsive landlord.",
-    date: "2026-07-15",
-    landlordName: "Anisur Rahman",
-  },
-  {
-    id: "rev-2",
-    propertyTitle: "Cozy Garden View Flat",
-    location: "Mirpur 10, Dhaka",
-    rating: 4,
-    comment: "Nice quiet neighborhood with good security. Parking facilities were convenient.",
-    date: "2026-05-20",
-    landlordName: "Syed Alim",
-  },
-];
 
-export default function TenantReviewsClient() {
-  const [reviews] = useState<IReview[]>(SAMPLE_REVIEWS);
+export default function TenantReviewsClient({ reviews = [] }: { reviews?: IReview[] }) {
 
   return (
     <div className="space-y-8 pb-10">
@@ -124,3 +101,4 @@ export default function TenantReviewsClient() {
     </div>
   );
 }
+

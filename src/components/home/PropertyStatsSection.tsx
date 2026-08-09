@@ -7,8 +7,8 @@ interface PropertyStatsSectionProps {
 }
 
 const supportingStats = [
-  { value: "2.4k+", label: "Happy renters" },
-  { value: "98%", label: "Positive experiences" },
+  { value: "—", label: "Happy renters" },
+  { value: "—", label: "Positive experiences" },
 ] as const;
 
 export function PropertyStatsSection({ totalProperties }: PropertyStatsSectionProps) {

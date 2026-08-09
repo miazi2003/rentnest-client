@@ -2,15 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export function GlobalNavigationLoader() {
   const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => setIsLoading(false));
-    return () => cancelAnimationFrame(frame);
+    const timer = window.setTimeout(() => setIsLoading(false), 0);
+    return () => window.clearTimeout(timer);
   }, [pathname]);
 
   useEffect(() => {
@@ -41,13 +40,11 @@ export function GlobalNavigationLoader() {
     const showLoader = () => setIsLoading(true);
     document.addEventListener("click", handleDocumentClick, true);
     window.addEventListener("popstate", showLoader);
-    window.addEventListener("beforeunload", showLoader);
     window.addEventListener("rentnest:navigation-start", showLoader);
 
     return () => {
       document.removeEventListener("click", handleDocumentClick, true);
       window.removeEventListener("popstate", showLoader);
-      window.removeEventListener("beforeunload", showLoader);
       window.removeEventListener("rentnest:navigation-start", showLoader);
     };
   }, []);
@@ -56,39 +53,9 @@ export function GlobalNavigationLoader() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] overflow-y-auto bg-[#FAFAFA] px-4 py-8 dark:bg-background sm:px-6 lg:px-8"
+      className="fixed top-0 left-0 right-0 z-[100] h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 animate-pulse transition-all duration-300"
       role="status"
-      aria-live="polite"
       aria-label="Loading page"
-    >
-      <div className="mx-auto w-full max-w-7xl space-y-8">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Skeleton className="size-10 rounded-xl" />
-            <Skeleton className="h-6 w-32" />
-          </div>
-          <Skeleton className="h-9 w-28 rounded-xl" />
-        </div>
-
-        <div className="space-y-3">
-          <Skeleton className="h-8 w-64 max-w-full" />
-          <Skeleton className="h-4 w-96 max-w-full" />
-        </div>
-
-        <Skeleton className="aspect-[16/5] min-h-48 w-full rounded-2xl" />
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="space-y-4 rounded-2xl border border-slate-200/70 bg-white p-5 dark:border-border dark:bg-card">
-              <Skeleton className="aspect-video w-full rounded-xl" />
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-3.5 w-full" />
-              <Skeleton className="h-3.5 w-2/3" />
-            </div>
-          ))}
-        </div>
-      </div>
-      <span className="sr-only">Loading content, please wait.</span>
-    </div>
+    />
   );
 }

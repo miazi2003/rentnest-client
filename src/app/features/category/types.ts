@@ -1,1 +1,1 @@
-export interface ICategoryType {}
+export type ICategoryType = Record<string, unknown>;

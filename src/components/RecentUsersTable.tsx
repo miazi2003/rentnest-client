@@ -28,53 +28,6 @@ export interface UserItem {
   joined: string;
 }
 
-const defaultRecentUsers: UserItem[] = [
-  {
-    id: "user-1",
-    name: "Alex Rivera",
-    email: "alex.rivera@example.com",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
-    role: "Landlord",
-    status: "Active",
-    joined: "Aug 02, 2026",
-  },
-  {
-    id: "user-2",
-    name: "Sophia Martinez",
-    email: "sophia.m@example.com",
-    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80",
-    role: "Tenant",
-    status: "Active",
-    joined: "Aug 01, 2026",
-  },
-  {
-    id: "user-3",
-    name: "Marcus Vance",
-    email: "marcus.vance@example.com",
-    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
-    role: "Admin",
-    status: "Active",
-    joined: "Jul 31, 2026",
-  },
-  {
-    id: "user-4",
-    name: "Elena Rostova",
-    email: "elena.r@example.com",
-    avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=80",
-    role: "Tenant",
-    status: "Blocked",
-    joined: "Jul 30, 2026",
-  },
-  {
-    id: "user-5",
-    name: "David Kim",
-    email: "david.kim@example.com",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80",
-    role: "Landlord",
-    status: "Active",
-    joined: "Jul 28, 2026",
-  },
-];
 
 interface RecentUsersTableProps {
   users?: UserItem[];
@@ -85,7 +38,7 @@ export function RecentUsersTable({
   users,
   onManage,
 }: RecentUsersTableProps) {
-  const items = users !== undefined ? users : defaultRecentUsers;
+  const items = users ?? [];
   const displayUsers = items.slice(0, 5);
 
   const getRoleBadgeVariant = (role: UserRole) => {
@@ -205,3 +158,4 @@ export function RecentUsersTable({
     </Card>
   );
 }
+

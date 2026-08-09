@@ -149,9 +149,9 @@ The tenant success page reads the Stripe session ID, calls the backend verificat
 - Authentication forms display Server Action validation/API messages and use Sonner notifications.
 - Property, request, category, payment, review, and logout interactions provide success and failure toasts.
 - API helpers return structured `ok`, `status`, `data`, and optional `message` values and safely handle network or response parsing failures.
-- Pages and tables normalize missing collections to empty arrays and render empty states rather than crashing.
-- Root and dashboard `loading.tsx` files provide loading feedback; payment verification supplies its own loading, retry, and error UI.
-- The project does not currently define a custom App Router `error.tsx` boundary.
+- Successful empty collections render explicit empty states, while failed collection requests retain structured error feedback or reach an App Router error boundary.
+- Root, dashboard, properties, and property-detail loading files provide loading feedback; payment verification supplies its own loading, retry, and error UI.
+- Root, global, dashboard, and properties error boundaries provide branded recovery UI without exposing error details.
 
 ## Environment Variables
 
@@ -170,7 +170,7 @@ JWT_SECRET=<ADD_BACKEND_JWT_SECRET>
 Prerequisites: Node.js and pnpm.
 
 ```bash
-git clone <ADD_GITHUB_REPOSITORY_URL>
+git clone https://github.com/miazi2003/rentnest-client.git
 cd rentnest-client
 pnpm install
 ```

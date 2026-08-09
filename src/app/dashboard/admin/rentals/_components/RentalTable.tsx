@@ -28,6 +28,7 @@ import {
 
 export interface IRentalRequestItem {
   id: string;
+  _id?: string;
   propertyTitle: string;
   propertyAddress?: string;
   tenantName: string;
@@ -35,82 +36,20 @@ export interface IRentalRequestItem {
   startDate: string;
   endDate: string;
   totalPrice: number;
+  price?: number;
   status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED";
   paymentStatus?: "PAID" | "UNPAID";
   createdAt: string;
+  property?: { title?: string; address?: string; location?: string };
+  tenant?: { name?: string; email?: string };
 }
 
 interface RentalTableProps {
-  rentals?: any;
+  rentals?: IRentalRequestItem[] | {
+    data?: IRentalRequestItem[] | { data?: IRentalRequestItem[]; result?: IRentalRequestItem[]; rentals?: IRentalRequestItem[]; requests?: IRentalRequestItem[] };
+  };
 }
 
-const DEFAULT_SAMPLE_RENTALS: IRentalRequestItem[] = [
-  {
-    id: "rent-1",
-    propertyTitle: "Luxury Apartment in Downtown",
-    propertyAddress: "Downtown, New York",
-    tenantName: "Michael Chen",
-    tenantEmail: "m.chen@example.com",
-    startDate: "2026-08-10T00:00:00Z",
-    endDate: "2026-09-10T00:00:00Z",
-    totalPrice: 2500,
-    status: "APPROVED",
-    paymentStatus: "PAID",
-    createdAt: "2026-07-29T14:08:24.432Z",
-  },
-  {
-    id: "rent-2",
-    propertyTitle: "Cozy Modern Villa",
-    propertyAddress: "Beverly Hills, Los Angeles",
-    tenantName: "Emma Watson",
-    tenantEmail: "emma.watson@example.com",
-    startDate: "2026-08-15T00:00:00Z",
-    endDate: "2026-11-15T00:00:00Z",
-    totalPrice: 14400,
-    status: "PENDING",
-    paymentStatus: "UNPAID",
-    createdAt: "2026-07-30T10:15:00.000Z",
-  },
-  {
-    id: "rent-3",
-    propertyTitle: "Seaside Studio Apartment",
-    propertyAddress: "Ocean Drive, Miami",
-    tenantName: "Lucas Anderson",
-    tenantEmail: "lucas.a@example.com",
-    startDate: "2026-08-01T00:00:00Z",
-    endDate: "2026-08-31T00:00:00Z",
-    totalPrice: 1800,
-    status: "REJECTED",
-    paymentStatus: "UNPAID",
-    createdAt: "2026-07-25T08:30:00.000Z",
-  },
-  {
-    id: "rent-4",
-    propertyTitle: "Spacious Family Penthouse",
-    propertyAddress: "Lincoln Park, Chicago",
-    tenantName: "Sophia Martinez",
-    tenantEmail: "sophia.m@example.com",
-    startDate: "2026-06-01T00:00:00Z",
-    endDate: "2026-07-01T00:00:00Z",
-    totalPrice: 3500,
-    status: "COMPLETED",
-    paymentStatus: "PAID",
-    createdAt: "2026-05-20T16:45:00.000Z",
-  },
-  {
-    id: "rent-5",
-    propertyTitle: "Urban Loft near Station",
-    propertyAddress: "SoHo, New York",
-    tenantName: "Daniel White",
-    tenantEmail: "daniel.w@example.com",
-    startDate: "2026-08-20T00:00:00Z",
-    endDate: "2026-09-20T00:00:00Z",
-    totalPrice: 2200,
-    status: "PENDING",
-    paymentStatus: "UNPAID",
-    createdAt: "2026-08-01T11:20:00.000Z",
-  },
-];
 
 type SortField =
   | "propertyTitle"
@@ -122,7 +61,7 @@ type SortOrder = "asc" | "desc";
 
 export function RentalTable({ rentals }: RentalTableProps) {
   const rentalList = useMemo(() => {
-    if (rentals === undefined) return DEFAULT_SAMPLE_RENTALS;
+    if (rentals === undefined) return [];
     if (Array.isArray(rentals)) return rentals;
 
     if (rentals && typeof rentals === "object") {
@@ -147,7 +86,7 @@ export function RentalTable({ rentals }: RentalTableProps) {
   const pageSize = 5;
 
   const filteredRentals = useMemo(() => {
-    return rentalList.filter((item: any) => {
+    return rentalList.filter((item: IRentalRequestItem) => {
       const propTitle =
         typeof item.propertyTitle === "string"
           ? item.propertyTitle
@@ -177,9 +116,9 @@ export function RentalTable({ rentals }: RentalTableProps) {
 
 
   const sortedRentals = useMemo(() => {
-    return [...filteredRentals].sort((a: any, b: any) => {
-      let aValue: any = a[sortField];
-      let bValue: any = b[sortField];
+    return [...filteredRentals].sort((a: IRentalRequestItem, b: IRentalRequestItem) => {
+      let aValue: string | number = a[sortField];
+      let bValue: string | number = b[sortField];
 
       if (sortField === "propertyTitle") {
         aValue = a.propertyTitle || a.property?.title || "";
@@ -194,7 +133,7 @@ export function RentalTable({ rentals }: RentalTableProps) {
 
       if (typeof aValue === "string") {
         aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
+        bValue = String(bValue).toLowerCase();
       }
 
       if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
@@ -388,7 +327,7 @@ export function RentalTable({ rentals }: RentalTableProps) {
             </TableHeader>
             <TableBody>
               {paginatedRentals.length > 0 ? (
-                paginatedRentals.map((item: any) => {
+                paginatedRentals.map((item) => {
                   const title =
                     typeof item.propertyTitle === "string"
                       ? item.propertyTitle
@@ -507,7 +446,7 @@ export function RentalTable({ rentals }: RentalTableProps) {
 
         <div className="block md:hidden space-y-3">
           {paginatedRentals.length > 0 ? (
-            paginatedRentals.map((item: any) => {
+            paginatedRentals.map((item) => {
               const title =
                 typeof item.propertyTitle === "string"
                   ? item.propertyTitle

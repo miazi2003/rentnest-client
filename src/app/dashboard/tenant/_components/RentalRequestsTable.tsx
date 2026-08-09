@@ -26,7 +26,6 @@ import { Button } from "@/components/ui/button";
 
 interface RentalRequestsTableProps {
   requests: IRentalRequest[];
-  onOpenPayModal: (request: IRentalRequest) => void;
   onOpenReviewModal: (request: IRentalRequest) => void;
 }
 

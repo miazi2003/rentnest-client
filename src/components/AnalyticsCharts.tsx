@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, BarChart3, PieChart as PieIcon, DollarSign, Layers } from "lucide-react";
+import { TrendingUp, PieChart as PieIcon, DollarSign, Layers } from "lucide-react";
 
 interface StatusDistributionItem {
   status: string;

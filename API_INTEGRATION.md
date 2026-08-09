@@ -58,14 +58,14 @@ Review actions validate IDs and review payloads with Zod. The tenant UI reports 
 
 | Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
 |---|---|---|---|---|---|---|---|
-| Landlord properties | `/dashboard/landlord`, `/dashboard/landlord/properties` | `getMyPropertiesAction` → `getMyProperties` | GET | `/api/landlord/properties` | Bearer token | `cache: "force-cache"`; tag `landlord-properties` | Load listings owned by the authenticated landlord. |
-| Incoming requests | `/dashboard/landlord`, `/dashboard/landlord/requests` | `getIncomingRequestsAction` → `getRentalRequestForLandlord` | GET | `/api/landlord/requests` | Bearer token | `cache: "force-cache"`; tag `landlord-requests` | Load rental requests for the landlord's properties. |
+| Landlord properties | `/dashboard/landlord`, `/dashboard/landlord/properties` | `getMyPropertiesAction` → `getMyProperties` | GET | `/api/landlord/properties` | Bearer token | `cache: "no-store"` | Load listings owned by the authenticated landlord. |
+| Incoming requests | `/dashboard/landlord`, `/dashboard/landlord/requests` | `getIncomingRequestsAction` → `getRentalRequestForLandlord` | GET | `/api/landlord/requests` | Bearer token | `cache: "no-store"` | Load rental requests for the landlord's properties. |
 | Approve/reject request | `/dashboard/landlord/requests` | `RequestListTable` → `handleRequestAction` → `handleAcceptOrRejectRequest` | PATCH | `/api/landlord/requests/:requestId` | Bearer token | `cache: "no-store"`; revalidates `/dashboard/landlord/requests` | Update a validated rental request status. |
 | Create property | `/landlord/properties/new`, `/dashboard/landlord/properties/new` | `PropertyCreateForm` → `createPropertyAction` → `createProperty` | POST | `/api/landlord/properties` | Bearer token | `cache: "no-store"`; revalidates `/dashboard/landlord/properties` | Create a validated landlord property listing. |
-| Update property | `/landlord/properties/[id]/edit`, `/dashboard/landlord/properties/[id]/edit` | `PropertyEditForm` → `updatePropertyAction` → `updateProperty` | PUT, then PATCH on HTTP 405 | `/api/landlord/properties/:propertyId` | Bearer token | `cache: "no-store"`; paths and `landlord-properties` tag revalidated | Update a validated property while supporting either backend update method. |
-| Delete property | `/dashboard/landlord/properties` | `DeletePropertyButton` → `deletePropertyAction` → `deleteProperty` | DELETE | `/api/landlord/properties/:propertyId` | Bearer token | `cache: "no-store"`; related paths, `landlord-properties`, and `landlord-requests` revalidated | Delete an owned property and invalidate dependent views. |
+| Update property | `/landlord/properties/[id]/edit`, `/dashboard/landlord/properties/[id]/edit` | `PropertyEditForm` → `updatePropertyAction` → `updateProperty` | PUT, then PATCH on HTTP 405 | `/api/landlord/properties/:propertyId` | Bearer token | `cache: "no-store"`; related paths revalidated | Update a validated property while supporting either backend update method. |
+| Delete property | `/dashboard/landlord/properties` | `DeletePropertyButton` → `deletePropertyAction` → `deleteProperty` | DELETE | `/api/landlord/properties/:propertyId` | Bearer token | `cache: "no-store"`; related paths revalidated | Delete an owned property and invalidate dependent views. |
 
-Landlord list actions return empty arrays when the API fails or returns an unexpected shape. Mutation actions validate payloads with Zod, return structured failures, and display Sonner notifications in their client components.
+Landlord list actions preserve API failures as structured errors; successful empty results remain empty arrays. Mutation actions validate payloads with Zod, return structured failures, and display Sonner notifications in their client components.
 
 ## Admin APIs
 
@@ -85,9 +85,9 @@ No admin property or rental mutation endpoint is consumed by the current fronten
 | Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
 |---|---|---|---|---|---|---|---|
 | Category list | `/dashboard/admin`, `/dashboard/admin/categories` | `getCategoriesAction` → `getCategoriesApi` | GET | `/api/categories`; fallback `/api/admin/categories` when public request fails | Public first; Bearer token for fallback | `cache: "no-store"` | Load categories for admin summaries and management. |
-| Create category | `/dashboard/admin/categories` | `CategoryForm` → `createCategoryAction` → `createCategoryApi` | POST | `/api/admin/categories` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths; calls `revalidateTag("categories")` | Create a validated category. |
-| Update category | `/dashboard/admin/categories` | `CategoryForm` → `updateCategoryAction` → `updateCategoryApi` | PUT, then PATCH on HTTP 405 | `/api/admin/categories/:id` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths; calls `revalidateTag("categories")` | Update a validated category while supporting either backend update method. |
-| Delete category | `/dashboard/admin/categories` | `DeleteCategoryDialog` → `deleteCategoryAction` → `deleteCategoryApi` | DELETE | `/api/admin/categories/:id` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths; calls `revalidateTag("categories")` | Delete a validated category ID. |
+| Create category | `/dashboard/admin/categories` | `CategoryForm` → `createCategoryAction` → `createCategoryApi` | POST | `/api/admin/categories` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths | Create a validated category. |
+| Update category | `/dashboard/admin/categories` | `CategoryForm` → `updateCategoryAction` → `updateCategoryApi` | PUT, then PATCH on HTTP 405 | `/api/admin/categories/:id` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths | Update a validated category while supporting either backend update method. |
+| Delete category | `/dashboard/admin/categories` | `DeleteCategoryDialog` → `deleteCategoryAction` → `deleteCategoryApi` | DELETE | `/api/admin/categories/:id` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths | Delete a validated category ID. |
 
 Category forms perform required-field checks before invoking Zod-validated Server Actions. Results are communicated through Sonner and the list is refreshed after successful mutations.
 
@@ -107,7 +107,7 @@ Login form
 → Next.js proxy checks authentication and JWT role for protected routes
 ```
 
-The proxy treats `/`, `/about`, `/login`, `/register`, and `/properties...` as public. Other matched application routes require `accessToken`. It redirects authenticated visitors away from login/register and restricts `/dashboard/admin`, `/dashboard/tenant`, `/dashboard/landlord`, and `/landlord` by JWT role.
+The proxy treats `/`, `/about`, `/contact`, `/login`, `/register`, and `/properties...` as public. Other matched application routes require `accessToken`. It redirects authenticated visitors away from login/register and restricts `/dashboard/admin`, `/dashboard/tenant`, `/dashboard/landlord`, and `/landlord` by a successfully verified JWT role.
 
 ## Payment Flow
 
@@ -132,8 +132,7 @@ The webhook itself belongs to the backend and is not implemented in this reposit
 - Public property lists and details use `next: { revalidate: 60 }`.
 - Public property reviews use `next: { revalidate: 60 }`.
 - The property-form category helper uses `next: { revalidate: 300 }`.
-- Landlord properties use `cache: "force-cache"` with the `landlord-properties` tag.
-- Landlord incoming requests use `cache: "force-cache"` with the `landlord-requests` tag.
+- Authenticated landlord properties and incoming requests use `cache: "no-store"`.
 
 ### Uncached reads and mutations
 
@@ -147,18 +146,12 @@ Authenticated current-user, tenant rental, payment, admin, category-management, 
 - Property deletion revalidates landlord properties, landlord requests, tenant dashboard, and public properties.
 - Category mutations revalidate `/dashboard/admin/categories` and `/properties`.
 
-### Tag revalidation
-
-- Property update revalidates `landlord-properties`.
-- Property deletion revalidates `landlord-properties` and `landlord-requests`.
-- Category mutations call `revalidateTag("categories")`. The current category fetches do not attach a `categories` tag, so path revalidation is the effective invalidation mechanism for the documented category views.
-
 ## Error Handling
 
 - **API return objects:** helpers return status-aware `ok`, `status`, `data`, and optional `message` results; most JSON parsing uses a `null` fallback.
 - **Zod validation:** Server Actions reject malformed forms, entity IDs, rental dates, property payloads, category data, review data, and payment identifiers before calling the backend.
 - **Sonner notifications:** authentication, rental, landlord, category, payment, review, and logout components display success and error toasts.
 - **Inline states:** authentication forms render action messages; payment verification renders progress, retry, timeout, and success states.
-- **Loading states:** root and dashboard `loading.tsx` files provide skeleton/loading UI, with additional local pending states in forms and payment components.
+- **Loading states:** root, dashboard, properties, and property-detail loading files provide skeleton/loading UI, with additional local pending states in forms and payment components.
 - **Empty states:** property lists, dashboard tables, request lists, payments, and reviews safely handle missing or empty arrays.
-- **Error boundary status:** no custom `error.tsx` exists in the current frontend, so the documentation does not claim a project-specific App Router error boundary.
+- **Error boundaries:** root/global, dashboard, and properties boundaries provide reset-based recovery UI; genuine missing-property responses use the branded `not-found.tsx` page.

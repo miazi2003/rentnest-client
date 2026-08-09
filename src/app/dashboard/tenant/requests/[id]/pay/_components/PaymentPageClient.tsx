@@ -1,4 +1,3 @@
-"use me";
 "use client";
 
 import React, { useState } from "react";
@@ -12,7 +11,6 @@ import {
   Sparkles,
   Phone,
   Mail,
-  Receipt,
   Tag,
   ExternalLink,
 } from "lucide-react";
@@ -39,7 +37,7 @@ interface PaymentPageClientProps {
 export default function PaymentPageClient({ request }: PaymentPageClientProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const requestId = request?.id || (request as any)?._id || "";
+  const requestId = request?.id || request?._id || "";
   const propertyTitle = request?.title || request?.property?.title || "Rental Property";
   const propertyAddress = request?.address || request?.property?.address || request?.location || "Location N/A";
   const categoryName = request?.category?.name || request?.property?.category?.name || "Property";

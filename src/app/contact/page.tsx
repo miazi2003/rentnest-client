@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, CheckCircle2, Building2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Building2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,7 @@ export default function ContactPage() {
     subject: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const isSubmitting = false;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +23,8 @@ export default function ContactPage() {
       return;
     }
 
-    setIsSubmitting(true);
-    // Simulate contact submission feedback for frontend UX
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSent(true);
-      toast.success("Thank you! Your message has been sent to the RentNest support team.");
-    }, 600);
+    // Submission remains disabled until a real backend contact endpoint is available.
+    toast.error("Contact submission is temporarily unavailable. Please use the contact details on this page.");
   };
 
   return (
@@ -112,27 +106,6 @@ export default function ContactPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="px-2 pt-2">
-              {isSent ? (
-                <div className="py-12 text-center space-y-4">
-                  <div className="size-16 rounded-2xl bg-emerald-500/15 text-emerald-500 mx-auto flex items-center justify-center">
-                    <CheckCircle2 className="size-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">Message Sent Successfully!</h3>
-                  <p className="text-xs text-muted-foreground max-w-md mx-auto">
-                    We have received your inquiry and will reach out to <strong>{formData.email}</strong> shortly.
-                  </p>
-                  <Button
-                    onClick={() => {
-                      setIsSent(false);
-                      setFormData({ name: "", email: "", subject: "", message: "" });
-                    }}
-                    variant="outline"
-                    className="rounded-full text-xs font-bold px-6 cursor-pointer mt-4"
-                  >
-                    Send Another Message
-                  </Button>
-                </div>
-              ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
@@ -208,7 +181,6 @@ export default function ContactPage() {
                     )}
                   </Button>
                 </form>
-              )}
             </CardContent>
           </Card>
         </div>

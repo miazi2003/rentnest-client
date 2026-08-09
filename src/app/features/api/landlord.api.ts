@@ -17,10 +17,7 @@ export const getMyProperties = async () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        cache: "force-cache",
-        next: {
-          tags: ["landlord-properties"],
-        },
+        cache: "no-store",
       }
     );
 
@@ -61,10 +58,7 @@ export const getRentalRequestForLandlord = async () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        cache: "force-cache",
-        next: {
-          tags: ["landlord-requests"],
-        },
+        cache: "no-store",
       }
     );
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import {
   getCategoriesApi,
   createCategoryApi,
@@ -37,7 +37,6 @@ export async function createCategoryAction(payload: {
     if (res.ok) {
       revalidatePath("/dashboard/admin/categories");
       revalidatePath("/properties");
-      (revalidateTag as (tag: string) => void)("categories");
     }
     return res;
   } catch (error) {
@@ -67,7 +66,6 @@ export async function updateCategoryAction(
     if (res.ok) {
       revalidatePath("/dashboard/admin/categories");
       revalidatePath("/properties");
-      (revalidateTag as (tag: string) => void)("categories");
     }
     return res;
   } catch (error) {
@@ -90,7 +88,6 @@ export async function deleteCategoryAction(id: string) {
     if (res.ok) {
       revalidatePath("/dashboard/admin/categories");
       revalidatePath("/properties");
-      (revalidateTag as (tag: string) => void)("categories");
     }
     return res;
   } catch (error) {

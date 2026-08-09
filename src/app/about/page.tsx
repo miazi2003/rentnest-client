@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ArrowUpRight, Building2, HeartHandshake, KeyRound } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Us | RentNest",
   description: "Meet the people and principles behind RentNest.",
 };
-
-const values = [
-  { icon: HeartHandshake, title: "People first", text: "Every decision starts with what makes renting feel clearer, safer, and more human." },
-  { icon: Building2, title: "Better homes", text: "We connect thoughtful landlords with tenants searching for a place that truly fits." },
-  { icon: KeyRound, title: "Simple by design", text: "From discovery to move-in, we remove friction from every step of the rental journey." },
-];
 
 export default function AboutPage() {
   return (

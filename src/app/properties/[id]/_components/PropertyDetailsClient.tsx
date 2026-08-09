@@ -215,6 +215,7 @@ export default function PropertyDetailsClient({
                 <button
                   key={idx}
                   type="button"
+                  aria-label={`View property image ${idx + 1}`}
                   onClick={() => setSelectedImageIndex(idx)}
                   className={`relative size-20 shrink-0 overflow-hidden rounded-2xl border-2 transition-all cursor-pointer ${
                     selectedImageIndex === idx

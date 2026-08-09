@@ -18,8 +18,7 @@ export function PopularLocationsSection({ properties = [] }: PopularLocationsSec
     )
   ).slice(0, 4);
 
-  const fallbackLocations = ["Downtown City Center", "Westside Heights", "Lakeside District", "Uptown Residences"];
-  const displayLocations = realLocations.length > 0 ? realLocations : fallbackLocations;
+  const displayLocations = realLocations;
 
   return (
     <section className="py-16 sm:py-24 bg-muted/20 border-t border-border/50">

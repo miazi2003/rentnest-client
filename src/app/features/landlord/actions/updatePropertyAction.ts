@@ -2,7 +2,7 @@
 
 import { TCreatePropertyPayload } from "@/app/dashboard/landlord/types/landlord.types";
 import { updateProperty } from "../../api/landlord.api";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { propertyIdSchema, propertyPayloadSchema } from "../validations";
 import { validationMessage } from "../../shared-validations";
 
@@ -27,7 +27,6 @@ export async function updatePropertyAction(
       revalidatePath("/landlord/properties");
       revalidatePath("/properties");
       revalidatePath(`/properties/${validatedId.data}`);
-      (revalidateTag as (tag: string) => void)("landlord-properties");
     }
     return res;
   } catch (error) {

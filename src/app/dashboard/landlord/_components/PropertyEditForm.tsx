@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { toast } from "sonner";
 import {
   Building2,
@@ -15,7 +16,6 @@ import {
   Loader2,
   ArrowLeft,
   CheckCircle2,
-  Edit3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,7 +48,7 @@ export function PropertyEditForm({
     title: initialData?.title || "",
     description: initialData?.description || "",
     price: Number(initialData?.price || 0),
-    address: initialData?.address || (initialData as any)?.location || "",
+    address: initialData?.address || initialData?.location || "",
     latitude: initialData?.latitude || 23.8103,
     longitude: initialData?.longitude || 90.4125,
     images: initialData?.images || [],
@@ -134,7 +134,7 @@ export function PropertyEditForm({
     }
 
     loadCategories();
-  }, [categories]);
+  }, [categories, formData.categoryId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -203,7 +203,7 @@ export function PropertyEditForm({
       } else {
         toast.error(res?.message || res?.data?.message || "Failed to update property.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred while updating property.");
     } finally {
       setLoading(false);
@@ -260,10 +260,11 @@ export function PropertyEditForm({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
               <div className="sm:col-span-2 space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                <label htmlFor="property-title" className="text-xs font-bold text-foreground flex items-center gap-1">
                   Property Title <span className="text-rose-500">*</span>
                 </label>
                 <Input
+                  id="property-title"
                   type="text"
                   name="title"
                   value={formData.title}
@@ -276,13 +277,14 @@ export function PropertyEditForm({
 
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                <label htmlFor="property-price" className="text-xs font-bold text-foreground flex items-center gap-1">
                   Rent Price per Day ($) <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <DollarSign className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5" />
                   <Input
-                    type="number"
+                    id="property-price"
+                  type="number"
                     name="price"
                     value={formData.price || ""}
                     onChange={handleChange}
@@ -296,13 +298,14 @@ export function PropertyEditForm({
 
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                <label htmlFor="property-category" className="text-xs font-bold text-foreground flex items-center gap-1">
                   Property Category <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <Tag className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5" />
                   <select
-                    name="categoryId"
+                    id="property-category"
+                  name="categoryId"
                     value={formData.categoryId}
                     onChange={handleChange}
                     disabled={fetchingCategories}
@@ -386,10 +389,11 @@ export function PropertyEditForm({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
               <div className="sm:col-span-3 space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                <label htmlFor="property-address" className="text-xs font-bold text-foreground flex items-center gap-1">
                   Full Address / Location <span className="text-rose-500">*</span>
                 </label>
                 <Input
+                  id="property-address"
                   type="text"
                   name="address"
                   value={formData.address}
@@ -402,7 +406,7 @@ export function PropertyEditForm({
 
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label htmlFor="property-latitude" className="text-xs font-bold text-foreground">
                   Latitude (Optional)
                 </label>
                 <Input
@@ -418,7 +422,7 @@ export function PropertyEditForm({
 
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label htmlFor="property-longitude" className="text-xs font-bold text-foreground">
                   Longitude (Optional)
                 </label>
                 <Input
@@ -451,6 +455,8 @@ export function PropertyEditForm({
             <div className="space-y-3">
               <div className="flex gap-2">
                 <Input
+                  id="property-image-url"
+                  aria-label="Property image URL"
                   type="url"
                   value={imageUrlInput}
                   onChange={(e) => setImageUrlInput(e.target.value)}
@@ -475,18 +481,18 @@ export function PropertyEditForm({
                       key={idx}
                       className="group relative h-24 overflow-hidden rounded-2xl bg-muted"
                     >
-                      <img
+                      <Image
                         src={img}
                         alt={`Property image ${idx + 1}`}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 640px) 50vw, 25vw"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "https://placehold.co/400x300?text=Invalid+Image+URL";
-                        }}
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(idx)}
+                        aria-label={`Remove property image ${idx + 1}`}
                         className="absolute top-1.5 right-1.5 p-1.5 rounded-full bg-rose-600/90 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-700 cursor-pointer"
                         title="Remove image"
                       >
@@ -509,11 +515,12 @@ export function PropertyEditForm({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-foreground">
-                Description & Amenities
+              <label htmlFor="property-description" className="text-xs font-bold text-foreground">
+                  Description & Amenities
               </label>
               <textarea
-                name="description"
+                id="property-description"
+                  name="description"
                 rows={4}
                 value={formData.description}
                 onChange={handleChange}
@@ -557,3 +564,5 @@ export function PropertyEditForm({
     </Card>
   );
 }
+
+

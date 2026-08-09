@@ -16,13 +16,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { DeletePropertyButton } from "../_components/DeletePropertyButton";
+import type { ILandlordProperty } from "../types/landlord.types";
 
 export const dynamic = "force-dynamic";
 
 export default async function LandlordPropertiesPage() {
   const response = await getMyPropertiesAction();
 
-  const myPropertyData = Array.isArray(response)
+  const myPropertyData: ILandlordProperty[] = Array.isArray(response)
     ? response
     : Array.isArray(response?.data)
       ? response.data
@@ -73,7 +74,7 @@ export default async function LandlordPropertiesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {myPropertyData.map((property: any) => (
+          {myPropertyData.map((property) => (
             <Card
               key={property.id}
               className="flex flex-col justify-between overflow-hidden rounded-3xl border-border/80 transition-all duration-300 hover:shadow-xl"

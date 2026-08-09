@@ -23,48 +23,6 @@ export interface PendingRequestItem {
   status: string;
 }
 
-const defaultPendingRequests: PendingRequestItem[] = [
-  {
-    id: "req-1",
-    property: "Luxury Penthouse in Gulshan",
-    tenant: "Yeasin Arafat",
-    tenantEmail: "yeasin@example.com",
-    date: "Aug 02, 2026",
-    status: "Pending",
-  },
-  {
-    id: "req-2",
-    property: "Modern Studio Apartment",
-    tenant: "Sarah Jenkins",
-    tenantEmail: "sarah.j@example.com",
-    date: "Aug 01, 2026",
-    status: "Pending",
-  },
-  {
-    id: "req-3",
-    property: "Green Valley Duplex Villa",
-    tenant: "Michael Chen",
-    tenantEmail: "m.chen@example.com",
-    date: "Jul 31, 2026",
-    status: "Pending",
-  },
-  {
-    id: "req-4",
-    property: "Sunset Heights 3BR Apt",
-    tenant: "Fatima Rahman",
-    tenantEmail: "fatima.r@example.com",
-    date: "Jul 30, 2026",
-    status: "Pending",
-  },
-  {
-    id: "req-5",
-    property: "Downtown Commercial Space",
-    tenant: "David Miller",
-    tenantEmail: "david.m@example.com",
-    date: "Jul 29, 2026",
-    status: "Pending",
-  },
-];
 
 interface PendingRequestsTableProps {
   rentals?: unknown;
@@ -129,9 +87,9 @@ export function PendingRequestsTable({
     }
 
     if (requests !== undefined) return requests;
-    if (rentals === undefined) return defaultPendingRequests;
+    if (rentals === undefined) return [];
 
-    return defaultPendingRequests;
+    return [];
   }, [rentals, requests]);
 
   const pendingItems = React.useMemo(() => {
@@ -271,3 +229,4 @@ export function PendingRequestsTable({
     </Card>
   );
 }
+

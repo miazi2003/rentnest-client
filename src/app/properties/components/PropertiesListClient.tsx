@@ -8,7 +8,6 @@ import { getPropertyAvailability, type PropertyItem } from "./property.types";
 import {
   PropertySearchFilters,
   type PropertyFilters,
-  type SortOption,
 } from "./PropertySearchFilters";
 import { Button } from "@/components/ui/button";
 
@@ -40,9 +39,12 @@ export default function PropertiesListClient({ properties }: PropertiesListClien
     const q = searchParams.get("query") || "";
     const cat = searchParams.get("category") || "";
     if (q !== filters.query || cat !== filters.category) {
-      setFilters((prev) => ({ ...prev, query: q, category: cat }));
+      const timer = window.setTimeout(() => {
+        setFilters((prev) => ({ ...prev, query: q, category: cat }));
+      }, 0);
+      return () => window.clearTimeout(timer);
     }
-  }, [searchParams]);
+  }, [filters.category, filters.query, searchParams]);
 
   // Reset to page 1 when filters or sort change
   const handleFilterChange = (newFilters: PropertyFilters) => {
@@ -159,7 +161,7 @@ export default function PropertiesListClient({ properties }: PropertiesListClien
           <div className="space-y-1">
             <h2 className="text-lg font-extrabold text-foreground">No matching properties found</h2>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-              We couldn't find any properties matching your current search parameters. Try adjusting your filters.
+              We couldn&apos;t find any properties matching your current search parameters. Try adjusting your filters.
             </p>
           </div>
           <Button

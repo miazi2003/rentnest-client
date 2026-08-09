@@ -48,13 +48,16 @@ export function CategoryFormModal({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (initialData) {
-      setName(initialData.name || "");
-      setDescription(initialData.description || "");
-    } else {
-      setName("");
-      setDescription("");
-    }
+    const timer = window.setTimeout(() => {
+      if (initialData) {
+        setName(initialData.name || "");
+        setDescription(initialData.description || "");
+      } else {
+        setName("");
+        setDescription("");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [initialData, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -93,8 +96,8 @@ export function CategoryFormModal({
           toast.error(res.message || "Failed to create category.");
         }
       }
-    } catch (err: any) {
-      toast.error(err?.message || "An unexpected error occurred.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -122,11 +125,12 @@ export function CategoryFormModal({
         <form onSubmit={handleSubmit} className="space-y-4">
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="category-name" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <Tag className="w-3.5 h-3.5 text-emerald-600" />
               Category Name <span className="text-red-500">*</span>
             </label>
             <Input
+              id="category-name"
               type="text"
               placeholder="e.g. Luxury Villa, Commercial Office"
               value={name}
@@ -139,11 +143,12 @@ export function CategoryFormModal({
 
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <label htmlFor="category-description" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-emerald-600" />
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
+              id="category-description"
               rows={3}
               placeholder="Brief description of property types under this category..."
               value={description}

@@ -26,7 +26,7 @@ const AuthProvider = ({
         } else {
             setUser(res.data.data)
         }
-      }catch(error){
+      }catch{
         setUser(null)
       }finally {
     setLoading(false);
@@ -37,7 +37,8 @@ const AuthProvider = ({
 
 
 useEffect(() => {
-  getUser();
+  const timer = window.setTimeout(() => void getUser(), 0);
+  return () => window.clearTimeout(timer);
 }, []);
     return <AuthContext.Provider  value={{
     user,
@@ -52,7 +53,5 @@ useEffect(() => {
 
 
 export default AuthProvider;
-
-
 
 

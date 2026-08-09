@@ -1,18 +1,16 @@
 
-import { DialogTitle } from "@base-ui/react";
-
 export type LoginState = {
   success: boolean;
   statusCode: number | null;
   message: string;
-  data: any | null;
+  data: IUser | null;
 };
 
 export type registerState = {
   success: boolean;
   statusCode: number | null;
   message: string;
-  data: any | null;
+  data: unknown;
 };
 
 export type LoginPayload = {

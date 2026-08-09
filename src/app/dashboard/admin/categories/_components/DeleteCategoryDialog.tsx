@@ -47,8 +47,8 @@ export function DeleteCategoryDialog({
       } else {
         toast.error(res.message || "Failed to delete category.");
       }
-    } catch (err: any) {
-      toast.error(err?.message || "An error occurred while deleting.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "An error occurred while deleting.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export function DeleteCategoryDialog({
           <DialogDescription className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
             Are you sure you want to delete{" "}
             <span className="font-bold text-slate-900 dark:text-slate-100">
-              "{category.name}"
+              &ldquo;{category.name}&rdquo;
             </span>
             ? This action cannot be undone.
           </DialogDescription>

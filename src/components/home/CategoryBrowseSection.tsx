@@ -8,13 +8,7 @@ interface CategoryBrowseSectionProps {
 }
 
 export function CategoryBrowseSection({ categories = [] }: CategoryBrowseSectionProps) {
-  // Default RentNest categories fallback if backend list is loading/empty
-  const displayCategories = categories.length > 0 ? categories : [
-    { name: "Apartments", description: "Modern urban living spaces" },
-    { name: "Single Family", description: "Spacious suburban homes" },
-    { name: "Villas & Luxury", description: "Exclusive high-end rentals" },
-    { name: "Studios", description: "Cozy efficient city apartments" },
-  ];
+  const displayCategories = categories;
 
   return (
     <section className="py-16 sm:py-24 bg-muted/30 border-y border-border/50">

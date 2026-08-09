@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
 import Link from "next/link";
-import { ShieldCheck, UserRound, Building2, Lock, Mail, Sparkles, Info } from "lucide-react";
+import { ShieldCheck, UserRound, Building2, Lock, Mail, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const DEMO_ACCOUNTS = [

@@ -39,6 +39,7 @@ export interface IPropertyInfo {
 
 export interface IRentalRequest {
   id: string;
+  _id?: string;
   propertyId?: string;
   title?: string;
   description?: string;

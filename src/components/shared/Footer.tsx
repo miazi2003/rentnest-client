@@ -4,19 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
-import { RiFacebookCircleLine, RiInstagramLine, RiLinkedinLine } from "@remixicon/react";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
 
 const exploreLinks = [
   { label: "Home", href: "/" },
   { label: "Properties", href: "/properties" },
   { label: "About us", href: "/about" },
-] as const;
-
-const socialLinks = [
-  { label: "Instagram", href: "#", icon: RiInstagramLine },
-  { label: "Facebook", href: "#", icon: RiFacebookCircleLine },
-  { label: "LinkedIn", href: "#", icon: RiLinkedinLine },
 ] as const;
 
 export default function Footer() {
@@ -44,7 +37,7 @@ export default function Footer() {
   return (
     <footer className="bg-background px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <div className="mx-auto w-full max-w-[1600px] overflow-hidden rounded-[2rem] bg-slate-950 px-6 py-9 text-white sm:rounded-[2.5rem] sm:px-10 sm:py-12 lg:px-14 lg:py-14">
-        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.9fr_0.9fr_auto] lg:gap-8">
+        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.9fr_0.9fr] lg:gap-8">
           <div className="lg:border-r lg:border-white/10 lg:pr-12">
             <Link href="/" className="inline-flex items-center gap-3" aria-label="RentNest home">
               <Image src="/favicon.ico" alt="RentNest logo" width={40} height={40} className="size-10 rounded-xl object-contain" />
@@ -57,13 +50,13 @@ export default function Footer() {
 
             <div className="mt-8 max-w-sm">
               <label htmlFor="footer-email" className="text-xs font-semibold text-white/70">Subscribe to our newsletter</label>
-              <form className="mt-3 flex h-12 items-center rounded-full border border-white/15 bg-white/5 p-1 pl-4 focus-within:border-emerald-400/60">
+              <div className="mt-3 flex h-12 items-center rounded-full border border-white/15 bg-white/5 p-1 pl-4 focus-within:border-emerald-400/60">
                 <Mail className="size-4 shrink-0 text-white/35" />
                 <input id="footer-email" type="email" placeholder="Your email address" className="min-w-0 flex-1 bg-transparent px-3 text-xs text-white outline-none placeholder:text-white/30" />
-                <button type="submit" aria-label="Subscribe" className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-emerald-950 transition-transform hover:scale-105">
+                <Link href="/contact" aria-label="Contact RentNest" className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-emerald-950 transition-transform hover:scale-105">
                   <ArrowUpRight className="size-4" />
-                </button>
-              </form>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -86,27 +79,17 @@ export default function Footer() {
             </nav>
           ))}
 
-          <div className="border-white/10 lg:border-l lg:pl-8">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">Follow</p>
-            <div className="mt-5 flex gap-2 lg:flex-col">
-              {socialLinks.map(({ label, href, icon: Icon }) => (
-                <Link key={label} href={href} aria-label={label} className="flex size-11 items-center justify-center rounded-full border border-white/15 text-white/55 transition-all hover:border-emerald-400 hover:bg-emerald-400 hover:text-emerald-950">
-                  <Icon className="size-4" />
-                </Link>
-              ))}
-            </div>
-          </div>
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-[10px] font-medium text-white/35 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} RentNest. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="inline-flex items-center gap-1.5"><MapPin className="size-3" /> Bangladesh</span>
-            <Link href="#" className="hover:text-white">Privacy policy</Link>
-            <Link href="#" className="hover:text-white">Terms of use</Link>
+            <Link href="/contact" className="hover:text-white">Contact</Link>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+

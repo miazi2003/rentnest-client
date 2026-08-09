@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { deleteProperty } from "../../api/landlord.api";
 import { propertyIdSchema } from "../validations";
 import { validationMessage } from "../../shared-validations";
@@ -17,8 +17,6 @@ export async function deletePropertyAction(propertyId: string) {
     revalidatePath("/dashboard/landlord/requests");
     revalidatePath("/dashboard/tenant");
     revalidatePath("/properties");
-    (revalidateTag as (tag: string) => void)("landlord-requests");
-    (revalidateTag as (tag: string) => void)("landlord-properties");
   }
   return result;
 }

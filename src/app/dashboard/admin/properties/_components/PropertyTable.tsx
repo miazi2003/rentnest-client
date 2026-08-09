@@ -23,89 +23,34 @@ import {
   Bed,
   Bath,
   Eye,
-  Trash2,
 } from "lucide-react";
 
 export interface IAdminProperty {
   id: string;
+  _id?: string;
   title: string;
-  location: string;
+  location: string | { address?: string };
   price: number;
   bedrooms: number;
   bathrooms: number;
-  category: string;
+  category: string | { name?: string };
   status: "AVAILABLE" | "RENTED" | "PENDING";
   createdAt: string;
 }
 
 interface PropertyTableProps {
-  properties?: any;
+  properties?: IAdminProperty[] | {
+    data?: IAdminProperty[] | { data?: IAdminProperty[]; result?: IAdminProperty[]; properties?: IAdminProperty[] };
+  };
 }
 
-const DEFAULT_SAMPLE_PROPERTIES: IAdminProperty[] = [
-  {
-    id: "prop-1",
-    title: "Luxury Apartment in Downtown",
-    location: "Downtown, New York",
-    price: 2500,
-    bedrooms: 2,
-    bathrooms: 2,
-    category: "Apartment",
-    status: "AVAILABLE",
-    createdAt: "2026-06-15T10:00:00Z",
-  },
-  {
-    id: "prop-2",
-    title: "Cozy Modern Villa",
-    location: "Beverly Hills, Los Angeles",
-    price: 4800,
-    bedrooms: 4,
-    bathrooms: 3,
-    category: "Villa",
-    status: "RENTED",
-    createdAt: "2026-07-01T14:30:00Z",
-  },
-  {
-    id: "prop-3",
-    title: "Seaside Studio Apartment",
-    location: "Ocean Drive, Miami",
-    price: 1800,
-    bedrooms: 1,
-    bathrooms: 1,
-    category: "Studio",
-    status: "AVAILABLE",
-    createdAt: "2026-07-10T09:15:00Z",
-  },
-  {
-    id: "prop-4",
-    title: "Spacious Family Penthouse",
-    location: "Lincoln Park, Chicago",
-    price: 3500,
-    bedrooms: 3,
-    bathrooms: 2.5,
-    category: "Penthouse",
-    status: "RENTED",
-    createdAt: "2026-07-20T11:45:00Z",
-  },
-  {
-    id: "prop-5",
-    title: "Urban Loft near Station",
-    location: "SoHo, New York",
-    price: 2200,
-    bedrooms: 2,
-    bathrooms: 1,
-    category: "Loft",
-    status: "AVAILABLE",
-    createdAt: "2026-07-28T16:00:00Z",
-  },
-];
 
 type SortField = "title" | "price" | "category" | "status" | "createdAt";
 type SortOrder = "asc" | "desc";
 
 export function PropertyTable({ properties }: PropertyTableProps) {
   const propertyList = useMemo(() => {
-    if (properties === undefined) return DEFAULT_SAMPLE_PROPERTIES;
+    if (properties === undefined) return [];
     if (Array.isArray(properties)) return properties;
 
     if (properties && typeof properties === "object") {
@@ -130,8 +75,8 @@ export function PropertyTable({ properties }: PropertyTableProps) {
   const pageSize = 5;
 
   const filteredProperties = useMemo(() => {
-    return propertyList.filter((p: any) => {
-      const titleStr = typeof p.title === "string" ? p.title : p.title?.name || "";
+    return propertyList.filter((p: IAdminProperty) => {
+      const titleStr = p.title || "";
       const locationStr = typeof p.location === "string" ? p.location : p.location?.address || "";
 
       const matchesSearch =
@@ -151,16 +96,14 @@ export function PropertyTable({ properties }: PropertyTableProps) {
 
   const sortedProperties = useMemo(() => {
     return [...filteredProperties].sort((a, b) => {
-      let aValue: any = a[sortField];
-      let bValue: any = b[sortField];
-
-      if (sortField === "createdAt") {
-        aValue = new Date(aValue).getTime() || 0;
-        bValue = new Date(bValue).getTime() || 0;
-      } else if (typeof aValue === "string") {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
+      const valueFor = (property: IAdminProperty): string | number => {
+        if (sortField === "category") return typeof property.category === "string" ? property.category.toLowerCase() : (property.category.name || "").toLowerCase();
+        if (sortField === "createdAt") return new Date(property.createdAt).getTime() || 0;
+        const value = property[sortField];
+        return typeof value === "string" ? value.toLowerCase() : value;
+      };
+      const aValue = valueFor(a);
+      const bValue = valueFor(b);
 
       if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
       if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
@@ -372,7 +315,7 @@ export function PropertyTable({ properties }: PropertyTableProps) {
                           </p>
                           <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                            {prop.location}
+                            {typeof prop.location === "string" ? prop.location : prop.location.address || ""}
                           </p>
                         </div>
                       </div>

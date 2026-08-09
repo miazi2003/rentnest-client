@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
+const VALID_ROLES = new Set(["ADMIN", "LANDLORD", "TENANT"]);
+
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const publicRoutes = ["/", "/about", "/login", "/register"];
+  const publicRoutes = ["/", "/about", "/contact", "/login", "/register"];
 
   const isPublic =
     publicRoutes.includes(pathname) ||
@@ -27,46 +29,27 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  let role: string | undefined;
-
   try {
-    const secret = process.env.JWT_SECRET || "default_secret";
-    let decoded: JwtPayload | null = null;
-    try {
-      decoded = jwt.verify(token, secret) as JwtPayload;
-    } catch {
-      decoded = jwt.decode(token) as JwtPayload | null;
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error("JWT_SECRET is not configured");
+
+    const decoded = jwt.verify(token, secret) as JwtPayload;
+    const role = typeof decoded.role === "string" ? decoded.role : undefined;
+    if (!role || !VALID_ROLES.has(role)) {
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    role = decoded?.role;
-  } catch (err) {
-    console.error("Proxy Token Decode Error:", err);
+    if (pathname.startsWith("/dashboard/admin") && role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    if (pathname.startsWith("/dashboard/tenant") && role !== "TENANT") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    if ((pathname.startsWith("/dashboard/landlord") || pathname.startsWith("/landlord")) && role !== "LANDLORD") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  } catch {
     return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  if (
-    pathname.startsWith("/dashboard/admin") &&
-    role &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (
-    pathname.startsWith("/dashboard/tenant") &&
-    role &&
-    role !== "TENANT"
-  ) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (
-    (pathname.startsWith("/dashboard/landlord") ||
-      pathname.startsWith("/landlord")) &&
-    role &&
-    role !== "LANDLORD"
-  ) {
-    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

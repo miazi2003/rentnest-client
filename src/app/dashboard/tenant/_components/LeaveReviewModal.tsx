@@ -112,6 +112,7 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
               <button
                 key={starVal}
                 type="button"
+                aria-label={`Rate ${starVal} out of 5 stars`}
                 onMouseEnter={() => setHoverRating(starVal)}
                 onMouseLeave={() => setHoverRating(0)}
                 onClick={() => setRating(starVal)}
@@ -141,10 +142,11 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
 
 
         <div className="space-y-2">
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+          <label htmlFor="review-comment" className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
             Written Feedback
           </label>
           <textarea
+            id="review-comment"
             rows={3}
             disabled={alreadyReviewed}
             placeholder="How is the property quality, location convenience, and landlord response time?"

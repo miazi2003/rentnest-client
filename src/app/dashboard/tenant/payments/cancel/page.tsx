@@ -1,9 +1,8 @@
-"use me";
 "use client";
 
 import React from "react";
 import Link from "next/link";
-import { XCircle, RefreshCw, Building2, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { XCircle, RefreshCw, LayoutDashboard } from "lucide-react";
 
 import {
   Card,

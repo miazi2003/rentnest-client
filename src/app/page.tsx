@@ -12,18 +12,28 @@ import { FinalCtaSection } from "@/components/home/FinalCtaSection";
 import propertyAction from "@/app/features/property/actions/propertyAction";
 import { getCategoriesAction } from "@/app/features/category/actions/categoryActions";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [propertyRes, categoryRes] = await Promise.all([
-    propertyAction().catch(() => null),
-    getCategoriesAction().catch(() => null),
+    propertyAction(),
+    getCategoriesAction(),
   ]);
 
+  if (!propertyRes.ok) {
+    throw new Error(propertyRes.message || "Unable to load properties");
+  }
+  if (!categoryRes.ok) {
+    throw new Error(categoryRes.message || "Unable to load categories");
+  }
+
   const properties = Array.isArray(propertyRes?.data) ? propertyRes.data : [];
-  const rawCategories = Array.isArray(categoryRes?.data)
-    ? categoryRes.data
-    : Array.isArray((categoryRes?.data as any)?.data)
-    ? (categoryRes?.data as any).data
-    : [];
+  const categoryData = categoryRes?.data;
+  const rawCategories = Array.isArray(categoryData)
+    ? categoryData
+    : categoryData && typeof categoryData === "object" && "data" in categoryData && Array.isArray(categoryData.data)
+      ? categoryData.data
+      : [];
 
   return (
     <div className="flex flex-col space-y-0">
