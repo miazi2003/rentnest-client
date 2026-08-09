@@ -7,9 +7,8 @@ export default function RegisterPage() {
   const logoSvg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='24' fill='%230F172A'/><path d='M30 68V48L50 32L70 48V68C70 70.2091 68.2091 72 66 72H34C31.7909 72 30 70.2091 30 68Z' stroke='%23F97316' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><path d='M44 72V56H56V72' stroke='%23F97316' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='50' cy='24' r='4' fill='%23F59E0B'/></svg>`;
 
   return (
-    <main className="min-h-screen w-full  flex items-center justify-center p-4 sm:p-6 lg:p-6 font-sans">
-      <div className="w-full max-w-[1220px] bg-white rounded-[22px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-2.5 sm:p-4 flex flex-col lg:flex-row-reverse lg:min-h-[640px]">
-
+    <main className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-6 font-sans bg-background text-foreground">
+      <div className="w-full max-w-[1220px] bg-card text-foreground border border-border rounded-[22px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.07)] overflow-hidden p-2.5 sm:p-4 flex flex-col lg:flex-row-reverse lg:min-h-[640px]">
         <div className="relative w-full lg:w-[48%] min-h-[260px] sm:min-h-[420px] lg:min-h-[640px] rounded-[18px] sm:rounded-[24px] overflow-hidden flex flex-col justify-between p-6 sm:p-10 lg:p-12">
           <Image
             src={heroImageSvg}
@@ -19,13 +18,9 @@ export default function RegisterPage() {
             sizes="(max-width:768px) 100vw, 48vw"
             className="object-cover"
           />
-
-
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20 pointer-events-none" />
-
-
           <div className="relative z-10">
-            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-white leading-[1.15] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-white leading-[1.15] tracking-tight font-heading">
               Find Your Perfect
               <br />
               Property Today
@@ -33,10 +28,8 @@ export default function RegisterPage() {
           </div>
         </div>
 
-
         <div className="w-full lg:w-[52%] flex flex-col justify-center px-4 py-8 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
-
-          <div className="w-[48px] h-[48px] relative mb-10">
+          <div className="w-[48px] h-[48px] relative mb-6">
             <Image
               src={logoSvg}
               alt="Logo"
@@ -47,16 +40,12 @@ export default function RegisterPage() {
             />
           </div>
 
-
-          <h2 className="text-3xl sm:text-[42px] font-bold text-gray-900 leading-tight mb-4">
+          <h2 className="text-3xl sm:text-[42px] font-black text-foreground leading-tight mb-4 font-heading">
             Create New Account
           </h2>
 
-
-
-
           <div className="w-full">
-            <RegisterForm/>
+            <RegisterForm />
           </div>
         </div>
       </div>
