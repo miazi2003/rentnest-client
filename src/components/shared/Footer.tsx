@@ -49,13 +49,13 @@ export default function Footer() {
             </h2>
 
             <div className="mt-8 max-w-sm">
-              <label htmlFor="footer-email" className="text-xs font-semibold text-white/70">Subscribe to our newsletter</label>
+              <label htmlFor="footer-email" className="text-xs font-semibold text-white/70">Newsletter coming soon</label>
               <div className="mt-3 flex h-12 items-center rounded-full border border-white/15 bg-white/5 p-1 pl-4 focus-within:border-emerald-400/60">
                 <Mail className="size-4 shrink-0 text-white/35" />
-                <input id="footer-email" type="email" placeholder="Your email address" className="min-w-0 flex-1 bg-transparent px-3 text-xs text-white outline-none placeholder:text-white/30" />
-                <Link href="/contact" aria-label="Contact RentNest" className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-emerald-950 transition-transform hover:scale-105">
+                <input id="footer-email" type="email" placeholder="Subscriptions unavailable" disabled className="min-w-0 flex-1 bg-transparent px-3 text-xs text-white outline-none placeholder:text-white/30 disabled:cursor-not-allowed" />
+                <button type="button" aria-label="Newsletter subscriptions unavailable" disabled className="flex size-10 shrink-0 cursor-not-allowed items-center justify-center rounded-full bg-emerald-400 text-emerald-950 opacity-50">
                   <ArrowUpRight className="size-4" />
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -92,4 +92,3 @@ export default function Footer() {
     </footer>
   );
 }
-

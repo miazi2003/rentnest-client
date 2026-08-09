@@ -20,7 +20,7 @@ export function FinalCtaSection() {
             Start Your Rental Journey Today
           </h2>
           <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
-            Join thousands of tenants and verified landlords experiencing simpler, modern rental management with RentNest.
+            Join tenants and verified landlords experiencing simpler, modern rental management with RentNest.
           </p>
         </div>
 

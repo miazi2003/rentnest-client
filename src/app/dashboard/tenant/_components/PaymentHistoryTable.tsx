@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { CreditCard, CheckCircle2 } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { CreditCard, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { IPaymentItem } from "../types/tenant.types";
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 interface PaymentHistoryTableProps {
   payments: IPaymentItem[];
@@ -19,6 +20,15 @@ interface PaymentHistoryTableProps {
 export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
   payments,
 }) => {
+  const pageSize = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(payments.length / pageSize));
+  const validPage = Math.min(currentPage, totalPages);
+  const paginatedPayments = useMemo(() => {
+    const start = (validPage - 1) * pageSize;
+    return payments.slice(start, start + pageSize);
+  }, [payments, validPage]);
+
   if (payments.length === 0) {
     return (
       <div className="space-y-3 p-7 text-center sm:p-12">
@@ -62,7 +72,7 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {payments.map((pay) => {
+        {paginatedPayments.map((pay) => {
           const txn = pay.transactionId || pay.id;
           const propTitle =
             pay.propertyTitle || pay.property?.title || "Rent Payment";
@@ -133,7 +143,7 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
     </div>
 
     <div className="space-y-3 p-3 md:hidden">
-      {payments.map((pay) => {
+      {paginatedPayments.map((pay) => {
         const transaction = pay.transactionId || pay.id;
         const title = pay.propertyTitle || pay.property?.title || "Rent Payment";
         const date = pay.createdAt ? new Date(pay.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Recent";
@@ -152,6 +162,22 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
         );
       })}
     </div>
+    {payments.length > pageSize && (
+      <div className="flex items-center justify-between border-t border-border px-4 py-3 sm:px-6">
+        <p className="text-xs text-muted-foreground">
+          Showing {(validPage - 1) * pageSize + 1}–{Math.min(validPage * pageSize, payments.length)} of {payments.length}
+        </p>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={validPage === 1} className="h-8 gap-1 text-xs">
+            <ChevronLeft className="size-3.5" /> Previous
+          </Button>
+          <span className="text-xs font-semibold text-muted-foreground">{validPage} / {totalPages}</span>
+          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={validPage === totalPages} className="h-8 gap-1 text-xs">
+            Next <ChevronRight className="size-3.5" />
+          </Button>
+        </div>
+      </div>
+    )}
     </>
   );
 };

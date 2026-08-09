@@ -92,7 +92,7 @@ export function UserTable({ users }: UserTableProps) {
       return;
     }
 
-    const nextStatus = user.status === "ACTIVE" ? "BLOCKED" : "ACTIVE";
+    const nextStatus = user.status === "ACTIVE" ? "BANNED" : "ACTIVE";
     setUpdatingUserId(userId);
 
     startTransition(async () => {
@@ -101,7 +101,7 @@ export function UserTable({ users }: UserTableProps) {
       if (result.ok) {
         setStatusOverrides((current) => ({ ...current, [userId]: nextStatus }));
         toast.success(
-          result.message || (nextStatus === "BLOCKED" ? "User banned successfully." : "User unbanned successfully.")
+          result.message || (nextStatus === "BANNED" ? "User banned successfully." : "User unbanned successfully.")
         );
         router.refresh();
       } else {
@@ -263,7 +263,7 @@ export function UserTable({ users }: UserTableProps) {
             >
               <option value="ALL">All Statuses</option>
               <option value="ACTIVE">ACTIVE</option>
-              <option value="BLOCKED">BLOCKED</option>
+              <option value="BANNED">Banned</option>
             </select>
           </div>
         </div>

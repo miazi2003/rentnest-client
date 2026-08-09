@@ -1,7 +1,7 @@
 import React from "react";
 
 interface UserStatusBadgeProps {
-  status: "ACTIVE" | "BLOCKED" | string;
+  status: "ACTIVE" | "BANNED" | string;
 }
 
 export function UserStatusBadge({ status }: UserStatusBadgeProps) {
@@ -17,7 +17,7 @@ export function UserStatusBadge({ status }: UserStatusBadgeProps) {
   return (
     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200/80 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5 shrink-0" />
-      BLOCKED
+      BANNED
     </span>
   );
 }

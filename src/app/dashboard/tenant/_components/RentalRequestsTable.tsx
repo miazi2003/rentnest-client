@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   GitPullRequest,
@@ -11,6 +11,8 @@ import {
   Star,
   Clock,
   Check,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { IRentalRequest } from "../types/tenant.types";
 import { RentalStatusBadge } from "./RentalStatusBadge";
@@ -33,6 +35,15 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
   requests,
   onOpenReviewModal,
 }) => {
+  const pageSize = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(requests.length / pageSize));
+  const validPage = Math.min(currentPage, totalPages);
+  const paginatedRequests = useMemo(() => {
+    const start = (validPage - 1) * pageSize;
+    return requests.slice(start, start + pageSize);
+  }, [requests, validPage]);
+
   const getPropertyTitle = (req: IRentalRequest) =>
     req.property?.title || req.propertyTitle || "Rental Property";
 
@@ -96,7 +107,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {requests.map((req) => {
+        {paginatedRequests.map((req) => {
           const title = getPropertyTitle(req);
           const location = getPropertyLocation(req);
           const landlordName = getLandlordName(req);
@@ -214,7 +225,7 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
     </div>
 
     <div className="space-y-3 p-3 md:hidden">
-      {requests.map((req) => {
+      {paginatedRequests.map((req) => {
         const status = (req.status || "PENDING").toUpperCase();
         return (
           <article key={req.id} className="rounded-2xl bg-muted/35 p-4 shadow-sm">
@@ -241,6 +252,22 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
         );
       })}
     </div>
+    {requests.length > pageSize && (
+      <div className="flex items-center justify-between border-t border-border px-4 py-3 sm:px-6">
+        <p className="text-xs text-muted-foreground">
+          Showing {(validPage - 1) * pageSize + 1}–{Math.min(validPage * pageSize, requests.length)} of {requests.length}
+        </p>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={validPage === 1} className="h-8 gap-1 text-xs">
+            <ChevronLeft className="size-3.5" /> Previous
+          </Button>
+          <span className="text-xs font-semibold text-muted-foreground">{validPage} / {totalPages}</span>
+          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={validPage === totalPages} className="h-8 gap-1 text-xs">
+            Next <ChevronRight className="size-3.5" />
+          </Button>
+        </div>
+      </div>
+    )}
     </>
   );
 };

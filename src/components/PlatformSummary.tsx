@@ -28,34 +28,13 @@ export interface RentalSummaryData {
 }
 
 interface PlatformSummaryProps {
-  platformData?: PlatformSummaryData;
-  rentalData?: RentalSummaryData;
+  platformData: PlatformSummaryData;
+  rentalData: RentalSummaryData;
 }
 
-const defaultPlatformData: PlatformSummaryData = {
-  users: {
-    total: 1248,
-    active: 1180,
-    blocked: 68,
-  },
-  properties: {
-    total: 450,
-    available: 362,
-    unavailable: 88,
-  },
-};
-
-const defaultRentalData: RentalSummaryData = {
-  pending: 24,
-  approved: 142,
-  rejected: 18,
-  active: 95,
-  completed: 210,
-};
-
 export function PlatformSummary({
-  platformData = defaultPlatformData,
-  rentalData = defaultRentalData,
+  platformData,
+  rentalData,
 }: PlatformSummaryProps) {
   const userActivePercent = Math.round((platformData.users.active / platformData.users.total) * 100);
   const userBlockedPercent = Math.round((platformData.users.blocked / platformData.users.total) * 100);

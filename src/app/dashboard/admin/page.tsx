@@ -110,7 +110,7 @@ export default async function AdminDashboardPage() {
     ? rawUsers.filter((u) => (u.status || "ACTIVE").toUpperCase() === "ACTIVE").length
     : 0;
   const blockedUsersCount = hasUsersData
-    ? rawUsers.filter((u) => (u.status || "").toUpperCase() === "BLOCKED").length
+    ? rawUsers.filter((u) => (u.status || "").toUpperCase() === "BANNED").length
     : 0;
 
   const hasPropertiesData = rawProperties.length > 0;
@@ -230,7 +230,7 @@ export default async function AdminDashboardPage() {
     const rawRole = (u.role || "TENANT").toUpperCase();
     const role = rawRole === "ADMIN" ? "Admin" : rawRole === "LANDLORD" ? "Landlord" : "Tenant";
     const rawStatus = (u.status || "ACTIVE").toUpperCase();
-    const status = rawStatus === "BLOCKED" ? "Blocked" : "Active";
+    const status = rawStatus === "BANNED" ? "Banned" : "Active";
 
     return {
       id: u.id || u._id || `user-${idx}`,

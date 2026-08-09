@@ -5,7 +5,6 @@ import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
-import { RiFacebookCircleFill, RiGoogleFill } from "@remixicon/react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
 import { facebookLoginAction, googleLoginAction } from "@/app/features/auth/actions/socialLoginActions";

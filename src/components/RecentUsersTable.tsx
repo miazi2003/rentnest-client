@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Users, MoreHorizontal } from "lucide-react";
 
 export type UserRole = "Tenant" | "Landlord" | "Admin";
-export type UserStatus = "Active" | "Blocked";
+export type UserStatus = "Active" | "Banned";
 
 export interface UserItem {
   id: string;
@@ -158,4 +158,3 @@ export function RecentUsersTable({
     </Card>
   );
 }
-

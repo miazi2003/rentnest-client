@@ -9,8 +9,8 @@ export const getPaymentHistory = async () => {
       throw new Error("User not logged in");
     }
 
-    const response = await fetch(
-      `${process.env.BACKEND_URL}/api/payments`,
+    const fetchPage = (page: number) => fetch(
+      `${process.env.BACKEND_URL}/api/payments?page=${page}&limit=100`,
       {
         method: "GET",
         headers: {
@@ -20,8 +20,30 @@ export const getPaymentHistory = async () => {
         cache: "no-store",
       }
     );
-
+    const response = await fetchPage(1);
     const data = await response.json().catch(() => null);
+
+    if (response.ok && data?.meta?.totalPages > 1 && Array.isArray(data?.data)) {
+      const remainingResponses = await Promise.all(
+        Array.from({ length: data.meta.totalPages - 1 }, (_, index) => fetchPage(index + 2)),
+      );
+      const remainingPayloads = await Promise.all(
+        remainingResponses.map((pageResponse) => pageResponse.json().catch(() => null)),
+      );
+      const failedPageIndex = remainingResponses.findIndex((pageResponse) => !pageResponse.ok);
+      if (failedPageIndex !== -1) {
+        return {
+          ok: false,
+          status: remainingResponses[failedPageIndex].status,
+          data: remainingPayloads[failedPageIndex],
+          message: remainingPayloads[failedPageIndex]?.message || "Unable to load all payment history",
+        };
+      }
+      data.data = [
+        ...data.data,
+        ...remainingPayloads.flatMap((payload) => Array.isArray(payload?.data) ? payload.data : []),
+      ];
+    }
 
     return {
       ok: response.ok,

@@ -1,15 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Quote, Star } from "lucide-react";
+import { ArrowUpRight, Quote } from "lucide-react";
 
 interface PropertyStatsSectionProps {
   totalProperties: number;
 }
-
-const supportingStats = [
-  { value: "—", label: "Happy renters" },
-  { value: "—", label: "Positive experiences" },
-] as const;
 
 export function PropertyStatsSection({ totalProperties }: PropertyStatsSectionProps) {
   const propertyLabel = totalProperties === 1 ? "Listed property" : "Listed properties";
@@ -42,17 +37,11 @@ export function PropertyStatsSection({ totalProperties }: PropertyStatsSectionPr
           </div>
 
           <div className="relative mt-auto rounded-[1.5rem] bg-white/90 p-6 shadow-[0_18px_45px_-35px_rgba(15,23,42,0.4)] backdrop-blur-sm sm:p-8">
-            <div className="grid grid-cols-3 divide-x divide-slate-200">
+            <div>
               <div className="px-2">
                 <p className="font-heading text-2xl font-semibold tracking-tight sm:text-4xl">{totalProperties.toLocaleString()}</p>
                 <p className="mt-2 text-[10px] text-slate-500 sm:text-xs">{propertyLabel}</p>
               </div>
-              {supportingStats.map((stat) => (
-                <div key={stat.label} className="px-2">
-                  <p className="font-heading text-2xl font-semibold tracking-tight sm:text-4xl">{stat.value}</p>
-                  <p className="mt-2 text-[10px] text-slate-500 sm:text-xs">{stat.label}</p>
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -75,9 +64,6 @@ export function PropertyStatsSection({ totalProperties }: PropertyStatsSectionPr
             </p>
             <div className="mt-5 flex items-center justify-between gap-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65">The RentNest experience</p>
-              <div className="flex gap-0.5 text-emerald-300" aria-label="Five out of five stars">
-                {Array.from({ length: 5 }).map((_, index) => <Star key={index} className="size-3 fill-current" />)}
-              </div>
             </div>
           </div>
         </div>

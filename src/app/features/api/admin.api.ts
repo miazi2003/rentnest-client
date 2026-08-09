@@ -51,7 +51,7 @@ export async function getUsersList() {
 
 export async function updateUserStatus(
   userId: string,
-  status: "ACTIVE" | "BLOCKED"
+  status: "ACTIVE" | "BANNED"
 ) {
   try {
     const cookieStore = await cookies();

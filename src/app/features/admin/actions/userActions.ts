@@ -21,7 +21,7 @@ export async function getUsersAction() {
 
 export async function updateUserStatusAction(
   userId: string,
-  status: "ACTIVE" | "BLOCKED"
+  status: "ACTIVE" | "BANNED"
 ) {
   try {
     const validated = adminUserStatusUpdateSchema.safeParse({ userId, status });

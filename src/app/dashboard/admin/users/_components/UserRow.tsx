@@ -10,7 +10,7 @@ export interface IUser {
   email: string;
   phone: string;
   role: "TENANT" | "LANDLORD" | "ADMIN";
-  status: "ACTIVE" | "BLOCKED";
+  status: "ACTIVE" | "BANNED";
   createdAt: string;
   updatedAt: string;
 }
