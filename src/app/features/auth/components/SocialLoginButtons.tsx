@@ -129,7 +129,7 @@ export function SocialLoginButtons() {
       }
 
       void handleFacebookAuth(accessToken);
-    }, { scope: "public_profile" });
+    }, { scope: "public_profile,email" });
   };
 
   return (
