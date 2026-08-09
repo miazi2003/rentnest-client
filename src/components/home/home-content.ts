@@ -2,6 +2,7 @@ export const homeNavigation = [
   { label: "Home", href: "/" },
   { label: "Properties", href: "/properties" },
   { label: "About us", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 export const heroContent = {

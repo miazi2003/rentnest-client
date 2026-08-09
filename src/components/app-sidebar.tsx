@@ -22,6 +22,7 @@ import {
   Receipt,
   ListSortDescending,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 
 import {
   Sidebar,
@@ -291,8 +292,14 @@ export function AppSidebar() {
       </SidebarContent>
 
 
-      <SidebarFooter className="p-2 border-t border-gray-200 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:py-2 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
-        <SidebarMenu className="group-data-[collapsible=icon]:items-center">
+      <SidebarFooter className="p-2 border-t border-border group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:py-2 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+        <SidebarMenu className="group-data-[collapsible=icon]:items-center space-y-1">
+          <SidebarMenuItem className="flex items-center justify-between px-2 py-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+            <span className="text-xs font-semibold text-muted-foreground group-data-[collapsible=icon]:hidden">
+              Theme
+            </span>
+            <ThemeToggle variant="ghost" />
+          </SidebarMenuItem>
           <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
             <SidebarMenuButton
               tooltip="Logout"
