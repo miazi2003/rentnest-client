@@ -21,7 +21,7 @@ export function HomeHero() {
   };
 
   return (
-    <section className="relative isolate min-h-[720px] overflow-hidden bg-slate-900 text-white sm:min-h-[800px] lg:h-[68svh] lg:min-h-[560px]">
+    <section className="relative isolate min-h-[100svh] overflow-hidden bg-slate-900 text-white">
       <Image
         src="/rentnest-hero.png"
         alt="Sculptural modern coastal home at dusk"

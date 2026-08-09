@@ -31,8 +31,8 @@ export function HomeNavbar() {
         "inset-x-0 top-0 z-50 transition-[background-color,color,border-color,box-shadow] duration-300",
         isHome ? "fixed" : "sticky",
         isTransparent
-          ? "border-b border-transparent bg-transparent text-white shadow-none"
-          : "border-b border-border/60 bg-background text-foreground shadow-xs"
+          ? "bg-transparent text-white shadow-none"
+          : "bg-[#ffffff] text-foreground shadow-xs dark:bg-slate-950"
       )}
     >
       <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-5 sm:px-8 lg:h-24 lg:px-12">
