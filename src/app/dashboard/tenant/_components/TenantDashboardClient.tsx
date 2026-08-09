@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 
 interface TenantDashboardClientProps {
   initialRequests?: IRentalRequest[];
@@ -222,6 +223,13 @@ export default function TenantDashboardClient({
     { title: "Active Rentals", value: stats.activeRentals.toLocaleString(), subtitle: "Your current homes", icon: "properties", iconBgColor: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
     { title: "Total Payments", value: formatCurrency(stats.totalPaymentAmount), subtitle: `${stats.totalPaymentsCount} completed transactions`, icon: "payments", iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
   ];
+  const tenantRentalStatusData = [
+    { status: "Approved", count: stats.approvedRequests, color: "bg-emerald-500 text-emerald-500" },
+    { status: "Active", count: stats.activeRentals, color: "bg-blue-500 text-blue-500" },
+    { status: "Completed", count: completedRequests, color: "bg-purple-500 text-purple-500" },
+    { status: "Pending", count: stats.pendingRequests, color: "bg-amber-500 text-amber-500" },
+    { status: "Rejected", count: rejectedRequests, color: "bg-rose-500 text-rose-500" },
+  ];
 
   return (
     <div className="w-full space-y-8 pb-8">
@@ -245,6 +253,16 @@ export default function TenantDashboardClient({
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((stat) => <StatsCard key={stat.title} {...stat} />)}
         </div>
+      </DashboardSection>
+
+      <DashboardSection>
+        <AnalyticsCharts
+          title="Rental Analytics"
+          subtitle="Your rental request status based on current account data"
+          rentalStatusData={tenantRentalStatusData}
+          categoryData={[]}
+          monthlyRevenueData={[]}
+        />
       </DashboardSection>
 
       <DashboardSection>
@@ -327,5 +345,4 @@ export default function TenantDashboardClient({
     </div>
   );
 }
-
 

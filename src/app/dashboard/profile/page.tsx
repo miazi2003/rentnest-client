@@ -8,8 +8,9 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-import { getCurrentUser } from "@/app/features/api/auth.api";
+import { getProfileApi } from "@/app/features/api/profile.api";
 import type { IUser } from "@/app/features/auth/types";
+import type { ProfileUser } from "@/app/features/profile/types";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -19,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ProfileLogoutButton } from "./_components/ProfileLogoutButton";
+import { ProfileForms } from "./_components/ProfileForms";
 
 const formatDate = (value?: string) => {
   if (!value) return "Not available";
@@ -60,19 +62,11 @@ function ProfileField({
 }
 
 export default async function ProfilePage() {
-  const response = await getCurrentUser();
+  const response = await getProfileApi();
 
   if (response.status === 401) redirect("/login");
 
-  const responseBody = response.data as
-    | { data?: IUser; user?: IUser }
-    | IUser
-    | null;
-  const user = responseBody && "data" in responseBody
-    ? responseBody.data
-    : responseBody && "user" in responseBody
-      ? responseBody.user
-      : responseBody as IUser | null;
+  const user = response.data as ProfileUser | null;
 
   if (!response.ok || !user) {
     return (
@@ -151,6 +145,8 @@ export default async function ProfilePage() {
             </CardContent>
           </Card>
       </div>
+
+      <ProfileForms user={user} />
     </div>
   );
 }

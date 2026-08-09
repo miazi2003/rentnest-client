@@ -35,6 +35,7 @@ type PropertyItem = {
   price: number;
   availability: string;
   createdAt?: string;
+  categoryName?: string;
 };
 
 type RentalItem = {
@@ -87,6 +88,7 @@ const toProperty = (value: unknown): PropertyItem | null => {
   const id = getString(property.id) || getString(property._id);
   if (!id) return null;
 
+  const category = asRecord(property.category);
   return {
     id,
     title: getString(property.title, "Untitled property"),
@@ -94,6 +96,7 @@ const toProperty = (value: unknown): PropertyItem | null => {
     price: getNumber(property.price ?? property.rent ?? property.rentAmount),
     availability: getString(property.availability, "UNAVAILABLE").toUpperCase(),
     createdAt: getString(property.createdAt) || undefined,
+    categoryName: getString(category?.name) || undefined,
   };
 };
 
@@ -172,6 +175,18 @@ export default async function LandlordDashboardPage() {
     .filter((request) => request.paymentStatus === "PAID" || request.status === "ACTIVE" || request.status === "COMPLETED")
     .reduce((sum, request) => sum + request.totalPrice, 0);
   const totalRequests = requests.length;
+  const categoryCounts = new Map<string, number>();
+  properties.forEach((property) => {
+    if (property.categoryName) {
+      categoryCounts.set(property.categoryName, (categoryCounts.get(property.categoryName) || 0) + 1);
+    }
+  });
+  const categoryColors = ["bg-emerald-500", "bg-purple-500", "bg-blue-500", "bg-amber-500"];
+  const categoryChartData = Array.from(categoryCounts.entries()).map(([name, count], index) => ({
+    name,
+    count,
+    color: categoryColors[index % categoryColors.length],
+  }));
   const stats: StatsCardProps[] = [
     { title: "Total Properties", value: properties.length.toLocaleString(), subtitle: "Your rental listings", icon: "properties", iconBgColor: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
     { title: "Pending Requests", value: countStatus("PENDING").toLocaleString(), subtitle: "Awaiting your response", icon: "rentals", iconBgColor: "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
@@ -224,6 +239,8 @@ export default async function LandlordDashboardPage() {
             { status: "Pending", count: countStatus("PENDING"), color: "bg-amber-500 text-amber-500" },
             { status: "Rejected", count: countStatus("REJECTED"), color: "bg-rose-500 text-rose-500" },
           ]}
+          categoryData={categoryChartData}
+          monthlyRevenueData={[]}
         />
       </DashboardSection>
 

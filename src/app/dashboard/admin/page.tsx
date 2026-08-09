@@ -33,6 +33,8 @@ interface AdminRecord {
   property?: { title?: string; name?: string };
   tenant?: { name?: string; email?: string };
   user?: { name?: string; email?: string };
+  category?: { id?: string; name?: string };
+  categoryId?: string;
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -145,6 +147,18 @@ export default async function AdminDashboardPage() {
     : 0;
 
   const totalCategoriesCount = rawCategories.length;
+  const categoryColors = ["bg-emerald-500", "bg-purple-500", "bg-blue-500", "bg-amber-500"];
+  const categoryChartData = rawCategories
+    .map((category, index) => {
+      const categoryId = category.id || category._id;
+      const categoryName = category.name || "Unnamed category";
+      const count = rawProperties.filter((property) =>
+        (categoryId && (property.categoryId === categoryId || property.category?.id === categoryId)) ||
+        property.category?.name === categoryName
+      ).length;
+      return { name: categoryName, count, color: categoryColors[index % categoryColors.length] };
+    })
+    .filter((category) => category.count > 0);
 
   const statsData: StatsCardProps[] = [
     {
@@ -275,6 +289,8 @@ export default async function AdminDashboardPage() {
             { status: "Pending", count: pendingRentalsCount, color: "bg-amber-500 text-amber-500" },
             { status: "Rejected", count: rejectedRentalsCount, color: "bg-rose-500 text-rose-500" },
           ]}
+          categoryData={categoryChartData}
+          monthlyRevenueData={[]}
         />
       </DashboardSection>
 
@@ -298,4 +314,3 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
-

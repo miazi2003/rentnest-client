@@ -32,34 +32,10 @@ interface AnalyticsChartsProps {
   subtitle?: string;
 }
 
-const DEFAULT_STATUS_DATA: StatusDistributionItem[] = [
-  { status: "Approved", count: 142, color: "bg-emerald-500 text-emerald-500" },
-  { status: "Active", count: 95, color: "bg-blue-500 text-blue-500" },
-  { status: "Completed", count: 210, color: "bg-purple-500 text-purple-500" },
-  { status: "Pending", count: 24, color: "bg-amber-500 text-amber-500" },
-  { status: "Rejected", count: 18, color: "bg-rose-500 text-rose-500" },
-];
-
-const DEFAULT_CATEGORY_DATA: CategoryBreakdownItem[] = [
-  { name: "Apartments & Suites", count: 180, color: "bg-emerald-500" },
-  { name: "Luxury Villas", count: 110, color: "bg-purple-500" },
-  { name: "Studio Flats", count: 95, color: "bg-blue-500" },
-  { name: "Commercial & Office", count: 65, color: "bg-amber-500" },
-];
-
-const DEFAULT_MONTHLY_REVENUE = [
-  { month: "Mar", amount: 14200, count: 12 },
-  { month: "Apr", amount: 18500, count: 15 },
-  { month: "May", amount: 22400, count: 19 },
-  { month: "Jun", amount: 28900, count: 24 },
-  { month: "Jul", amount: 35100, count: 28 },
-  { month: "Aug", amount: 42850, count: 34 },
-];
-
 export function AnalyticsCharts({
-  rentalStatusData = DEFAULT_STATUS_DATA,
-  categoryData = DEFAULT_CATEGORY_DATA,
-  monthlyRevenueData = DEFAULT_MONTHLY_REVENUE,
+  rentalStatusData = [],
+  categoryData = [],
+  monthlyRevenueData = [],
   title = "Analytics & Performance",
   subtitle = "Real-time insights and business metrics",
 }: AnalyticsChartsProps) {
@@ -77,6 +53,12 @@ export function AnalyticsCharts({
     () => Math.max(...monthlyRevenueData.map((d) => d.amount), 1),
     [monthlyRevenueData]
   );
+  const hasStatusData = rentalStatusData.some((item) => item.count > 0);
+  const hasCategoryData = categoryData.some((item) => item.count > 0);
+  const hasRevenueData = monthlyRevenueData.length > 0;
+  const averageRevenue = hasRevenueData
+    ? Math.round(monthlyRevenueData.reduce((sum, item) => sum + item.amount, 0) / monthlyRevenueData.length)
+    : 0;
 
   return (
     <div className="space-y-6 w-full">
@@ -92,9 +74,15 @@ export function AnalyticsCharts({
         </Badge>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {!hasStatusData && !hasCategoryData && !hasRevenueData && (
+        <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
+          <CardContent className="py-12 text-center text-sm text-muted-foreground">No analytics data is available yet.</CardContent>
+        </Card>
+      )}
+
+      {(hasStatusData || hasRevenueData) && <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 1. Monthly Revenue & Rental Activity Chart */}
-        <Card className="lg:col-span-2 rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
+        {hasRevenueData && <Card className="lg:col-span-2 rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -140,13 +128,13 @@ export function AnalyticsCharts({
 
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
               <span>Peak Month: ${maxRevenue.toLocaleString()}</span>
-              <span>Average Monthly: ${Math.round(maxRevenue * 0.7).toLocaleString()}</span>
+              <span>Average Monthly: ${averageRevenue.toLocaleString()}</span>
             </div>
           </CardContent>
-        </Card>
+        </Card>}
 
         {/* 2. Rental Request Status Distribution */}
-        <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
+        {hasStatusData && <Card className={`${hasRevenueData ? "" : "lg:col-span-3"} rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none`}>
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -179,11 +167,11 @@ export function AnalyticsCharts({
               );
             })}
           </CardContent>
-        </Card>
-      </div>
+        </Card>}
+      </div>}
 
       {/* 3. Property Category Breakdown Bar */}
-      {categoryData.length > 0 && (
+      {hasCategoryData && (
         <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
