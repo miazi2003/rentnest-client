@@ -66,7 +66,7 @@ export function QuickActions({ actions = defaultQuickActions }: QuickActionsProp
         const Icon = action.icon;
         return (
           <Link key={action.id} href={action.href} className="group block">
-            <Card className="rounded-xl border-none bg-white dark:bg-card shadow-sm hover:shadow-md transition-all duration-200 h-full">
+            <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none transition-all duration-200 h-full">
               <CardContent className="p-5 flex flex-col justify-between h-full gap-4">
                 <div className="flex items-center justify-between">
                   <div

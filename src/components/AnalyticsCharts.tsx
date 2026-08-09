@@ -94,7 +94,7 @@ export function AnalyticsCharts({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 1. Monthly Revenue & Rental Activity Chart */}
-        <Card className="lg:col-span-2 rounded-3xl border border-slate-100 dark:border-white/10 bg-card shadow-xs">
+        <Card className="lg:col-span-2 rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -102,18 +102,18 @@ export function AnalyticsCharts({
                   <DollarSign className="size-5" />
                 </div>
                 <div>
-                  <CardTitle className="text-base font-bold">Monthly Revenue & Transactions</CardTitle>
-                  <CardDescription className="text-xs">Rental earnings over recent months</CardDescription>
+                  <CardTitle className="text-base font-bold text-slate-950 dark:text-white font-heading">Monthly Revenue & Transactions</CardTitle>
+                  <CardDescription className="text-xs text-slate-500 dark:text-slate-400">Rental earnings over recent months</CardDescription>
                 </div>
               </div>
-              <Badge variant="outline" className="border-border text-[11px] font-semibold">
+              <Badge variant="outline" className="border-slate-200 dark:border-white/15 text-[11px] font-semibold">
                 6-Month Trend
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="pt-2 space-y-6">
             {/* Visual Bar Chart */}
-            <div className="h-48 flex items-end justify-between gap-3 sm:gap-6 pt-6 px-2 border-b border-border">
+            <div className="h-48 flex items-end justify-between gap-3 sm:gap-6 pt-6 px-2 border-b border-slate-100 dark:border-white/10">
               {monthlyRevenueData.map((item) => {
                 const heightPercent = Math.max(15, Math.round((item.amount / maxRevenue) * 100));
                 return (
@@ -124,13 +124,13 @@ export function AnalyticsCharts({
                     </div>
 
                     {/* Bar Pill */}
-                    <div className="w-full max-w-[48px] bg-muted/60 dark:bg-muted/30 rounded-2xl h-full flex items-end p-1">
+                    <div className="w-full max-w-[48px] bg-slate-100 dark:bg-white/10 rounded-2xl h-full flex items-end p-1">
                       <div
                         style={{ height: `${heightPercent}%` }}
                         className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-xl transition-all duration-500 group-hover:from-emerald-500 group-hover:to-emerald-300"
                       />
                     </div>
-                    <span className="text-[11px] font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                    <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 transition-colors">
                       {item.month}
                     </span>
                   </div>
@@ -138,7 +138,7 @@ export function AnalyticsCharts({
               })}
             </div>
 
-            <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
               <span>Peak Month: ${maxRevenue.toLocaleString()}</span>
               <span>Average Monthly: ${Math.round(maxRevenue * 0.7).toLocaleString()}</span>
             </div>
@@ -146,7 +146,7 @@ export function AnalyticsCharts({
         </Card>
 
         {/* 2. Rental Request Status Distribution */}
-        <Card className="rounded-3xl border border-slate-100 dark:border-white/10 bg-card shadow-xs">
+        <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -154,8 +154,8 @@ export function AnalyticsCharts({
                   <PieIcon className="size-5" />
                 </div>
                 <div>
-                  <CardTitle className="text-base font-bold">Request Status</CardTitle>
-                  <CardDescription className="text-xs">Application status breakdown</CardDescription>
+                  <CardTitle className="text-base font-bold text-slate-950 dark:text-white font-heading">Request Status</CardTitle>
+                  <CardDescription className="text-xs text-slate-500 dark:text-slate-400">Application status breakdown</CardDescription>
                 </div>
               </div>
             </div>
@@ -166,15 +166,15 @@ export function AnalyticsCharts({
               return (
                 <div key={item.status} className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-foreground flex items-center gap-2">
+                    <span className="font-bold text-slate-950 dark:text-white flex items-center gap-2">
                       <span className={`size-2 rounded-full ${item.color.split(" ")[0]}`} />
                       {item.status}
                     </span>
-                    <span className="font-semibold text-muted-foreground">
+                    <span className="font-semibold text-slate-500 dark:text-slate-400">
                       {item.count} ({percent}%)
                     </span>
                   </div>
-                  <Progress value={percent} className="h-2 bg-muted" />
+                  <Progress value={percent} className="h-2 bg-slate-100 dark:bg-white/10" />
                 </div>
               );
             })}
@@ -184,15 +184,15 @@ export function AnalyticsCharts({
 
       {/* 3. Property Category Breakdown Bar */}
       {categoryData.length > 0 && (
-        <Card className="rounded-3xl border border-slate-100 dark:border-white/10 bg-card shadow-xs">
+        <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
               <div className="flex size-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
                 <Layers className="size-5" />
               </div>
               <div>
-                <CardTitle className="text-base font-bold">Property Category Distribution</CardTitle>
-                <CardDescription className="text-xs">Listings ratio across available categories</CardDescription>
+                <CardTitle className="text-base font-bold text-slate-950 dark:text-white font-heading">Property Category Distribution</CardTitle>
+                <CardDescription className="text-xs text-slate-500 dark:text-slate-400">Listings ratio across available categories</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -203,14 +203,14 @@ export function AnalyticsCharts({
                 return (
                   <div
                     key={cat.name}
-                    className="p-4 rounded-2xl border border-slate-100 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/40 space-y-2"
+                    className="p-4 rounded-2xl border border-slate-100 dark:border-white/15 bg-slate-50/50 dark:bg-transparent space-y-2"
                   >
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-foreground truncate">{cat.name}</span>
+                      <span className="font-bold text-slate-950 dark:text-white truncate">{cat.name}</span>
                       <span className="font-bold text-emerald-600 dark:text-emerald-400">{cat.count}</span>
                     </div>
-                    <Progress value={percent} className="h-2 bg-muted" />
-                    <p className="text-[10px] font-semibold text-muted-foreground text-right">{percent}% of total</p>
+                    <Progress value={percent} className="h-2 bg-slate-200 dark:bg-white/10" />
+                    <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 text-right">{percent}% of total</p>
                   </div>
                 );
               })}

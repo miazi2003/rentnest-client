@@ -84,7 +84,7 @@ export function ActivityList({ activities = defaultActivities }: ActivityListPro
   const displayActivities = activities.slice(0, 5);
 
   return (
-    <Card className="rounded-xl border-none bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none transition-shadow">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

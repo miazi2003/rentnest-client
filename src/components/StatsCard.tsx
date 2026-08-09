@@ -60,7 +60,7 @@ export function StatsCard({
     typeof icon === "string" ? iconMap[icon] || Users : icon;
 
   return (
-    <Card className="rounded-xl border-none bg-white dark:bg-card shadow-sm hover:shadow-md transition-all duration-200">
+    <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none transition-all duration-200">
       <CardContent className="p-5 flex flex-col justify-between h-full gap-4">
         <div className="flex items-center justify-between">
           <div
@@ -89,15 +89,15 @@ export function StatsCard({
         </div>
 
         <div>
-          <p className="text-2xl font-bold tracking-tight text-foreground">
+          <p className="text-2xl font-black tracking-tight text-slate-950 dark:text-white font-heading">
             {value}
           </p>
           <div className="flex items-center justify-between mt-1">
-            <h3 className="text-xs font-medium text-muted-foreground truncate">
+            <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 truncate">
               {title}
             </h3>
           </div>
-          <p className="text-[11px] text-muted-foreground/80 mt-1">
+          <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500 mt-1">
             {subtitle}
           </p>
         </div>

@@ -423,12 +423,12 @@ export default function TenantDashboardClient({
 
       <DashboardSection>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card className="rounded-xl border-none bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
+          <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
             <CardHeader className="pb-4"><div className="flex items-center justify-between"><div className="flex items-center gap-2"><div className="rounded-lg bg-emerald-50 p-2 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"><Home className="size-5" /></div><div><CardTitle className="text-base font-bold">Rental Overview</CardTitle><CardDescription className="text-xs">Your application and rental lifecycle</CardDescription></div></div><Badge variant="outline" className="border-none bg-muted/60 text-xs font-normal">{requestsList.length} Total</Badge></div></CardHeader>
             <CardContent className="space-y-3"><SummaryRow icon={Clock} label="Pending Requests" value={stats.pendingRequests} tone="bg-amber-50/60 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400" /><SummaryRow icon={CheckCircle2} label="Approved Requests" value={stats.approvedRequests} tone="bg-emerald-50/60 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400" /><SummaryRow icon={ShieldCheck} label="Active Rentals" value={stats.activeRentals} tone="bg-blue-50/60 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400" /><SummaryRow icon={XCircle} label="Rejected Requests" value={rejectedRequests} tone="bg-rose-50/60 text-rose-600 dark:bg-rose-950/20 dark:text-rose-400" /><SummaryRow icon={CheckCircle2} label="Completed Rentals" value={completedRequests} tone="bg-purple-50/60 text-purple-600 dark:bg-purple-950/20 dark:text-purple-400" /></CardContent>
           </Card>
 
-          <Card className="rounded-xl border-none bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-card">
+          <Card className="rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
             <CardHeader className="pb-4"><div className="flex items-center justify-between"><div className="flex items-center gap-2"><div className="rounded-lg bg-purple-50 p-2 text-purple-600 dark:bg-purple-950 dark:text-purple-400"><CreditCard className="size-5" /></div><div><CardTitle className="text-base font-bold">Payment Summary</CardTitle><CardDescription className="text-xs">Your completed rent transactions</CardDescription></div></div><Badge variant="outline" className="border-none bg-muted/60 text-xs font-normal">{paymentsList.length} Total</Badge></div></CardHeader>
             <CardContent className="space-y-5"><div className="space-y-3 rounded-xl bg-slate-50/70 p-4 dark:bg-muted/30"><div className="flex items-center justify-between"><span className="text-sm font-semibold">Payment Completion</span><span className="text-sm font-bold">{paymentCompletion}%</span></div><Progress value={paymentCompletion} className="h-2 bg-amber-100 dark:bg-amber-950/50" indicatorClassName="bg-emerald-500" /><div className="grid grid-cols-2 gap-4 pt-1"><div><p className="text-xs text-muted-foreground">Total Paid</p><p className="mt-1 text-lg font-bold text-emerald-600">{formatCurrency(stats.totalPaymentAmount)}</p></div><div><p className="text-xs text-muted-foreground">Transactions</p><p className="mt-1 text-lg font-bold text-foreground">{stats.totalPaymentsCount}</p></div></div></div><div className="flex items-center justify-between rounded-lg bg-blue-50/60 p-3 dark:bg-blue-950/20"><div className="flex items-center gap-2.5"><History className="size-4 text-blue-600" /><span className="text-sm font-medium">Payment records</span></div><Link href="/dashboard/tenant/payments" className="text-xs font-semibold text-blue-600 hover:underline">View history</Link></div></CardContent>
           </Card>
@@ -439,7 +439,7 @@ export default function TenantDashboardClient({
       <Tabs
         value={activeTab}
         onValueChange={(val) => setActiveTab(val as TenantDashboardTab)}
-        className="flex flex-col gap-0 overflow-hidden rounded-xl border-none bg-white text-card-foreground shadow-sm dark:bg-card"
+        className="flex flex-col gap-0 overflow-hidden rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none"
       >
 
         <TenantTabsHeader
@@ -471,7 +471,26 @@ export default function TenantDashboardClient({
 
       <DashboardSection title="Quick Actions" subtitle="Frequently used tenant shortcuts">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {quickActions.map(({ title, description, href, icon: Icon, iconBg, iconColor }) => <Link key={title} href={href} className="group block"><Card className="h-full rounded-xl border-none bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-card"><CardContent className="flex h-full flex-col justify-between gap-4 p-5"><div className="flex items-center justify-between"><div className={cn("flex size-11 items-center justify-center rounded-xl transition-all duration-200", iconBg, iconColor)}><Icon className="size-5" /></div><div className="flex size-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground"><ArrowUpRight className="size-4" /></div></div><div><h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">{title}</h3><p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{description}</p></div></CardContent></Card></Link>)}
+          {quickActions.map(({ title, description, href, icon: Icon, iconBg, iconColor }) => (
+            <Link key={title} href={href} className="group block">
+              <Card className="h-full rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none transition-all duration-200">
+                <CardContent className="flex h-full flex-col justify-between gap-4 p-5">
+                  <div className="flex items-center justify-between">
+                    <div className={cn("flex size-11 items-center justify-center rounded-xl transition-all duration-200", iconBg, iconColor)}>
+                      <Icon className="size-5" />
+                    </div>
+                    <div className="flex size-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
+                      <ArrowUpRight className="size-4" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-950 dark:text-white transition-colors group-hover:text-primary">{title}</h3>
+                    <p className="mt-1 line-clamp-1 text-xs text-slate-500 dark:text-slate-400">{description}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
         </div>
       </DashboardSection>
 

@@ -312,7 +312,7 @@ export function UserTable({ users }: UserTableProps) {
       </div>
 
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 sm:p-6 space-y-5">
+      <div className="bg-white border-0 shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none rounded-[1.5rem] p-4 sm:p-6 space-y-5">
 
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-1">
 
