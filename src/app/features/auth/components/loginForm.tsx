@@ -8,8 +8,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/features/auth/hooks/use-auth";
 import Link from "next/link";
-import { ShieldCheck, UserRound, Building2, Lock, Mail, Info } from "lucide-react";
+import { ShieldCheck, UserRound, Building2, Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SocialLoginButtons } from "./SocialLoginButtons";
 
 const DEMO_ACCOUNTS = [
   {
@@ -163,13 +164,7 @@ const LoginForm = () => {
             {pending ? "Signing in..." : "Login to RentNest"}
           </Button>
 
-          {/* Social Authentication Architecture Note */}
-          <div className="mt-4 p-3 rounded-xl bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-white/10 text-[11px] text-muted-foreground flex items-start gap-2 shadow-xs">
-            <Info className="size-4 text-emerald-600 shrink-0 mt-0.5" />
-            <span>
-              <strong>Note on Social Login:</strong> RentNest uses custom JWT authentication. Social Login (Google/Facebook OAuth) requires backend OAuth endpoints before UI integration.
-            </span>
-          </div>
+          <SocialLoginButtons />
 
           <p className="pt-2 text-center text-xs text-muted-foreground">
             New to RentNest?{" "}

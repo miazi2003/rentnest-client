@@ -18,6 +18,29 @@ export type LoginPayload = {
   password: string;
 };
 
+export interface GoogleLoginPayload {
+  credential: string;
+}
+
+export interface FacebookLoginPayload {
+  accessToken: string;
+}
+
+export interface SocialAuthResponse {
+  success: boolean;
+  message: string;
+  data: {
+    accessToken: string;
+    user: IUser;
+  };
+}
+
+export interface SocialAuthState {
+  success: boolean;
+  statusCode: number;
+  message: string;
+}
+
 export type RegisterPayload = {
     name : string,
     email : string ,
@@ -47,5 +70,5 @@ export interface AuthContextType {
   user: IUser | null;
   loading: boolean;
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
-  getUser: () => Promise<void>;
+  getUser: () => Promise<IUser | null>;
 }

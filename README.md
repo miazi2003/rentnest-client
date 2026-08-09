@@ -161,9 +161,11 @@ Create a `.env.local` file in the project root:
 BACKEND_URL=<ADD_BACKEND_API_URL>
 NEXT_PUBLIC_BACKEND_URL=<ADD_BROWSER_ACCESSIBLE_BACKEND_API_URL>
 JWT_SECRET=<ADD_BACKEND_JWT_SECRET>
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=<ADD_GOOGLE_OAUTH_CLIENT_ID>
+NEXT_PUBLIC_FACEBOOK_APP_ID=<ADD_FACEBOOK_APP_ID>
 ```
 
-`BACKEND_URL` is used by server-side API helpers. `NEXT_PUBLIC_BACKEND_URL` is used by the landlord property forms when they make a browser-side category fallback request. `JWT_SECRET` is used by the Next.js proxy when verifying the access token. Do not commit real secrets.
+`BACKEND_URL` is used by server-side API helpers. `NEXT_PUBLIC_BACKEND_URL` is used by the landlord property forms when they make a browser-side category fallback request. `JWT_SECRET` is used by the Next.js proxy when verifying the access token. The two `NEXT_PUBLIC` OAuth values are public application identifiers; provider client/app secrets must remain backend-only. Do not commit real secrets.
 
 ## Local Setup
 
@@ -194,4 +196,4 @@ pnpm lint     # Run ESLint
 
 ## Production Deployment
 
-Configure `BACKEND_URL`, `NEXT_PUBLIC_BACKEND_URL`, and `JWT_SECRET` in the hosting environment, then deploy the Next.js application. The authenticated dashboard tree and cookie-dependent routes are configured for dynamic server rendering.
+Configure `BACKEND_URL`, `NEXT_PUBLIC_BACKEND_URL`, `JWT_SECRET`, `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, and `NEXT_PUBLIC_FACEBOOK_APP_ID` in the hosting environment, then deploy the Next.js application. The authenticated dashboard tree and cookie-dependent routes are configured for dynamic server rendering.

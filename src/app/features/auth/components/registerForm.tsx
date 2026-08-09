@@ -9,6 +9,7 @@ import { registerAction } from "@/app/features/auth/actions/registerAction";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Mail, Lock, User, Phone, Building2, UserRound } from "lucide-react";
+import { SocialLoginButtons } from "./SocialLoginButtons";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -179,6 +180,8 @@ const RegisterForm = () => {
           >
             {pending ? "Creating Account..." : "Create Account"}
           </Button>
+
+          <SocialLoginButtons />
 
           <p className="pt-2 text-center text-xs text-muted-foreground">
             Already have an account?{" "}

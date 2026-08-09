@@ -18,16 +18,19 @@ const AuthProvider = ({
     const [user, setUser] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const getUser = async() =>{
+    const getUser = async(): Promise<IUser | null> =>{
       try{
           const res = await getCurrentUserAction()
         if(!res || !res.ok || !res.data?.data){
             setUser(null)
+            return null
         } else {
             setUser(res.data.data)
+            return res.data.data
         }
       }catch{
         setUser(null)
+        return null
       }finally {
     setLoading(false);
   }
@@ -53,5 +56,4 @@ useEffect(() => {
 
 
 export default AuthProvider;
-
 

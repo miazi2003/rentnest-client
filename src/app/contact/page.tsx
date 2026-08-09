@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Mail, Phone, MapPin, Send, Building2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { contactAction } from "@/app/features/contact/actions/contactAction";
+import type { ContactActionState } from "@/app/features/contact/types";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,17 +16,23 @@ export default function ContactPage() {
     subject: "",
     message: "",
   });
-  const isSubmitting = false;
+  const [isSubmitting, startTransition] = useTransition();
+  const [feedback, setFeedback] = useState<ContactActionState | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Please fill in all required fields.");
-      return;
-    }
+    setFeedback(null);
+    startTransition(async () => {
+      const result = await contactAction(formData);
+      setFeedback(result);
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
 
-    // Submission remains disabled until a real backend contact endpoint is available.
-    toast.error("Contact submission is temporarily unavailable. Please use the contact details on this page.");
+      toast.success(result.message);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    });
   };
 
   return (
@@ -120,7 +128,9 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="rounded-xl"
+                        aria-describedby={feedback?.errors?.name ? "contact-name-error" : undefined}
                       />
+                      {feedback?.errors?.name && <p id="contact-name-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.name}</p>}
                     </div>
                     <div className="space-y-1.5">
                       <label htmlFor="contact-email" className="text-xs font-semibold text-foreground">
@@ -134,7 +144,9 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         className="rounded-xl"
+                        aria-describedby={feedback?.errors?.email ? "contact-email-error" : undefined}
                       />
+                      {feedback?.errors?.email && <p id="contact-email-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.email}</p>}
                     </div>
                   </div>
 
@@ -149,7 +161,9 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       className="rounded-xl"
+                      aria-describedby={feedback?.errors?.subject ? "contact-subject-error" : undefined}
                     />
+                    {feedback?.errors?.subject && <p id="contact-subject-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.subject}</p>}
                   </div>
 
                   <div className="space-y-1.5">
@@ -164,8 +178,16 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="w-full rounded-xl border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      aria-describedby={feedback?.errors?.message ? "contact-message-error" : undefined}
                     />
+                    {feedback?.errors?.message && <p id="contact-message-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.message}</p>}
                   </div>
+
+                  {feedback?.message && (
+                    <p className={`text-xs font-semibold ${feedback.success ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`} role="status">
+                      {feedback.message}
+                    </p>
+                  )}
 
                   <Button
                     type="submit"

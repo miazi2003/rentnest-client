@@ -1,5 +1,10 @@
 import { cookies } from "next/headers";
-import { RegisterPayload } from "../auth/types";
+import {
+  FacebookLoginPayload,
+  GoogleLoginPayload,
+  RegisterPayload,
+  SocialAuthResponse,
+} from "../auth/types";
 
 export type LoginPayload = {
   email: string;
@@ -42,6 +47,46 @@ export async function register(payload: RegisterPayload) {
   } catch (error) {
     return { ok: false, status: 500, data: null, message: error instanceof Error ? error.message : "Registration failed" };
   }
+}
+
+async function socialLogin(
+  endpoint: "/api/auth/google" | "/api/auth/facebook",
+  payload: GoogleLoginPayload | FacebookLoginPayload
+) {
+  try {
+    const baseUrl = process.env.BACKEND_URL;
+    if (!baseUrl) throw new Error("BACKEND_URL is not configured");
+
+    const response = await fetch(`${baseUrl}${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+    const data = (await response.json().catch(() => null)) as SocialAuthResponse | null;
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+      message: data?.message || (response.ok ? "Login successful" : "Social login failed"),
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 500,
+      data: null,
+      message: error instanceof Error ? error.message : "Social login failed",
+    };
+  }
+}
+
+export function googleLoginApi(credential: string) {
+  return socialLogin("/api/auth/google", { credential });
+}
+
+export function facebookLoginApi(accessToken: string) {
+  return socialLogin("/api/auth/facebook", { accessToken });
 }
 
 export async function getCurrentUser() {
