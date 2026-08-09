@@ -1,157 +1,155 @@
-# RentNest API Integration
+# RentNest Frontend API Integration
 
-This document maps the backend endpoints actually consumed by the RentNest frontend. Endpoints are relative to `BACKEND_URL`, except for the explicitly noted browser-side category fallback, which uses `NEXT_PUBLIC_BACKEND_URL`.
+This document maps the backend endpoints consumed by the current frontend source. Paths are relative to `BACKEND_URL` unless the browser-side category fallback is explicitly mentioned.
 
-API helpers generally return `{ ok, status, data, message? }`. Protected helpers read the HttpOnly `accessToken` cookie on the server and forward it as `Authorization: Bearer <token>`.
+Protected server-side helpers read the HttpOnly `accessToken` cookie and forward it as a Bearer token. Public reads may use Next.js revalidation; authenticated data and mutations use `cache: "no-store"`.
 
-## Authentication APIs
+## Authentication
 
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Login | `/login` | `loginForm` → `loginAction` → `login` | POST | `/api/auth/login` | Public | Default fetch behavior | Validate credentials and return the access token and user used by the login action. |
-| Registration | `/register` | `registerForm` → `registerAction` → `register` | POST | `/api/auth/register` | Public | Default fetch behavior | Create a tenant or landlord account from validated registration data. |
-| Current user | Global `AuthProvider`; `/properties`; `/dashboard/profile` | `getCurrentUserAction` → `getCurrentUser` | GET | `/api/auth/me` | Bearer token | `cache: "no-store"` | Load the authenticated account for context, role-aware UI, and profile display. |
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Register | `registerForm` -> `registerAction` -> `register` | POST | `/api/auth/register` | Public | Create a tenant or landlord account. |
+| Email/password login | `loginForm` -> `loginAction` -> `login` | POST | `/api/auth/login` | Public | Authenticate credentials and return an access token/user payload. |
+| Current user | `AuthProvider` -> `getCurrentUserAction` -> `getCurrentUser` | GET | `/api/auth/me` | Bearer token | Load the authenticated user for context, profile display, and role-aware UI. |
 
-Login and registration API helpers catch network/configuration errors and safely parse JSON. Their Server Actions validate form data with Zod and return user-facing messages. The current-user helper returns a 401-style result when no cookie is present, while `AuthProvider` falls back to `user: null`.
+Frontend logout does not call a backend endpoint; `logoutAction` removes the `accessToken` cookie.
 
-## Public Property APIs
+## Social authentication
 
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Property listing | `/`, `/properties` | `HomePage`/`PropertiesPage` → `propertyAction` → `getProperty` | GET | `/api/properties` | Public | `next.revalidate: 60` | Load public property cards, counts, search, and filter data. |
-| Property details | `/properties/[id]`; landlord edit routes | `getPropertyByIdAction` → `getPropertyById` | GET | `/api/properties/:id` | Public | `next.revalidate: 60` | Load one property's details and prefill landlord editing when applicable. |
-| Public categories | Landlord create/edit routes | `getCategoriesAction` → `getCategories` | GET | `/api/categories` | Public | `next.revalidate: 300` | Populate property category selection. |
-| Browser category fallback | Landlord property create/edit forms | `PropertyCreateForm`, `PropertyEditForm` | GET | `/api/categories` | Public | Browser default fetch behavior | Retry category loading directly from `NEXT_PUBLIC_BACKEND_URL` when the Server Action returns no categories. |
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Google login | `SocialLoginButtons` -> `googleLoginAction` -> `googleLoginApi` | POST | `/api/auth/google` | Public | Exchange a Google Identity Services credential for the backend access token. |
+| Facebook login | `SocialLoginButtons` -> `facebookLoginAction` -> `facebookLoginApi` | POST | `/api/auth/facebook` | Public | Exchange a Facebook JavaScript SDK access token for the backend access token. |
 
-Property actions normalize missing listing payloads to empty arrays and return structured errors. Detail actions validate IDs with Zod. Pages display empty or unavailable states when data cannot be loaded.
+Both Server Actions validate the provider value, store the returned access token in an HttpOnly cookie, refresh the user through `/api/auth/me`, and redirect according to the returned role. The browser uses only `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and `NEXT_PUBLIC_FACEBOOK_APP_ID`; no provider secret belongs in frontend configuration.
 
-## Tenant APIs
+## Properties and public categories
 
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Tenant rentals | `/dashboard/tenant`, `/dashboard/tenant/payments`; admin dashboard supplementary data | `getRentalRequest` | GET | `/api/rentals` | Bearer token | `cache: "no-store"` | Load the authenticated tenant's rental requests and statuses. |
-| Rental detail | `/dashboard/tenant/requests/[id]/pay`; payment verification enrichment | `getRentalRequestById` | GET | `/api/rentals/:id` | Bearer token | `cache: "no-store"` | Load the rental selected for payment and refresh its latest state after verification. |
-| Submit rental request | `/properties/[id]` | `RentModal` → `createRentalAction` → `createRentalRequest` | POST | `/api/rentals` | Bearer token; tenant UI restriction | `cache: "no-store"` | Submit validated property, start-date, and end-date data. |
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Property listing | Home and `/properties` -> `propertyAction` -> `getProperty` | GET | `/api/properties` | Public | Load available properties used by cards, search, filters, sorting, pagination, locations, and counts. |
+| Property details | `/properties/[id]` and landlord edit pages -> `getPropertyByIdAction` | GET | `/api/properties/:id` | Public | Load full property details or edit-form initial data. |
+| Public categories | Property and landlord forms -> `getCategories` | GET | `/api/categories` | Public | Load category options and category management data. |
 
-Tenant pages normalize missing rentals to empty arrays. Rental creation uses Zod validation and Sonner success/error notifications.
+Public property list/detail reads use a 60-second Next.js revalidation window. The server-side property category helper uses 300 seconds. Landlord forms can retry the public category request in the browser through `NEXT_PUBLIC_BACKEND_URL`.
 
-## Payment APIs
+Search, filter, sort, and pagination presentation on `/properties` operates on the property data returned by the listing integration.
 
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Payment history | `/dashboard/tenant`, `/dashboard/tenant/payments` | `getPaymentHistory` | GET | `/api/payments` | Bearer token | `cache: "no-store"` | Load the tenant's completed and recorded payments. |
-| Create checkout session | `/dashboard/tenant/requests/[id]/pay` | `PaymentPageClient` → `handleCreateCheckoutSessionAction` → `createCheckoutSession` | POST | `/api/payments/create` | Bearer token | `cache: "no-store"` | Send a validated rental request ID and receive a Stripe Hosted Checkout URL. |
-| Verify checkout session | `/dashboard/tenant/payments/success` | `PaymentSuccessClient` → `handleVerifyPaymentSessionAction` → `verifyPaymentSession` | GET | `/api/payments/verify/:sessionId` | Bearer token | `cache: "no-store"` | Verify the returned Stripe session and display payment status and receipt data. |
+## Tenant rentals
 
-Payment actions validate rental request and session IDs with Zod. The checkout page handles missing URLs and API failures with toasts. The success page retries verification up to five times at two-second intervals for pending/processing states, renders a retryable error state, and fetches current rental details after successful verification when a rental request ID is returned.
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Rental list | Tenant dashboard/requests/payments -> `getRentalRequest` | GET | `/api/rentals` | Bearer token; tenant | Load all pages of the tenant's rental requests. |
+| Rental detail | Payment page and verification refresh -> `getRentalRequestById` | GET | `/api/rentals/:id` | Bearer token; tenant | Load one rental request and its current status. |
+| Create rental request | `RentModal` -> `createRentalAction` -> `createRentalRequest` | POST | `/api/rentals` | Bearer token; tenant | Submit validated property and rental dates. |
 
-## Review APIs
+## Payments
 
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Property reviews | `/dashboard/tenant` review modal | `LeaveReviewModal` → `handleGetPropertyReviewsAction` → `getPropertyReviews` | GET | `/api/reviews/property/:propertyId` | Public | `next.revalidate: 60` | Load existing property reviews before presenting review submission state. |
-| Submit review | `/dashboard/tenant` | `TenantDashboardClient` → `handleCreateReviewAction` → `createReview` | POST | `/api/reviews` | Bearer token | `cache: "no-store"` | Submit a validated rating, comment, and property ID. |
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Payment history | Tenant dashboard/payments -> `getPaymentHistory` | GET | `/api/payments` | Bearer token; tenant | Load all pages of recorded tenant payments. |
+| Create Checkout Session | `PaymentPageClient` -> `handleCreateCheckoutSessionAction` -> `createCheckoutSession` | POST | `/api/payments/create` | Bearer token; tenant | Send `rentalRequestId` and receive a Stripe Hosted Checkout URL. |
+| Verify Checkout Session | `PaymentSuccessClient` -> `handleVerifyPaymentSessionAction` -> `verifyPaymentSession` | GET | `/api/payments/verify/:sessionId` | Bearer token supplied by frontend | Read the returned session/payment status for the success UI. |
 
-Review actions validate IDs and review payloads with Zod. The tenant UI reports submission success and backend/network errors through Sonner.
-
-## Landlord APIs
-
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Landlord properties | `/dashboard/landlord`, `/dashboard/landlord/properties` | `getMyPropertiesAction` → `getMyProperties` | GET | `/api/landlord/properties` | Bearer token | `cache: "no-store"` | Load listings owned by the authenticated landlord. |
-| Incoming requests | `/dashboard/landlord`, `/dashboard/landlord/requests` | `getIncomingRequestsAction` → `getRentalRequestForLandlord` | GET | `/api/landlord/requests` | Bearer token | `cache: "no-store"` | Load rental requests for the landlord's properties. |
-| Approve/reject request | `/dashboard/landlord/requests` | `RequestListTable` → `handleRequestAction` → `handleAcceptOrRejectRequest` | PATCH | `/api/landlord/requests/:requestId` | Bearer token | `cache: "no-store"`; revalidates `/dashboard/landlord/requests` | Update a validated rental request status. |
-| Create property | `/landlord/properties/new`, `/dashboard/landlord/properties/new` | `PropertyCreateForm` → `createPropertyAction` → `createProperty` | POST | `/api/landlord/properties` | Bearer token | `cache: "no-store"`; revalidates `/dashboard/landlord/properties` | Create a validated landlord property listing. |
-| Update property | `/landlord/properties/[id]/edit`, `/dashboard/landlord/properties/[id]/edit` | `PropertyEditForm` → `updatePropertyAction` → `updateProperty` | PUT, then PATCH on HTTP 405 | `/api/landlord/properties/:propertyId` | Bearer token | `cache: "no-store"`; related paths revalidated | Update a validated property while supporting either backend update method. |
-| Delete property | `/dashboard/landlord/properties` | `DeletePropertyButton` → `deletePropertyAction` → `deleteProperty` | DELETE | `/api/landlord/properties/:propertyId` | Bearer token | `cache: "no-store"`; related paths revalidated | Delete an owned property and invalidate dependent views. |
-
-Landlord list actions preserve API failures as structured errors; successful empty results remain empty arrays. Mutation actions validate payloads with Zod, return structured failures, and display Sonner notifications in their client components.
-
-## Admin APIs
-
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| User directory | `/dashboard/admin`, `/dashboard/admin/users` | `getUsersAction` → `getUsersList` | GET | `/api/admin/users` | Bearer token; admin route protection | `cache: "no-store"` | Load users for dashboard statistics and the searchable, sortable user table. |
-| User status management | `/dashboard/admin/users` | `UserTable`/`UserRow` → `updateUserStatusAction` → `updateUserStatus` | PATCH | `/api/admin/users/:id` | Bearer token; admin route protection | `cache: "no-store"`; revalidates `/dashboard/admin` and `/dashboard/admin/users` | Ban or unban a validated user by changing status to `BLOCKED` or `ACTIVE`. |
-| Property monitoring | `/dashboard/admin`, `/dashboard/admin/properties` | `PropertyAction` → `getAllProperty` | GET | `/api/admin/properties` | Bearer token; admin route protection | `cache: "no-store"` | Load all properties for admin summaries and inspection. |
-| Rental monitoring | `/dashboard/admin`, `/dashboard/admin/rentals` | `rentalActions` → `getAllRentalRequest` | GET | `/api/admin/rentals` | Bearer token; admin route protection | `cache: "no-store"` | Load all rental requests for platform monitoring. |
-
-Admin API helpers handle missing tokens, fetch failures, non-JSON responses, and backend status/message values. Admin pages and tables normalize supported response shapes and render empty states.
-
-No admin property or rental mutation endpoint is consumed by the current frontend; those modules provide monitoring and table interactions only.
-
-## Category APIs
-
-| Feature | Frontend Route | Component/Action | Method | Backend Endpoint | Auth | Cache/Revalidation | Purpose |
-|---|---|---|---|---|---|---|---|
-| Category list | `/dashboard/admin`, `/dashboard/admin/categories` | `getCategoriesAction` → `getCategoriesApi` | GET | `/api/categories`; fallback `/api/admin/categories` when public request fails | Public first; Bearer token for fallback | `cache: "no-store"` | Load categories for admin summaries and management. |
-| Create category | `/dashboard/admin/categories` | `CategoryForm` → `createCategoryAction` → `createCategoryApi` | POST | `/api/admin/categories` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths | Create a validated category. |
-| Update category | `/dashboard/admin/categories` | `CategoryForm` → `updateCategoryAction` → `updateCategoryApi` | PUT, then PATCH on HTTP 405 | `/api/admin/categories/:id` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths | Update a validated category while supporting either backend update method. |
-| Delete category | `/dashboard/admin/categories` | `DeleteCategoryDialog` → `deleteCategoryAction` → `deleteCategoryApi` | DELETE | `/api/admin/categories/:id` | Bearer token | `cache: "no-store"`; revalidates admin categories and properties paths | Delete a validated category ID. |
-
-Category forms perform required-field checks before invoking Zod-validated Server Actions. Results are communicated through Sonner and the list is refreshed after successful mutations.
-
-## Authentication Flow
+Current payment flow:
 
 ```text
-Register form
-→ registerAction (Zod validation)
-→ POST /api/auth/register
-→ redirect to login after success
-
-Login form
-→ loginAction (Zod validation)
-→ POST /api/auth/login
-→ HttpOnly accessToken cookie
-→ AuthProvider calls GET /api/auth/me
-→ Next.js proxy checks authentication and JWT role for protected routes
+Approved rental
+-> POST /api/payments/create
+-> Stripe Hosted Checkout
+-> success/cancel return route
+-> backend webhook authoritatively updates payment and rental state
+-> GET /api/payments/verify/:sessionId
+-> frontend refreshes payment and rental data
 ```
 
-The proxy treats `/`, `/about`, `/contact`, `/login`, `/register`, and `/properties...` as public. Other matched application routes require `accessToken`. It redirects authenticated visitors away from login/register and restricts `/dashboard/admin`, `/dashboard/tenant`, `/dashboard/landlord`, and `/landlord` by a successfully verified JWT role.
+The success UI retries pending/processing verification results up to five times and fetches the latest rental detail when verification returns a rental request ID. There is no Stripe Elements or direct card-entry integration in this frontend.
 
-## Payment Flow
+## Reviews
 
-```text
-Approved rental request
-→ PaymentPageClient checks that it is not already ACTIVE or COMPLETED
-→ POST /api/payments/create with rentalRequestId
-→ Browser redirects to Stripe Hosted Checkout
-→ Stripe returns to the configured success or cancel route
-→ Backend webhook processing updates payment/rental state
-→ Success page calls GET /api/payments/verify/:sessionId
-→ Pending/processing results are polled
-→ Latest rental detail is fetched when verification returns its ID
-```
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Property reviews | Tenant review modal -> `handleGetPropertyReviewsAction` -> `getPropertyReviews` | GET | `/api/reviews/property/:propertyId` | Public | Load reviews for a property before review submission. |
+| Create review | Tenant dashboard -> `handleCreateReviewAction` -> `createReview` | POST | `/api/reviews` | Bearer token; tenant | Submit a validated property ID, rating, and comment. |
 
-The webhook itself belongs to the backend and is not implemented in this repository. The frontend's polling text and verification behavior explicitly account for webhook processing delay.
+The frontend has no personal review-list integration; it only reads reviews by property and submits new reviews.
 
-## Cache and Revalidation Strategy
+## Landlord
 
-### Cached reads
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Owned properties | Landlord dashboard/properties -> `getMyPropertiesAction` | GET | `/api/landlord/properties` | Bearer token; landlord | Load listings owned by the current landlord. |
+| Incoming requests | Landlord dashboard/requests -> `getIncomingRequestsAction` | GET | `/api/landlord/requests` | Bearer token; landlord | Load requests for the landlord's properties. |
+| Approve/reject request | `RequestListTable` -> `handleRequestAction` | PATCH | `/api/landlord/requests/:requestId` | Bearer token; landlord | Set a validated request decision. |
+| Create property | `PropertyCreateForm` -> `createPropertyAction` | POST | `/api/landlord/properties` | Bearer token; landlord | Create a validated property. |
+| Update property | `PropertyEditForm` -> `updatePropertyAction` | PUT | `/api/landlord/properties/:propertyId` | Bearer token; landlord | Update an owned property. |
+| Delete property | `DeletePropertyButton` -> `deletePropertyAction` | DELETE | `/api/landlord/properties/:propertyId` | Bearer token; landlord | Delete an owned property. |
 
-- Public property lists and details use `next: { revalidate: 60 }`.
-- Public property reviews use `next: { revalidate: 60 }`.
-- The property-form category helper uses `next: { revalidate: 300 }`.
-- Authenticated landlord properties and incoming requests use `cache: "no-store"`.
+## Admin
 
-### Uncached reads and mutations
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| User list | Admin dashboard/users -> `getUsersAction` -> `getUsersList` | GET | `/api/admin/users` | Bearer token; admin | Load real user data for tables and dashboard summaries. |
+| User status | `UserTable`/`UserRow` -> `updateUserStatusAction` | PATCH | `/api/admin/users/:id` | Bearer token; admin | Change a user between supported active/banned states. |
+| Property monitoring | Admin dashboard/properties -> `PropertyAction` | GET | `/api/admin/properties` | Bearer token; admin | Load real property data for monitoring and analytics. |
+| Rental monitoring | Admin dashboard/rentals -> `rentalActions` | GET | `/api/admin/rentals` | Bearer token; admin | Load real rental data for monitoring and analytics. |
 
-Authenticated current-user, tenant rental, payment, admin, category-management, review mutation, and landlord mutation requests use `cache: "no-store"`.
+The current admin frontend does not submit property or rental mutations. Dashboard counts and charts are calculated from API responses rather than hard-coded analytics defaults.
 
-### Path revalidation
+## Category management
 
-- Property creation revalidates `/dashboard/landlord/properties`.
-- Request approval/rejection revalidates `/dashboard/landlord/requests`.
-- Property updates revalidate landlord property lists/details and public property lists/details.
-- Property deletion revalidates landlord properties, landlord requests, tenant dashboard, and public properties.
-- Category mutations revalidate `/dashboard/admin/categories` and `/properties`.
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Category list | Admin dashboard/categories -> `getCategoriesAction` | GET | `/api/categories` | Public | Load current categories. |
+| Create category | `CategoryForm` -> `createCategoryAction` | POST | `/api/admin/categories` | Bearer token; admin | Create a validated category. |
+| Update category | `CategoryForm` -> `updateCategoryAction` | PUT | `/api/admin/categories/:id` | Bearer token; admin | Update a validated category. |
+| Delete category | `DeleteCategoryDialog` -> `deleteCategoryAction` | DELETE | `/api/admin/categories/:id` | Bearer token; admin | Delete a category. |
 
-## Error Handling
+## Contact
 
-- **API return objects:** helpers return status-aware `ok`, `status`, `data`, and optional `message` results; most JSON parsing uses a `null` fallback.
-- **Zod validation:** Server Actions reject malformed forms, entity IDs, rental dates, property payloads, category data, review data, and payment identifiers before calling the backend.
-- **Sonner notifications:** authentication, rental, landlord, category, payment, review, and logout components display success and error toasts.
-- **Inline states:** authentication forms render action messages; payment verification renders progress, retry, timeout, and success states.
-- **Loading states:** root, dashboard, properties, and property-detail loading files provide skeleton/loading UI, with additional local pending states in forms and payment components.
-- **Empty states:** property lists, dashboard tables, request lists, payments, and reviews safely handle missing or empty arrays.
-- **Error boundaries:** root/global, dashboard, and properties boundaries provide reset-based recovery UI; genuine missing-property responses use the branded `not-found.tsx` page.
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Contact submission | `/contact` -> `contactAction` -> `submitContactMessage` | POST | `/api/contact` | Public | Submit name, email, optional subject, and message. |
+
+The Zod schema applies: `name` 1-100 characters, valid `email`, optional `subject` up to 200 characters, and `message` 5-2000 characters. The page renders inline validation, loading, success, and backend error states and clears the form after success. No email-delivery or newsletter endpoint is called.
+
+## Profile
+
+| Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
+|---|---|---|---|---|---|
+| Load profile | `/dashboard/profile` -> `getProfileApi` | GET | `/api/profile` | Bearer token | Load name, phone, email, role, status, and account dates. |
+| Update profile | `ProfileForms` -> `updateProfileAction` -> `updateProfileApi` | PATCH | `/api/profile` | Bearer token | Update editable `name` and `phone`. |
+| Change password | `ProfileForms` -> `changePasswordAction` -> `changePasswordApi` | PATCH | `/api/profile/password` | Bearer token | Submit `currentPassword` and `newPassword` through the separate password form. |
+
+After profile update success, `ProfileForms` calls `AuthProvider.getUser()` and refreshes the route. Email, role, and account status are displayed as read-only values.
+
+## Frontend routes using these integrations
+
+Verified routes include:
+
+- Public: `/`, `/about`, `/contact`, `/properties`, `/properties/[id]`, `/login`, `/register`
+- Shared authenticated: `/dashboard`, `/dashboard/profile`
+- Tenant: `/dashboard/tenant`, `/dashboard/tenant/requests`, `/dashboard/tenant/requests/[id]/pay`, `/dashboard/tenant/payments`, `/dashboard/tenant/payments/success`, `/dashboard/tenant/payments/cancel`, `/dashboard/tenant/reviews`
+- Landlord: `/dashboard/landlord`, `/dashboard/landlord/properties`, `/dashboard/landlord/properties/new`, `/dashboard/landlord/properties/[id]`, `/dashboard/landlord/properties/[id]/edit`, `/dashboard/landlord/requests`
+- Admin: `/dashboard/admin`, `/dashboard/admin/users`, `/dashboard/admin/properties`, `/dashboard/admin/rentals`, `/dashboard/admin/categories`
+- Payment return aliases: `/payment/success`, `/payment/cancel`
+
+## Error, loading, and cache behavior
+
+- Root/global, dashboard, and properties error boundaries provide recovery UI.
+- `not-found.tsx` handles unknown routes and missing resources routed to not-found behavior.
+- Root, dashboard, property list, and property detail loading files provide loading/skeleton feedback.
+- Public property and review reads use bounded revalidation; protected lists and mutations use uncached requests.
+- API helpers safely handle missing configuration, authentication, network failures, non-JSON responses, and backend status/messages.
+
+## Environment variables used by source
+
+| Variable | Exposure | Use |
+|---|---|---|
+| `BACKEND_URL` | Server only | Base URL for frontend API helpers and Server Actions. |
+| `NEXT_PUBLIC_BACKEND_URL` | Public | Browser-side public category fallback in landlord forms. |
+| `JWT_SECRET` | Server only | JWT verification in `src/proxy.ts`. |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Public | Google Identity Services initialization. |
+| `NEXT_PUBLIC_FACEBOOK_APP_ID` | Public | Facebook JavaScript SDK initialization. |
+
+Only variable names are documented. Actual secret values must remain outside version control.

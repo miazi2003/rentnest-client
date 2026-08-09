@@ -1,7 +1,7 @@
 "use server";
 
-import { createReview, getPropertyReviews } from "@/app/features/api/review.api";
-import { createReviewValidation } from "@/app/features/review/validations";
+import { createReview, getMyReviews, getPropertyReviews } from "@/app/features/api/review.api";
+import { createReviewValidation, reviewHistoryQueryValidation } from "@/app/features/review/validations";
 import { entityIdSchema, validationMessage } from "../../shared-validations";
 
 export async function handleCreateReviewAction(payload: {
@@ -56,4 +56,18 @@ export async function handleGetPropertyReviewsAction(propertyId: string) {
       data: null,
     };
   }
+}
+
+export async function handleGetMyReviewsAction(page = 1, limit = 10) {
+  const validation = reviewHistoryQueryValidation.safeParse({ page, limit });
+  if (!validation.success) {
+    return {
+      ok: false,
+      status: 400,
+      message: validation.error.issues[0]?.message || "Invalid review history query",
+      data: null,
+    };
+  }
+
+  return getMyReviews(validation.data.page, validation.data.limit);
 }
