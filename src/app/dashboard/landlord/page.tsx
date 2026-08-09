@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { StatsCard, type StatsCardProps } from "@/components/StatsCard";
 import { DashboardSection } from "@/components/DashboardSection";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 import { getMyProperties, getRentalRequestForLandlord } from "@/app/features/api/landlord.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -202,6 +203,21 @@ export default async function LandlordDashboardPage() {
             <CardContent className="space-y-3"><SummaryRow icon={Clock} label="Pending Requests" value={countStatus("PENDING")} tone="bg-amber-50/60 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400" /><SummaryRow icon={CheckCircle2} label="Approved" value={countStatus("APPROVED")} tone="bg-emerald-50/60 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400" /><SummaryRow icon={XCircle} label="Rejected" value={countStatus("REJECTED")} tone="bg-rose-50/60 text-rose-600 dark:bg-rose-950/20 dark:text-rose-400" /><SummaryRow icon={PlayCircle} label="Active Rentals" value={activeRentals} tone="bg-blue-50/60 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400" /><SummaryRow icon={CheckCheck} label="Completed Rentals" value={countStatus("COMPLETED")} tone="bg-purple-50/60 text-purple-600 dark:bg-purple-950/20 dark:text-purple-400" /></CardContent>
           </Card>
         </div>
+      </DashboardSection>
+
+      {/* Analytics Charts Section */}
+      <DashboardSection>
+        <AnalyticsCharts
+          title="Landlord Revenue & Rental Performance"
+          subtitle="Real-time listing analytics and application stats"
+          rentalStatusData={[
+            { status: "Approved", count: countStatus("APPROVED"), color: "bg-emerald-500 text-emerald-500" },
+            { status: "Active", count: activeRentals, color: "bg-blue-500 text-blue-500" },
+            { status: "Completed", count: countStatus("COMPLETED"), color: "bg-purple-500 text-purple-500" },
+            { status: "Pending", count: countStatus("PENDING"), color: "bg-amber-500 text-amber-500" },
+            { status: "Rejected", count: countStatus("REJECTED"), color: "bg-rose-500 text-rose-500" },
+          ]}
+        />
       </DashboardSection>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">

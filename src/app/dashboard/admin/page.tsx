@@ -12,6 +12,7 @@ import { PendingRequestsTable, PendingRequestItem } from "@/components/PendingRe
 import { RecentUsersTable, UserItem } from "@/components/RecentUsersTable";
 import { QuickActions } from "@/components/QuickActions";
 import { DashboardSection } from "@/components/DashboardSection";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 
@@ -272,11 +273,25 @@ export default async function AdminDashboardPage() {
         </div>
       </DashboardSection>
 
-
       <DashboardSection>
         <PlatformSummary
           platformData={platformSummaryData}
           rentalData={rentalSummaryData}
+        />
+      </DashboardSection>
+
+      {/* Recharts / Analytics Section */}
+      <DashboardSection>
+        <AnalyticsCharts
+          title="Platform Analytics & Revenue Overview"
+          subtitle="System-wide application metrics, listing category breakdowns, and rental revenue trends"
+          rentalStatusData={[
+            { status: "Approved", count: approvedRentalsCount, color: "bg-emerald-500 text-emerald-500" },
+            { status: "Active", count: activeRentalsCount, color: "bg-blue-500 text-blue-500" },
+            { status: "Completed", count: completedRentalsCount, color: "bg-purple-500 text-purple-500" },
+            { status: "Pending", count: pendingRentalsCount, color: "bg-amber-500 text-amber-500" },
+            { status: "Rejected", count: rejectedRentalsCount, color: "bg-rose-500 text-rose-500" },
+          ]}
         />
       </DashboardSection>
 
