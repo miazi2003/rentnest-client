@@ -26,8 +26,42 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+type DbPaymentStatus = "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CANCELLED";
+type StripeSessionStatus = "open" | "complete" | "expired";
+
+interface PaymentVerificationPayload {
+  status?: StripeSessionStatus;
+  paymentStatus?: DbPaymentStatus;
+  amount?: number;
+  currency?: string;
+  transactionId?: string;
+  date?: string;
+  receiptUrl?: string;
+  rentalRequestId?: string;
+  propertyTitle?: string;
+  landlordName?: string;
+  rentalId?: string;
+  requestId?: string;
+  client_reference_id?: string;
+  createdAt?: string;
+  paymentIntentId?: string;
+  receipt_url?: string;
+  stripeReceiptUrl?: string;
+  totalAmount?: number;
+  price?: number;
+  property?: { title?: string };
+  landlord?: { name?: string };
+  metadata?: { rentalRequestId?: string };
+  data?: {
+    rentalRequestId?: string;
+    rentalId?: string;
+    client_reference_id?: string;
+  };
+}
+
 interface PaymentVerificationResult {
-  status?: string;
+  dbPaymentStatus: DbPaymentStatus;
+  stripeSessionStatus?: StripeSessionStatus;
   amount?: number;
   currency?: string;
   transactionId?: string;
@@ -38,6 +72,21 @@ interface PaymentVerificationResult {
   landlordName?: string;
 }
 
+const dbPaymentStatuses = new Set<DbPaymentStatus>(["PENDING", "COMPLETED", "FAILED", "REFUNDED", "CANCELLED"]);
+const stripeSessionStatuses = new Set<StripeSessionStatus>(["open", "complete", "expired"]);
+
+function parseDbPaymentStatus(value: unknown): DbPaymentStatus | null {
+  return typeof value === "string" && dbPaymentStatuses.has(value.toUpperCase() as DbPaymentStatus)
+    ? value.toUpperCase() as DbPaymentStatus
+    : null;
+}
+
+function parseStripeSessionStatus(value: unknown): StripeSessionStatus | undefined {
+  return typeof value === "string" && stripeSessionStatuses.has(value.toLowerCase() as StripeSessionStatus)
+    ? value.toLowerCase() as StripeSessionStatus
+    : undefined;
+}
+
 export default function PaymentSuccessClient() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id") || searchParams.get("sessionId");
@@ -46,6 +95,7 @@ export default function PaymentSuccessClient() {
   const [verifyingText, setVerifyingText] = useState("Verifying payment with Stripe...");
   const [paymentData, setPaymentData] = useState<PaymentVerificationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorTitle, setErrorTitle] = useState("Verification Pending");
 
   const verifyPayment = useCallback(async () => {
     const verifyAttempt = async (attemptsRemaining: number): Promise<void> => {
@@ -57,16 +107,17 @@ export default function PaymentSuccessClient() {
 
     setLoading(true);
     setError(null);
+    setErrorTitle("Verification Pending");
 
     try {
       const res = await handleVerifyPaymentSessionAction(sessionId);
 
       if (res.ok && res.data) {
-        const payload = res.data.data || res.data;
-        const statusValue = payload?.status || payload?.paymentStatus;
-        const statusStr = typeof statusValue === "string" ? statusValue.toUpperCase() : "";
+        const payload = (res.data.data || res.data) as PaymentVerificationPayload;
+        const dbPaymentStatus = parseDbPaymentStatus(payload.paymentStatus);
+        const stripeSessionStatus = parseStripeSessionStatus(payload.status);
 
-        if ((statusStr === "PENDING" || statusStr === "PROCESSING") && attemptsRemaining > 1) {
+        if (dbPaymentStatus === "PENDING" && attemptsRemaining > 1) {
           setVerifyingText(`Awaiting Stripe webhook confirmation... (Attempt ${6 - attemptsRemaining} of 5)`);
           setTimeout(() => {
             void verifyAttempt(attemptsRemaining - 1);
@@ -74,9 +125,24 @@ export default function PaymentSuccessClient() {
           return;
         }
 
-        if (!["PAID", "COMPLETED", "SUCCEEDED"].includes(statusStr)) {
+        if (dbPaymentStatus !== "COMPLETED") {
           setLoading(false);
-          setError(statusStr ? `Payment is not confirmed (status: ${statusStr}).` : "Payment verification did not return a confirmed payment status.");
+          if (dbPaymentStatus === "PENDING") {
+            setErrorTitle("Verification Pending");
+            setError("Payment confirmation is still pending. Please retry shortly.");
+          } else if (dbPaymentStatus === "FAILED") {
+            setErrorTitle("Payment Failed");
+            setError("The payment could not be confirmed.");
+          } else if (dbPaymentStatus === "CANCELLED") {
+            setErrorTitle("Payment Cancelled");
+            setError("This payment was cancelled and was not completed.");
+          } else if (dbPaymentStatus === "REFUNDED") {
+            setErrorTitle("Payment Refunded");
+            setError("This payment has been refunded and is not an active completed payment.");
+          } else {
+            setErrorTitle("Verification Error");
+            setError("Payment verification did not return a recognized RentNest payment status.");
+          }
           return;
         }
 
@@ -123,7 +189,8 @@ export default function PaymentSuccessClient() {
           "Not provided";
 
         setPaymentData({
-          status: statusStr,
+          dbPaymentStatus,
+          stripeSessionStatus,
           amount: Number(payload?.amount ?? payload?.totalAmount ?? payload?.price ?? 0),
           currency: (payload?.currency || "USD").toUpperCase(),
           transactionId: payload?.transactionId || payload?.paymentIntentId || sessionId,
@@ -195,7 +262,7 @@ export default function PaymentSuccessClient() {
               <AlertCircle className="w-7 h-7" />
             </div>
             <div className="space-y-1">
-              <h2 className="text-xl font-bold text-foreground">Verification Pending</h2>
+              <h2 className="text-xl font-bold text-foreground">{errorTitle}</h2>
               <p className="text-xs text-muted-foreground max-w-sm mx-auto">{error}</p>
             </div>
             <div className="pt-2 flex justify-center gap-3">
@@ -242,7 +309,7 @@ export default function PaymentSuccessClient() {
                     <span className="text-muted-foreground">Payment Status:</span>
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      {paymentData?.status}
+                      {paymentData?.dbPaymentStatus}
                     </span>
                   </div>
 
