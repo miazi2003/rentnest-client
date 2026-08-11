@@ -1,11 +1,12 @@
 import { getRentalRequest } from "@/app/features/api/rental.api";
 import { getPaymentHistory } from "@/app/features/api/payment.api";
 import TenantDashboardClient from "./_components/TenantDashboardClient";
+import type { IPaginationMeta } from "./types/tenant.types";
 
 const TenantDashboardPage = async () => {
   const [result, payment] = await Promise.all([
-    getRentalRequest(),
-    getPaymentHistory(),
+    getRentalRequest(1, 100),
+    getPaymentHistory(1, 100),
   ]);
 
   const rawRequests = result?.data?.data ?? result?.data;
@@ -22,6 +23,8 @@ const TenantDashboardPage = async () => {
     <TenantDashboardClient
       initialRequests={rentalRequests}
       initialPayments={paymentHistory}
+      requestsMeta={(result?.data?.meta as IPaginationMeta | undefined) || null}
+      paymentsMeta={(payment?.data?.meta as IPaginationMeta | undefined) || null}
       errorMessage={errors.join(" ") || undefined}
     />
   );

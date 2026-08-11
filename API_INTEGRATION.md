@@ -39,7 +39,7 @@ Search, filter, sort, and pagination presentation on `/properties` operates on t
 
 | Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
 |---|---|---|---|---|---|
-| Rental list | Tenant dashboard/requests/payments -> `getRentalRequest` | GET | `/api/rentals` | Bearer token; tenant | Load all pages of the tenant's rental requests. |
+| Rental list | Tenant dashboard/requests -> `getRentalRequest` | GET | `/api/rentals?page=:page&limit=:limit` | Bearer token; tenant | Load only the requested page and preserve backend `page`, `limit`, `total`, and `totalPages` metadata. |
 | Rental detail | Payment page and verification refresh -> `getRentalRequestById` | GET | `/api/rentals/:id` | Bearer token; tenant | Load one rental request and its current status. |
 | Create rental request | `RentModal` -> `createRentalAction` -> `createRentalRequest` | POST | `/api/rentals` | Bearer token; tenant | Submit validated property and rental dates. |
 
@@ -47,7 +47,7 @@ Search, filter, sort, and pagination presentation on `/properties` operates on t
 
 | Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
 |---|---|---|---|---|---|
-| Payment history | Tenant dashboard/payments -> `getPaymentHistory` | GET | `/api/payments` | Bearer token; tenant | Load all pages of recorded tenant payments. |
+| Payment history | Tenant dashboard/payments -> `getPaymentHistory` | GET | `/api/payments?page=:page&limit=:limit` | Bearer token; tenant | Load only the requested page and preserve backend `page`, `limit`, `total`, and `totalPages` metadata. |
 | Create Checkout Session | `PaymentPageClient` -> `handleCreateCheckoutSessionAction` -> `createCheckoutSession` | POST | `/api/payments/create` | Bearer token; tenant | Send `rentalRequestId` and receive a Stripe Hosted Checkout URL. |
 | Verify Checkout Session | `PaymentSuccessClient` -> `handleVerifyPaymentSessionAction` -> `verifyPaymentSession` | GET | `/api/payments/verify/:sessionId` | Bearer token supplied by frontend | Read the returned session/payment status for the success UI. |
 
@@ -69,10 +69,11 @@ The success UI retries pending/processing verification results up to five times 
 
 | Feature | Frontend Component/Action | Method | Backend Endpoint | Auth | Purpose |
 |---|---|---|---|---|---|
+| Tenant review history | Tenant reviews page -> `handleGetMyReviewsAction` -> `getMyReviews` | GET | `/api/reviews/me?page=:page&limit=:limit` | Bearer token; tenant | Load the authenticated tenant's paginated review history while preserving `page`, `limit`, `total`, and `totalPages` metadata. |
 | Property reviews | Tenant review modal -> `handleGetPropertyReviewsAction` -> `getPropertyReviews` | GET | `/api/reviews/property/:propertyId` | Public | Load reviews for a property before review submission. |
 | Create review | Tenant dashboard -> `handleCreateReviewAction` -> `createReview` | POST | `/api/reviews` | Bearer token; tenant | Submit a validated property ID, rating, and comment. |
 
-The frontend has no personal review-list integration; it only reads reviews by property and submits new reviews.
+The tenant review-history page distinguishes API errors from a successful empty history and uses backend pagination metadata for navigation.
 
 ## Landlord
 

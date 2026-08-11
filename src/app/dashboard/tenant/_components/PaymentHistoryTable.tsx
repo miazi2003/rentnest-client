@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CreditCard, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
-import { IPaymentItem } from "../types/tenant.types";
+import { IPaginationMeta, IPaymentItem } from "../types/tenant.types";
 import {
   Table,
   TableHeader,
@@ -15,19 +16,34 @@ import { Button } from "@/components/ui/button";
 
 interface PaymentHistoryTableProps {
   payments: IPaymentItem[];
+  pagination?: IPaginationMeta | null;
+  paginationPath?: string;
 }
 
 export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
   payments,
+  pagination,
+  paginationPath = "/dashboard/tenant/payments",
 }) => {
+  const router = useRouter();
   const pageSize = 5;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(payments.length / pageSize));
-  const validPage = Math.min(currentPage, totalPages);
+  const totalPages = pagination?.totalPages ?? Math.max(1, Math.ceil(payments.length / pageSize));
+  const validPage = pagination?.page ?? Math.min(currentPage, totalPages);
   const paginatedPayments = useMemo(() => {
+    if (pagination) return payments;
     const start = (validPage - 1) * pageSize;
     return payments.slice(start, start + pageSize);
-  }, [payments, validPage]);
+  }, [pagination, payments, validPage]);
+  const totalItems = pagination?.total ?? payments.length;
+  const effectivePageSize = pagination?.limit ?? pageSize;
+  const changePage = (page: number) => {
+    if (pagination) {
+      router.push(`${paginationPath}?page=${page}`);
+    } else {
+      setCurrentPage(page);
+    }
+  };
 
   if (payments.length === 0) {
     return (
@@ -75,8 +91,8 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
         {paginatedPayments.map((pay) => {
           const txn = pay.transactionId || pay.id;
           const propTitle =
-            pay.propertyTitle || pay.property?.title || "Rent Payment";
-          const landlordName = pay.landlordName || "Landlord";
+            pay.propertyTitle || pay.property?.title || "Property unavailable";
+          const landlordName = pay.landlordName || "Not provided";
           const dateStr = pay.createdAt
             ? new Date(pay.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -117,7 +133,7 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
               <TableCell className="py-4 px-6">
                 <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
                   <CreditCard className="w-3.5 h-3.5 text-blue-500" />
-                  {pay.paymentMethod || "Online Transfer"}
+                  {pay.paymentMethod || "Not provided"}
                 </div>
               </TableCell>
 
@@ -145,7 +161,7 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
     <div className="space-y-3 p-3 md:hidden">
       {paginatedPayments.map((pay) => {
         const transaction = pay.transactionId || pay.id;
-        const title = pay.propertyTitle || pay.property?.title || "Rent Payment";
+        const title = pay.propertyTitle || pay.property?.title || "Property unavailable";
         const date = pay.createdAt ? new Date(pay.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Recent";
         return (
           <article key={pay.id} className="rounded-2xl bg-muted/35 p-4 shadow-sm">
@@ -155,24 +171,24 @@ export const PaymentHistoryTable: React.FC<PaymentHistoryTableProps> = ({
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
               <div><p className="text-[10px] text-muted-foreground">Amount paid</p><p className="mt-1 text-base font-black text-emerald-600">${Number(pay.amount).toLocaleString()}</p></div>
-              <div><p className="text-[10px] text-muted-foreground">Method</p><p className="mt-1 truncate font-semibold">{pay.paymentMethod || "Online Transfer"}</p></div>
+              <div><p className="text-[10px] text-muted-foreground">Method</p><p className="mt-1 truncate font-semibold">{pay.paymentMethod || "Not provided"}</p></div>
             </div>
             <p className="mt-4 truncate rounded-xl bg-background/70 px-3 py-2 font-mono text-[10px] text-muted-foreground">Ref: {transaction}</p>
           </article>
         );
       })}
     </div>
-    {payments.length > pageSize && (
+    {totalItems > effectivePageSize && (
       <div className="flex items-center justify-between border-t border-border px-4 py-3 sm:px-6">
         <p className="text-xs text-muted-foreground">
-          Showing {(validPage - 1) * pageSize + 1}–{Math.min(validPage * pageSize, payments.length)} of {payments.length}
+          Showing {(validPage - 1) * effectivePageSize + 1}–{Math.min(validPage * effectivePageSize, totalItems)} of {totalItems}
         </p>
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={validPage === 1} className="h-8 gap-1 text-xs">
+          <Button type="button" variant="outline" size="sm" onClick={() => changePage(Math.max(1, validPage - 1))} disabled={validPage === 1} className="h-8 gap-1 text-xs">
             <ChevronLeft className="size-3.5" /> Previous
           </Button>
           <span className="text-xs font-semibold text-muted-foreground">{validPage} / {totalPages}</span>
-          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={validPage === totalPages} className="h-8 gap-1 text-xs">
+          <Button type="button" variant="outline" size="sm" onClick={() => changePage(Math.min(totalPages, validPage + 1))} disabled={validPage === totalPages} className="h-8 gap-1 text-xs">
             Next <ChevronRight className="size-3.5" />
           </Button>
         </div>

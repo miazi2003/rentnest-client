@@ -1,26 +1,28 @@
 import { getRentalRequest } from "@/app/features/api/rental.api";
-import { getPaymentHistory } from "@/app/features/api/payment.api";
 import TenantDashboardClient from "../_components/TenantDashboardClient";
+import type { IPaginationMeta } from "../types/tenant.types";
 
 export const dynamic = "force-dynamic";
 
-export default async function TenantRequestsPage() {
-  const [result, payment] = await Promise.all([
-    getRentalRequest().catch(() => null),
-    getPaymentHistory().catch(() => null),
-  ]);
+export default async function TenantRequestsPage({ searchParams }: { searchParams: Promise<{ page?: string | string[] }> }) {
+  const params = await searchParams;
+  const rawPage = Array.isArray(params.page) ? params.page[0] : params.page;
+  const requestedPage = Number(rawPage || 1);
+  const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const result = await getRentalRequest(page, 5);
 
   const rawRequests = result?.data?.data ?? result?.data;
   const rentalRequests = Array.isArray(rawRequests) ? rawRequests : [];
 
-  const rawPayments = payment?.data?.data ?? payment?.data;
-  const paymentHistory = Array.isArray(rawPayments) ? rawPayments : [];
+  const pagination = result?.data?.meta as IPaginationMeta | undefined;
 
   return (
     <TenantDashboardClient
       initialRequests={rentalRequests}
-      initialPayments={paymentHistory}
       defaultTab="requests"
+      dataScope="requests"
+      requestsMeta={result.ok ? pagination || null : null}
+      errorMessage={!result.ok ? result.message || result.data?.message || "Unable to load rental requests." : undefined}
     />
   );
 }

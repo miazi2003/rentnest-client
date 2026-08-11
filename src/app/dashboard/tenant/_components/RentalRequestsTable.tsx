@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   GitPullRequest,
   Building2,
@@ -14,7 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { IRentalRequest } from "../types/tenant.types";
+import { IPaginationMeta, IRentalRequest } from "../types/tenant.types";
 import { RentalStatusBadge } from "./RentalStatusBadge";
 import {
   Table,
@@ -29,35 +30,50 @@ import { Button } from "@/components/ui/button";
 interface RentalRequestsTableProps {
   requests: IRentalRequest[];
   onOpenReviewModal: (request: IRentalRequest) => void;
+  pagination?: IPaginationMeta | null;
+  paginationPath?: string;
 }
 
 export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
   requests,
   onOpenReviewModal,
+  pagination,
+  paginationPath = "/dashboard/tenant/requests",
 }) => {
+  const router = useRouter();
   const pageSize = 5;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(requests.length / pageSize));
-  const validPage = Math.min(currentPage, totalPages);
+  const totalPages = pagination?.totalPages ?? Math.max(1, Math.ceil(requests.length / pageSize));
+  const validPage = pagination?.page ?? Math.min(currentPage, totalPages);
   const paginatedRequests = useMemo(() => {
+    if (pagination) return requests;
     const start = (validPage - 1) * pageSize;
     return requests.slice(start, start + pageSize);
-  }, [requests, validPage]);
+  }, [pagination, requests, validPage]);
+  const totalItems = pagination?.total ?? requests.length;
+  const effectivePageSize = pagination?.limit ?? pageSize;
+  const changePage = (page: number) => {
+    if (pagination) {
+      router.push(`${paginationPath}?page=${page}`);
+    } else {
+      setCurrentPage(page);
+    }
+  };
 
   const getPropertyTitle = (req: IRentalRequest) =>
-    req.property?.title || req.propertyTitle || "Rental Property";
+    req.property?.title || req.propertyTitle || "Property unavailable";
 
   const getPropertyLocation = (req: IRentalRequest) =>
     req.property?.location || req.property?.address || req.location || "Location N/A";
 
   const getLandlordName = (req: IRentalRequest) =>
-    req.landlord?.name || req.landlordName || "Property Landlord";
+    req.landlord?.name || req.landlordName || "Not provided";
 
   const getLandlordContact = (req: IRentalRequest) =>
     req.landlord?.email ||
     req.landlordPhone ||
     req.landlord?.phone ||
-    "Contact via Nest";
+    "Not provided";
 
   const getRentAmount = (req: IRentalRequest) => {
     const val = req.totalPrice ?? req.property?.price ?? 0;
@@ -252,17 +268,17 @@ export const RentalRequestsTable: React.FC<RentalRequestsTableProps> = ({
         );
       })}
     </div>
-    {requests.length > pageSize && (
+    {totalItems > effectivePageSize && (
       <div className="flex items-center justify-between border-t border-border px-4 py-3 sm:px-6">
         <p className="text-xs text-muted-foreground">
-          Showing {(validPage - 1) * pageSize + 1}–{Math.min(validPage * pageSize, requests.length)} of {requests.length}
+          Showing {(validPage - 1) * effectivePageSize + 1}–{Math.min(validPage * effectivePageSize, totalItems)} of {totalItems}
         </p>
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={validPage === 1} className="h-8 gap-1 text-xs">
+          <Button type="button" variant="outline" size="sm" onClick={() => changePage(Math.max(1, validPage - 1))} disabled={validPage === 1} className="h-8 gap-1 text-xs">
             <ChevronLeft className="size-3.5" /> Previous
           </Button>
           <span className="text-xs font-semibold text-muted-foreground">{validPage} / {totalPages}</span>
-          <Button type="button" variant="outline" size="sm" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={validPage === totalPages} className="h-8 gap-1 text-xs">
+          <Button type="button" variant="outline" size="sm" onClick={() => changePage(Math.min(totalPages, validPage + 1))} disabled={validPage === totalPages} className="h-8 gap-1 text-xs">
             Next <ChevronRight className="size-3.5" />
           </Button>
         </div>

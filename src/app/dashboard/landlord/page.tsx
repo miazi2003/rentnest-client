@@ -114,8 +114,8 @@ const toRental = (value: unknown): RentalItem | null => {
     paymentStatus: getString(rental.paymentStatus).toUpperCase(),
     totalPrice: getNumber(rental.totalPrice ?? rental.price ?? rental.amount),
     createdAt: getString(rental.createdAt) || undefined,
-    tenantName: getString(tenant?.name ?? rental.tenantName, "Unknown tenant"),
-    propertyTitle: getString(property?.title ?? rental.propertyTitle, "Unknown property"),
+    tenantName: getString(tenant?.name ?? rental.tenantName, "Not provided"),
+    propertyTitle: getString(property?.title ?? rental.propertyTitle, "Property unavailable"),
   };
 };
 
@@ -171,9 +171,6 @@ export default async function LandlordDashboardPage() {
   const availableProperties = properties.filter((property) => property.availability === "AVAILABLE").length;
   const unavailableProperties = properties.length - availableProperties;
   const activeRentals = countStatus("ACTIVE");
-  const totalEarnings = requests
-    .filter((request) => request.paymentStatus === "PAID" || request.status === "ACTIVE" || request.status === "COMPLETED")
-    .reduce((sum, request) => sum + request.totalPrice, 0);
   const totalRequests = requests.length;
   const categoryCounts = new Map<string, number>();
   properties.forEach((property) => {
@@ -191,7 +188,7 @@ export default async function LandlordDashboardPage() {
     { title: "Total Properties", value: properties.length.toLocaleString(), subtitle: "Your rental listings", icon: "properties", iconBgColor: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
     { title: "Pending Requests", value: countStatus("PENDING").toLocaleString(), subtitle: "Awaiting your response", icon: "rentals", iconBgColor: "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
     { title: "Active Rentals", value: activeRentals.toLocaleString(), subtitle: "Currently occupied", icon: "rentals", iconBgColor: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
-    { title: "Total Earnings", value: formatCurrency(totalEarnings), subtitle: "From paid rental requests", icon: "payments", iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
+    { title: "Total Earnings", value: "Unavailable", subtitle: "Confirmed payment data unavailable", icon: "payments", iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
   ];
 
   return (
@@ -230,7 +227,7 @@ export default async function LandlordDashboardPage() {
       {/* Analytics Charts Section */}
       <DashboardSection>
         <AnalyticsCharts
-          title="Landlord Revenue & Rental Performance"
+          title="Landlord Rental Performance"
           subtitle="Real-time listing analytics and application stats"
           rentalStatusData={[
             { status: "Approved", count: countStatus("APPROVED"), color: "bg-emerald-500 text-emerald-500" },

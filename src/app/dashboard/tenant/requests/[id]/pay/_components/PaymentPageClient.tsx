@@ -38,11 +38,11 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const requestId = request?.id || request?._id || "";
-  const propertyTitle = request?.title || request?.property?.title || "Rental Property";
+  const propertyTitle = request?.title || request?.property?.title || "Property unavailable";
   const propertyAddress = request?.address || request?.property?.address || request?.location || "Location N/A";
   const categoryName = request?.category?.name || request?.property?.category?.name || "Property";
 
-  const landlordName = request?.landlord?.name || request?.property?.landlord?.name || "Landlord Contact";
+  const landlordName = request?.landlord?.name || request?.property?.landlord?.name || "Not provided";
   const landlordEmail = request?.landlord?.email || request?.property?.landlord?.email || "landlord@rentnest.com";
   const landlordPhone = request?.landlord?.phone || request?.property?.landlord?.phone || "N/A";
 
@@ -55,7 +55,8 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
   const price = rawPrice ? Number(rawPrice) : 0;
 
   const reqStatus = (request?.status || "").toUpperCase();
-  const isAlreadyPaid = reqStatus === "ACTIVE" || reqStatus === "COMPLETED";
+  const paymentStatus = (request?.paymentStatus || "").toUpperCase();
+  const isAlreadyPaid = paymentStatus === "PAID" || reqStatus === "ACTIVE" || reqStatus === "COMPLETED";
 
   const handlePay = async () => {
     if (!requestId) {
@@ -149,7 +150,7 @@ export default function PaymentPageClient({ request }: PaymentPageClientProps) {
               <Building2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               Rental Request Summary
             </CardTitle>
-            <RentalStatusBadge status={request?.status || "APPROVED"} />
+            <RentalStatusBadge status={request?.status || "UNKNOWN"} />
           </div>
           <CardDescription className="text-xs text-muted-foreground">
             Request ID: <span className="font-mono font-bold text-foreground">{requestId}</span>

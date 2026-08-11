@@ -58,9 +58,9 @@ export const LeaveReviewModal: React.FC<LeaveReviewModalProps> = ({
   if (!request) return null;
 
   const propertyTitle =
-    request.property?.title || request.propertyTitle || "Rental Property";
+    request.property?.title || request.propertyTitle || "Property unavailable";
   const landlordName =
-    request.landlord?.name || request.landlordName || "Landlord";
+    request.landlord?.name || request.landlordName || "Not provided";
 
   const handleSubmit = async () => {
     if (isSubmitting || alreadyReviewed) return;

@@ -18,9 +18,11 @@ export default async function RequestPayPage({ params }: PageProps) {
 
   if (rentalRequest) {
     const statusUpper = (rentalRequest.status || "").toUpperCase();
-    if (statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
+    const paymentStatus = (rentalRequest.paymentStatus || "").toUpperCase();
+    if (paymentStatus === "PAID" || statusUpper === "ACTIVE" || statusUpper === "COMPLETED") {
       redirect("/dashboard/tenant?notice=already_paid");
     }
+    if (statusUpper !== "APPROVED") redirect("/dashboard/tenant/requests");
   }
 
   return <PaymentPageClient request={rentalRequest} />;

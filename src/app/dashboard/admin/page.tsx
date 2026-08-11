@@ -140,12 +140,6 @@ export default async function AdminDashboardPage() {
     ? rawRentals.filter((r) => (r.status || "").toUpperCase() === "COMPLETED").length
     : 0;
 
-  const totalPaymentsAmount = hasRentalsData
-    ? rawRentals
-        .filter((r) => r.paymentStatus === "PAID" || r.status === "COMPLETED" || r.status === "APPROVED")
-        .reduce((sum, r) => sum + Number(r.totalPrice || r.price || 0), 0)
-    : 0;
-
   const totalCategoriesCount = rawCategories.length;
   const categoryColors = ["bg-emerald-500", "bg-purple-500", "bg-blue-500", "bg-amber-500"];
   const categoryChartData = rawCategories
@@ -184,8 +178,8 @@ export default async function AdminDashboardPage() {
     },
     {
       title: "Total Payments",
-      value: `$${totalPaymentsAmount.toLocaleString()}`,
-      subtitle: "Calculated from rentals",
+      value: "Unavailable",
+      subtitle: "Confirmed payment data unavailable",
       icon: "payments",
       iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400",
     },
@@ -280,8 +274,8 @@ export default async function AdminDashboardPage() {
       {/* Recharts / Analytics Section */}
       <DashboardSection>
         <AnalyticsCharts
-          title="Platform Analytics & Revenue Overview"
-          subtitle="System-wide application metrics, listing category breakdowns, and rental revenue trends"
+          title="Platform Analytics Overview"
+          subtitle="System-wide application metrics and listing category breakdowns"
           rentalStatusData={[
             { status: "Approved", count: approvedRentalsCount, color: "bg-emerald-500 text-emerald-500" },
             { status: "Active", count: activeRentalsCount, color: "bg-blue-500 text-blue-500" },

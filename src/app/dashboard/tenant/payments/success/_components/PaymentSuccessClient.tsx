@@ -63,13 +63,20 @@ export default function PaymentSuccessClient() {
 
       if (res.ok && res.data) {
         const payload = res.data.data || res.data;
-        const statusStr = (payload?.status || payload?.paymentStatus || "PAID").toUpperCase();
+        const statusValue = payload?.status || payload?.paymentStatus;
+        const statusStr = typeof statusValue === "string" ? statusValue.toUpperCase() : "";
 
         if ((statusStr === "PENDING" || statusStr === "PROCESSING") && attemptsRemaining > 1) {
           setVerifyingText(`Awaiting Stripe webhook confirmation... (Attempt ${6 - attemptsRemaining} of 5)`);
           setTimeout(() => {
             void verifyAttempt(attemptsRemaining - 1);
           }, 2000);
+          return;
+        }
+
+        if (!["PAID", "COMPLETED", "SUCCEEDED"].includes(statusStr)) {
+          setLoading(false);
+          setError(statusStr ? `Payment is not confirmed (status: ${statusStr}).` : "Payment verification did not return a confirmed payment status.");
           return;
         }
 
@@ -107,13 +114,13 @@ export default function PaymentSuccessClient() {
           payload?.propertyTitle ||
           payload?.property?.title ||
           storedPropertyTitle ||
-          "Rental Property";
+          "Property unavailable";
 
         const resolvedLandlordName =
           payload?.landlordName ||
           payload?.landlord?.name ||
           storedLandlordName ||
-          "Landlord Contact";
+          "Not provided";
 
         setPaymentData({
           status: statusStr,
@@ -235,7 +242,7 @@ export default function PaymentSuccessClient() {
                     <span className="text-muted-foreground">Payment Status:</span>
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      {paymentData?.status || "PAID"}
+                      {paymentData?.status}
                     </span>
                   </div>
 

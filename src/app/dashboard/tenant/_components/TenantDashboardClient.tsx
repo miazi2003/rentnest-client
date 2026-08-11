@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowUpRight,
@@ -22,6 +23,7 @@ import {
   IPaymentItem,
   TenantDashboardTab,
   ITenantStats,
+  IPaginationMeta,
 } from "../types/tenant.types";
 
 import {
@@ -54,6 +56,9 @@ interface TenantDashboardClientProps {
   initialPayments?: IPaymentItem[];
   defaultTab?: TenantDashboardTab;
   errorMessage?: string;
+  dataScope?: "overview" | "requests" | "payments";
+  requestsMeta?: IPaginationMeta | null;
+  paymentsMeta?: IPaginationMeta | null;
 }
 
 type QuickAction = {
@@ -87,7 +92,11 @@ export default function TenantDashboardClient({
   initialPayments = [],
   defaultTab = "requests",
   errorMessage,
+  dataScope = "overview",
+  requestsMeta = null,
+  paymentsMeta = null,
 }: TenantDashboardClientProps) {
+  const router = useRouter();
   const rawRequests = initialRequests;
   const rawPayments = initialPayments;
 
@@ -102,7 +111,7 @@ export default function TenantDashboardClient({
   const [reviewModalItem, setReviewModalItem] = useState<IRentalRequest | null>(null);
 
   const stats: ITenantStats = useMemo(() => {
-    const totalRequests = requestsList.length;
+    const totalRequests = requestsMeta?.total ?? requestsList.length;
     const pendingRequests = requestsList.filter(
       (r) => (r.status || "").toUpperCase() === "PENDING"
     ).length;
@@ -112,11 +121,14 @@ export default function TenantDashboardClient({
     const approvedRequests = requestsList.filter(
       (r) => (r.status || "").toUpperCase() === "APPROVED"
     ).length;
-    const totalPaymentAmount = paymentsList.reduce(
+    const confirmedPayments = paymentsList.filter((payment) =>
+      ["PAID", "COMPLETED", "SUCCEEDED"].includes((payment.status || "").toUpperCase()),
+    );
+    const totalPaymentAmount = confirmedPayments.reduce(
       (sum, p) => sum + Number(p.amount || 0),
       0
     );
-    const totalPaymentsCount = paymentsList.length;
+    const totalPaymentsCount = confirmedPayments.length;
 
     return {
       totalRequests,
@@ -126,16 +138,16 @@ export default function TenantDashboardClient({
       totalPaymentAmount,
       totalPaymentsCount,
     };
-  }, [requestsList, paymentsList]);
+  }, [paymentsList, requestsList, requestsMeta?.total]);
 
   const getPropertyTitle = (req: IRentalRequest) =>
-    req.property?.title || req.propertyTitle || "Rental Property";
+    req.property?.title || req.propertyTitle || "Property unavailable";
 
   const getPropertyLocation = (req: IRentalRequest) =>
-    req.property?.location || req.property?.address || req.location || "Location N/A";
+    req.property?.location || req.property?.address || req.location || "Not provided";
 
   const getLandlordName = (req: IRentalRequest) =>
-    req.landlord?.name || req.landlordName || "Property Landlord";
+    req.landlord?.name || req.landlordName || "Not provided";
 
   const filteredRequests = useMemo(() => {
     return requestsList.filter((req) => {
@@ -205,8 +217,8 @@ export default function TenantDashboardClient({
     ).length;
   const completedRequests = countStatus("COMPLETED");
   const rejectedRequests = countStatus("REJECTED");
-  const paidPayments = paymentsList.filter(
-    (payment) => (payment.status || "COMPLETED").toUpperCase() !== "FAILED",
+  const paidPayments = paymentsList.filter((payment) =>
+    ["PAID", "COMPLETED", "SUCCEEDED"].includes((payment.status || "").toUpperCase()),
   ).length;
   const paymentCompletion = paymentsList.length
     ? Math.round((paidPayments / paymentsList.length) * 100)
@@ -221,7 +233,7 @@ export default function TenantDashboardClient({
     { title: "Total Requests", value: stats.totalRequests.toLocaleString(), subtitle: "Your rental applications", icon: "rentals", iconBgColor: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
     { title: "Pending Requests", value: stats.pendingRequests.toLocaleString(), subtitle: "Awaiting landlord response", icon: "rentals", iconBgColor: "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
     { title: "Active Rentals", value: stats.activeRentals.toLocaleString(), subtitle: "Your current homes", icon: "properties", iconBgColor: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
-    { title: "Total Payments", value: formatCurrency(stats.totalPaymentAmount), subtitle: `${stats.totalPaymentsCount} completed transactions`, icon: "payments", iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
+    { title: "Confirmed Payments", value: formatCurrency(stats.totalPaymentAmount), subtitle: `${stats.totalPaymentsCount} confirmed in loaded records`, icon: "payments", iconBgColor: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
   ];
   const tenantRentalStatusData = [
     { status: "Approved", count: stats.approvedRequests, color: "bg-emerald-500 text-emerald-500" },
@@ -282,15 +294,22 @@ export default function TenantDashboardClient({
       <DashboardSection title="Rental Activity" subtitle="Search and manage your requests and payment records">
       <Tabs
         value={activeTab}
-        onValueChange={(val) => setActiveTab(val as TenantDashboardTab)}
+        onValueChange={(val) => {
+          const nextTab = val as TenantDashboardTab;
+          if (dataScope !== "overview" && nextTab !== dataScope) {
+            router.push(`/dashboard/tenant/${nextTab}`);
+            return;
+          }
+          setActiveTab(nextTab);
+        }}
         className="flex flex-col gap-0 overflow-hidden rounded-[1.5rem] border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none"
       >
 
         <TenantTabsHeader
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          requestsCount={requestsList.length}
-          paymentsCount={paymentsList.length}
+          requestsCount={requestsMeta?.total ?? requestsList.length}
+          paymentsCount={paymentsMeta?.total ?? paymentsList.length}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           statusFilter={statusFilter}
@@ -302,12 +321,13 @@ export default function TenantDashboardClient({
           <RentalRequestsTable
             requests={filteredRequests}
             onOpenReviewModal={(req) => setReviewModalItem(req)}
+            pagination={dataScope === "requests" && !searchQuery && statusFilter === "ALL" ? requestsMeta : null}
           />
         </TabsContent>
 
 
         <TabsContent value="payments" className="mt-0 p-0">
-          <PaymentHistoryTable payments={filteredPayments} />
+          <PaymentHistoryTable payments={filteredPayments} pagination={dataScope === "payments" && !searchQuery ? paymentsMeta : null} />
         </TabsContent>
       </Tabs>
       </DashboardSection>
@@ -345,4 +365,3 @@ export default function TenantDashboardClient({
     </div>
   );
 }
-

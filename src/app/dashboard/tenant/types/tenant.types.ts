@@ -89,3 +89,10 @@ export interface ITenantStats {
   totalPaymentAmount: number;
   totalPaymentsCount: number;
 }
+
+export interface IPaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}

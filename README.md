@@ -5,6 +5,7 @@ RentNest is a responsive rental-property marketplace built with the Next.js App 
 ## Links
 
 - Frontend repository: https://github.com/miazi2003/rentnest-client
+- Backend repository: https://github.com/miazi2003/L2A4--rentnest.git
 - Live frontend: https://rentnest-client-so3z.vercel.app/
 - Backend API: https://l2-a4-rentnest.vercel.app/
 

@@ -52,16 +52,16 @@ type SortOrder = "asc" | "desc";
 const PAGE_SIZE = 5;
 
 const propertyTitle = (request: ILandlordRentalRequest) =>
-  request.property?.title || request.propertyTitle || "Rental Property";
+  request.property?.title || request.propertyTitle || "Property unavailable";
 
 const propertyAddress = (request: ILandlordRentalRequest) =>
-  request.property?.address || "Location N/A";
+  request.property?.address || "Not provided";
 
 const tenantName = (request: ILandlordRentalRequest) =>
-  request.tenant?.name || request.tenantName || "Applicant Tenant";
+  request.tenant?.name || request.tenantName || "Not provided";
 
 const tenantEmail = (request: ILandlordRentalRequest) =>
-  request.tenant?.email || request.tenantEmail || "Email N/A";
+  request.tenant?.email || request.tenantEmail || "Not provided";
 
 const totalPrice = (request: ILandlordRentalRequest) =>
   Number(request.totalPrice ?? request.price ?? request.property?.price ?? 0) || 0;
