@@ -11,7 +11,7 @@ export function CategoryBrowseSection({ categories = [] }: CategoryBrowseSection
   const displayCategories = categories;
 
   return (
-    <section className="py-16 sm:py-24 bg-muted/30 border-y border-border/50">
+    <section className="border-y border-border/50 bg-muted/30 py-16 dark:border-y-0 sm:py-24">
       <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12 space-y-12">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">

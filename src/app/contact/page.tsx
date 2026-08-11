@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { contactAction } from "@/app/features/contact/actions/contactAction";
 import type { ContactActionState } from "@/app/features/contact/types";
 
+const contactFieldClass = "rounded-xl border-slate-200/70 bg-background shadow-none focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500/20 dark:border-white/10 dark:bg-slate-950/40";
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -52,18 +54,24 @@ export default function ContactPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Contact Info */}
-        <div className="lg:col-span-5 space-y-6">
-          <Card className="rounded-3xl border-emerald-500/20 bg-gradient-to-br from-emerald-950/90 to-slate-950 text-white p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-emerald-300">Are you a Landlord?</h3>
-            <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-              List your properties easily, review tenant requests, and receive verified rental payments directly through RentNest.
-            </p>
+        <div className="space-y-6 lg:col-span-5 lg:sticky lg:top-28">
+          <Card className="relative overflow-hidden rounded-3xl border-0 bg-gradient-to-br from-emerald-950/95 to-slate-950 p-7 text-white shadow-xl sm:p-8 dark:border dark:border-white/10">
+            <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-emerald-400/15 blur-3xl" />
+            <div className="relative">
+              <div className="mb-5 flex size-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-emerald-300">
+                <Building2 className="size-5" />
+              </div>
+              <h3 className="text-xl font-bold text-emerald-300">Are you a Landlord?</h3>
+              <p className="mt-3 max-w-sm text-sm leading-relaxed text-slate-300">
+                List your properties easily, review tenant requests, and receive verified rental payments directly through RentNest.
+              </p>
+            </div>
           </Card>
         </div>
 
         {/* Form */}
         <div className="lg:col-span-7">
-          <Card className="rounded-3xl border-border bg-card shadow-sm p-4 sm:p-6">
+          <Card className="rounded-3xl border-0 bg-white p-4 shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none sm:p-6">
             <CardHeader className="px-2">
               <CardTitle className="text-2xl font-bold">Send us a Message</CardTitle>
               <CardDescription className="text-xs">
@@ -85,7 +93,7 @@ export default function ContactPage() {
                         maxLength={100}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="rounded-xl"
+                        className={contactFieldClass}
                         aria-describedby={feedback?.errors?.name ? "contact-name-error" : undefined}
                       />
                       {feedback?.errors?.name && <p id="contact-name-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.name}</p>}
@@ -101,7 +109,7 @@ export default function ContactPage() {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="rounded-xl"
+                        className={contactFieldClass}
                         aria-describedby={feedback?.errors?.email ? "contact-email-error" : undefined}
                       />
                       {feedback?.errors?.email && <p id="contact-email-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.email}</p>}
@@ -119,7 +127,7 @@ export default function ContactPage() {
                       maxLength={200}
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="rounded-xl"
+                      className={contactFieldClass}
                       aria-describedby={feedback?.errors?.subject ? "contact-subject-error" : undefined}
                     />
                     {feedback?.errors?.subject && <p id="contact-subject-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.subject}</p>}
@@ -138,10 +146,13 @@ export default function ContactPage() {
                       placeholder="How can we help you today?"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full rounded-xl border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      className="w-full rounded-xl border border-slate-200/70 bg-background px-3 py-2 text-sm shadow-none outline-none placeholder:text-muted-foreground focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-slate-950/40"
                       aria-describedby={feedback?.errors?.message ? "contact-message-error" : undefined}
                     />
-                    {feedback?.errors?.message && <p id="contact-message-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.message}</p>}
+                    <div className="flex items-start justify-between gap-4">
+                      {feedback?.errors?.message ? <p id="contact-message-error" className="text-xs text-rose-600 dark:text-rose-400">{feedback.errors.message}</p> : <span />}
+                      <span className="shrink-0 text-[10px] text-muted-foreground">{formData.message.length}/2000</span>
+                    </div>
                   </div>
 
                   {feedback?.message && (

@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
@@ -46,6 +46,7 @@ export function SocialLoginButtons() {
   const router = useRouter();
   const { getUser } = useAuth();
   const googleButtonRef = useRef<HTMLDivElement>(null);
+  const googleInitializedRef = useRef(false);
   const [googleReady, setGoogleReady] = useState(false);
   const [facebookReady, setFacebookReady] = useState(false);
   const [provider, setProvider] = useState<"google" | "facebook" | null>(null);
@@ -82,17 +83,54 @@ export function SocialLoginButtons() {
   }, [finishLogin]);
 
   const initializeGoogle = useCallback(() => {
-    if (!googleClientId || !window.google || !googleButtonRef.current) return;
-    googleButtonRef.current.replaceChildren();
-    window.google.accounts.id.initialize({ client_id: googleClientId, callback: handleGoogleCredential });
-    window.google.accounts.id.renderButton(googleButtonRef.current, {
-      type: "icon",
-      theme: "outline",
-      size: "large",
-      shape: "circle",
-    });
-    setGoogleReady(true);
+    const googleIdentity = window.google?.accounts?.id;
+    const buttonContainer = googleButtonRef.current;
+
+    if (!googleClientId || !googleIdentity || !buttonContainer || googleInitializedRef.current) {
+      return;
+    }
+
+    try {
+      googleIdentity.initialize({
+        client_id: googleClientId,
+        callback: handleGoogleCredential,
+      });
+      buttonContainer.replaceChildren();
+      googleIdentity.renderButton(buttonContainer, {
+        type: "icon",
+        theme: "outline",
+        size: "large",
+        shape: "circle",
+      });
+
+      if (buttonContainer.childElementCount > 0) {
+        googleInitializedRef.current = true;
+        setGoogleReady(true);
+      }
+    } catch {
+      googleInitializedRef.current = false;
+      setGoogleReady(false);
+    }
   }, [googleClientId, handleGoogleCredential]);
+
+  useEffect(() => {
+    if (!googleClientId || googleInitializedRef.current) return;
+
+    let attempts = 0;
+    const maxAttempts = 10;
+    const retryInterval = window.setInterval(() => {
+      attempts += 1;
+      initializeGoogle();
+
+      if (googleInitializedRef.current || attempts >= maxAttempts) {
+        window.clearInterval(retryInterval);
+      }
+    }, 200);
+
+    initializeGoogle();
+
+    return () => window.clearInterval(retryInterval);
+  }, [googleClientId, initializeGoogle]);
 
   const handleFacebookAuth = async (accessToken: string) => {
     setProvider("facebook");
@@ -136,6 +174,7 @@ export function SocialLoginButtons() {
   <Script
     src="https://accounts.google.com/gsi/client"
     strategy="afterInteractive"
+    onLoad={initializeGoogle}
     onReady={initializeGoogle}
   />
 
@@ -202,12 +241,12 @@ export function SocialLoginButtons() {
     </button>
 
     {/* Invisible Google Identity button */}
-    {googleReady && (
-      <div
-        ref={googleButtonRef}
-        className="absolute inset-0 z-10 overflow-hidden rounded-full opacity-0"
-      />
-    )}
+    <div
+      ref={googleButtonRef}
+      className={`absolute inset-0 z-10 overflow-hidden rounded-full opacity-0 ${
+        googleReady ? "" : "pointer-events-none"
+      }`}
+    />
   </div>
 
   {/* Facebook */}

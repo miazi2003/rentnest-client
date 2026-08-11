@@ -49,8 +49,8 @@ function ProfileField({
   value: string;
 }) {
   return (
-    <div className="group flex items-start gap-4 rounded-xl border border-slate-100 bg-slate-50/70 p-4 transition-colors hover:border-emerald-200 hover:bg-emerald-50/40 dark:border-border/60 dark:bg-muted/25 dark:hover:border-emerald-900 dark:hover:bg-emerald-950/10">
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white text-emerald-600 shadow-xs transition-transform group-hover:scale-105 dark:border-emerald-900/60 dark:bg-background">
+    <div className="group flex items-start gap-4 rounded-xl border border-slate-200/70 bg-muted/30 p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40 dark:border-white/10 dark:hover:border-emerald-900 dark:hover:bg-emerald-950/10">
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200/70 bg-background text-emerald-600 shadow-xs transition-transform group-hover:scale-105 dark:border-white/10 dark:text-emerald-400">
         <Icon className="size-[18px]" />
       </div>
       <div className="min-w-0">
@@ -71,7 +71,7 @@ export default async function ProfilePage() {
   if (!response.ok || !user) {
     return (
       <div className="w-full py-10">
-        <Card className="rounded-xl border-none bg-white shadow-sm dark:bg-card">
+        <Card className="rounded-xl border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
           <CardContent className="p-10 text-center">
             <UserRound className="mx-auto size-10 text-muted-foreground" />
             <h1 className="mt-4 text-xl font-bold">Profile unavailable</h1>
@@ -120,7 +120,7 @@ export default async function ProfilePage() {
       </Card>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.35fr_0.65fr]">
-          <Card className="rounded-2xl border-none bg-white shadow-sm dark:bg-card">
+          <Card className="rounded-2xl border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
             <CardHeader>
               <CardTitle className="text-lg font-bold">Personal Information</CardTitle>
               <CardDescription className="text-sm">Details associated with your authenticated account.</CardDescription>
@@ -133,7 +133,7 @@ export default async function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-none bg-white shadow-sm dark:bg-card">
+          <Card className="rounded-2xl border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
             <CardHeader>
               <CardTitle className="text-lg font-bold">Account Information</CardTitle>
               <CardDescription className="text-sm">Status and membership timeline.</CardDescription>

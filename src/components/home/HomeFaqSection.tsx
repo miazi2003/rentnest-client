@@ -35,7 +35,7 @@ export function HomeFaqSection() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-background border-t border-border/50">
+    <section className="border-t border-border/50 bg-background py-16 dark:border-t-0 sm:py-24">
       <div className="mx-auto max-w-4xl px-5 sm:px-8 space-y-12">
         <div className="text-center space-y-3">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">

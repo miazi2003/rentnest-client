@@ -82,7 +82,7 @@ export function ProfileForms({ user }: { user: ProfileUser }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.35fr_0.65fr]">
-      <Card className="rounded-2xl border-none bg-white shadow-sm dark:bg-card">
+      <Card className="rounded-2xl border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-bold">Edit Personal Information</CardTitle>
           <CardDescription className="text-sm">Update the name and phone number associated with your account.</CardDescription>
@@ -100,7 +100,7 @@ export function ProfileForms({ user }: { user: ProfileUser }) {
                   disabled={profilePending}
                   aria-invalid={Boolean(profileErrors.name)}
                   aria-describedby={profileErrors.name ? "profile-name-error" : undefined}
-                  className="rounded-xl pl-9"
+                  className="rounded-xl border-slate-200/70 bg-background pl-9 focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500/20 dark:border-white/10 dark:bg-slate-950/40"
                 />
               </div>
               {profileErrors.name && <p id="profile-name-error" className="text-xs text-rose-600 dark:text-rose-400">{profileErrors.name}</p>}
@@ -118,7 +118,7 @@ export function ProfileForms({ user }: { user: ProfileUser }) {
                   disabled={profilePending}
                   aria-invalid={Boolean(profileErrors.phone)}
                   aria-describedby={profileErrors.phone ? "profile-phone-error" : undefined}
-                  className="rounded-xl pl-9"
+                  className="rounded-xl border-slate-200/70 bg-background pl-9 focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500/20 dark:border-white/10 dark:bg-slate-950/40"
                 />
               </div>
               {profileErrors.phone && <p id="profile-phone-error" className="text-xs text-rose-600 dark:text-rose-400">{profileErrors.phone}</p>}
@@ -134,7 +134,7 @@ export function ProfileForms({ user }: { user: ProfileUser }) {
         </CardContent>
       </Card>
 
-      <Card className="rounded-2xl border-none bg-white shadow-sm dark:bg-card">
+      <Card className="rounded-2xl border-0 bg-white shadow-sm dark:border dark:border-white/15 dark:bg-transparent dark:shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-bold">Change Password</CardTitle>
           <CardDescription className="text-sm">Use your current password to set a new one.</CardDescription>
@@ -152,7 +152,7 @@ export function ProfileForms({ user }: { user: ProfileUser }) {
                 disabled={passwordPending}
                 aria-invalid={Boolean(passwordErrors.currentPassword)}
                 aria-describedby={passwordErrors.currentPassword ? "current-password-error" : undefined}
-                className="rounded-xl"
+                className="rounded-xl border-slate-200/70 bg-background focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500/20 dark:border-white/10 dark:bg-slate-950/40"
               />
               {passwordErrors.currentPassword && <p id="current-password-error" className="text-xs text-rose-600 dark:text-rose-400">{passwordErrors.currentPassword}</p>}
             </div>
@@ -168,7 +168,7 @@ export function ProfileForms({ user }: { user: ProfileUser }) {
                 disabled={passwordPending}
                 aria-invalid={Boolean(passwordErrors.newPassword)}
                 aria-describedby={passwordErrors.newPassword ? "new-password-error" : undefined}
-                className="rounded-xl"
+                className="rounded-xl border-slate-200/70 bg-background focus-visible:border-emerald-500 focus-visible:ring-1 focus-visible:ring-emerald-500/20 dark:border-white/10 dark:bg-slate-950/40"
               />
               {passwordErrors.newPassword && <p id="new-password-error" className="text-xs text-rose-600 dark:text-rose-400">{passwordErrors.newPassword}</p>}
             </div>
